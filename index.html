@@ -473,7 +473,6 @@ footer::before {
 .chat-toggle-avatar {
   width: 100%; height: 100%; object-fit: cover; border-radius: 50%;
 }
-/* avatar placeholder si no hay imagen */
 .chat-toggle-icon {
   width: 32px; height: 32px; fill: var(--gold);
 }
@@ -486,6 +485,30 @@ footer::before {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.2); }
 }
+
+/* ── PILL VIZCACHITA ── */
+.chat-pill {
+  position: absolute; bottom: 14px; left: 68px;
+  background: var(--brown-dark); border: 1.5px solid var(--gold);
+  border-radius: 30px; padding: 0.55rem 1.1rem 0.55rem 0.9rem;
+  display: flex; align-items: center; gap: 0.5rem;
+  cursor: pointer; white-space: nowrap;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.3);
+  transform: translateX(-10px); opacity: 0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+.chat-pill.visible { opacity: 1; transform: translateX(0); pointer-events: all; }
+.chat-pill.hidden  { opacity: 0; transform: translateX(-10px); pointer-events: none; }
+.chat-pill-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  object-fit: cover; border: 1.5px solid var(--gold); flex-shrink: 0;
+}
+.chat-pill-text {
+  font-family: 'Playfair Display', serif; font-size: 0.82rem;
+  font-weight: 700; color: var(--cream); letter-spacing: 0.04em;
+}
+
 
 .chat-window {
   position: absolute; bottom: 72px; left: 0;
@@ -1257,6 +1280,12 @@ footer::before {
     <svg id="vizcachitaIconFallback" class="chat-toggle-icon" style="display:none" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
   </button>
   <div class="chat-notif" id="chatNotif"></div>
+
+  <!-- PILL VIZCACHITA -->
+  <div class="chat-pill" id="chatPill" onclick="chatToggle.click(); hidePill()">
+    <img class="chat-pill-avatar" src="Vizcahita.png" alt="Vizcachita" onerror="this.style.display='none'">
+    <span class="chat-pill-text">¡Hablá con Vizcachita! 🤎</span>
+  </div>
   <div class="chat-window" id="chatWindow">
     <div class="chat-header">
       <div class="chat-header-avatar">
@@ -1352,7 +1381,25 @@ const KB = [
   { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500\n<b>🍐 Calabaza</b>: $17.999,99 / $23.999,99\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $14.500\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $39.500 (Vaquita Ranchero). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
   { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera — $14.500 / 🍐 Criollo de Calabaza — $17.999,99 / 🤎 <b>Combo Criollo + Bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['curar','curado','como curar','primer uso','estrenar'], resp: ['¡Curar el mate es clave! 🔥 Subimos un video paso a paso en Instagram para que te quede perfecto. ¡Miralo antes de estrenar!'], link: { text: '▶️ Ver video: cómo curar el mate', url: 'https://www.instagram.com/p/DYxT6NKuyF9/', ig: true } },
+  {
+    keys: ['curar','curado','como curar','cómo curar','primer uso','estrenar','preparar'],
+    resp: ['¡Buenísima pregunta! 🔥 Curar bien el mate es clave para sacarle todo el sabor. El proceso varía un poco según el material. ¿Tu mate es de <b>calabaza</b> o de <b>algarrobo</b>?'],
+    followUp: 'curar_tipo',
+    postButtons: [
+      { label: '🍐 Es de calabaza', msg: 'calabaza' },
+      { label: '🪵 Es de algarrobo', msg: 'algarrobo' },
+    ]
+  },
+  {
+    keys: ['calabaza','criollo de calabaza','es de calabaza','curar calabaza'],
+    resp: ['¡Perfecto! Para los mates de <b>calabaza</b> el curado es fundamental — si no lo hacés bien puede lagar sabores amargos. Subimos un video paso a paso en Instagram, miralo antes de estrenar 🍐'],
+    link: { text: '▶️ Video: curar mate de calabaza', url: 'https://www.instagram.com/p/DYxT6NKuyF9/', ig: true }
+  },
+  {
+    keys: ['algarrobo','de algarrobo','curar algarrobo','es de algarrobo','madera'],
+    resp: ['¡Genial! Para los mates de <b>algarrobo</b> el proceso es distinto al de calabaza. Subimos un video específico en Instagram con todos los pasos para que quede perfecto 🪵'],
+    link: { text: '▶️ Video: curar mate de algarrobo', url: 'https://www.instagram.com/p/DYs0_3_TwBE/', ig: true }
+  },
   { keys: ['instagram','insta','ig','redes','fotos','novedades'], resp: ['¡En nuestro Instagram vas a encontrar todo! 📸 Fotos, videos del proceso artesanal y novedades. Seguinos en @fogonmates 🔥'], link: { text: '📸 Ver @fogonmates', url: IG_LINK, ig: true } },
   { keys: ['whatsapp','wsp','contacto','contactar','telefono','hablar'], resp: ['¡Podés escribirnos al +54 9 11 5099-8752! 📲 Te atendemos para confirmar stock, envío y cerrar la compra.'], link: { text: '💬 Abrir WhatsApp', url: WA_LINK } },
   { keys: ['envio','envíos','mandan','llega','correo','todo el pais'], resp: ['¡Sí, enviamos a todo el país! 📦 Despachamos por correo. Para el costo, escribinos con tu código postal y te calculamos al toque.'], link: { text: '💬 Consultar envío', url: WA_LINK } },
@@ -1373,7 +1420,22 @@ function getResponse(input) {
   }
   if (!best || bestScore === 0) return { text: 'No tengo esa info, pero escribinos por WhatsApp y te respondemos al toque 📲', link: { text: '💬 Escribir por WhatsApp', url: WA_LINK } };
   const t = Array.isArray(best.resp) ? best.resp[Math.floor(Math.random() * best.resp.length)] : best.resp;
-  return { text: t, link: best.link || null };
+  return { text: t, link: best.link || null, postButtons: best.postButtons || null };
+}
+
+function addCustomButtons(buttons) {
+  document.querySelectorAll('.chat-post-actions').forEach(el => el.remove());
+  const wrap = document.createElement('div');
+  wrap.className = 'chat-post-actions';
+  buttons.forEach(b => {
+    const btn = document.createElement('button');
+    btn.className = 'chat-post-btn';
+    btn.innerHTML = b.label;
+    btn.onclick = () => { wrap.remove(); sendMessage(b.msg); };
+    wrap.appendChild(btn);
+  });
+  chatMsgs.appendChild(wrap);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
 
 function addMsg(html, role) {
@@ -1417,10 +1479,15 @@ function sendMessage(text) {
   addMsg(text, 'user'); showTyping();
   setTimeout(() => {
     removeTyping();
-    const { text: reply, link } = getResponse(text);
+    const { text: reply, link, postButtons } = getResponse(text);
     addMsg(reply, 'bot');
     if (link) addLink(link);
-    addPostActions();
+    // Botones personalizados (ej: calabaza/algarrobo) o botones estándar
+    if (postButtons && postButtons.length) {
+      addCustomButtons(postButtons);
+    } else {
+      addPostActions();
+    }
   }, 600 + Math.random() * 600);
 }
 function sendSuggestion(text) { sendMessage(text); }
@@ -1428,7 +1495,11 @@ chatToggle.addEventListener('click', () => {
   chatOpen = !chatOpen; chatWindow.classList.toggle('open', chatOpen);
   if (chatOpen) {
     chatNotif.style.display = 'none';
-    if (chatMsgs.children.length === 0) setTimeout(() => { addMsg('¡Hola! Soy Vizcachita 🤎 Estoy acá para ayudarte a encontrar el mate perfecto. ¿Qué andás buscando?', 'bot'); }, 400);
+    if (chatMsgs.children.length === 0) {
+      setTimeout(() => {
+        addMsg('¡Hola! 🤎 Soy <b>Vizcachita</b>, la asistente virtual de Fogón Mates. Estoy acá para ayudarte a elegir el mate perfecto, contarte sobre los productos, precios, envíos y todo lo que necesites saber. ¿Por dónde empezamos?', 'bot');
+      }, 400);
+    }
     chatInput.focus();
   }
 });
@@ -1436,6 +1507,23 @@ chatClose.addEventListener('click', () => { chatOpen = false; chatWindow.classLi
 chatSend.addEventListener('click', () => sendMessage(chatInput.value));
 chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(chatInput.value); });
 setTimeout(() => { if (!chatOpen) chatNotif.style.display = 'block'; }, 3000);
+
+// ── PILL ──
+function hidePill() {
+  const pill = document.getElementById('chatPill');
+  if (pill) { pill.classList.remove('visible'); pill.classList.add('hidden'); }
+}
+// Mostrar pill a los 4 segundos si el chat no está abierto
+setTimeout(() => {
+  if (!chatOpen) {
+    const pill = document.getElementById('chatPill');
+    if (pill) pill.classList.add('visible');
+    // Se oculta solo a los 7 segundos
+    setTimeout(() => hidePill(), 7000);
+  }
+}, 4000);
+// Ocultar pill cuando se abre el chat
+chatToggle.addEventListener('click', hidePill);
 </script>
 </body>
 </html>
