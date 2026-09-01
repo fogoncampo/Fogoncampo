@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -926,6 +927,59 @@ footer::before {
   opacity: 0.7;
 }
 
+/* ── GALERÍA DE PRODUCTO (LIGHTBOX) ── */
+.gallery-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(26, 13, 5, 0.92);
+  align-items: center; justify-content: center;
+  padding: 2rem;
+}
+.gallery-modal.open { display: flex; }
+.gallery-inner {
+  position: relative; max-width: 700px; width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+}
+.gallery-main-wrap {
+  position: relative; width: 100%;
+  display: flex; align-items: center; justify-content: center;
+}
+.gallery-main-img {
+  max-width: 100%; max-height: 65vh; object-fit: contain;
+  border: 1px solid rgba(184,150,78,0.4);
+  background: var(--parchment);
+}
+.gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: var(--brown-dark); border: 1px solid var(--gold);
+  color: var(--cream); width: 42px; height: 42px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.3rem; transition: background 0.2s;
+}
+.gallery-arrow:hover { background: var(--ember); }
+.gallery-arrow-prev { left: -8px; }
+.gallery-arrow-next { right: -8px; }
+.gallery-close {
+  position: absolute; top: -3rem; right: -0.5rem;
+  background: none; border: none; color: var(--cream);
+  font-size: 1.8rem; cursor: pointer; line-height: 1;
+}
+.gallery-thumbs {
+  display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+}
+.gallery-thumb {
+  width: 60px; height: 60px; object-fit: cover; cursor: pointer;
+  border: 2px solid transparent; opacity: 0.6;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.gallery-thumb:hover { opacity: 0.9; }
+.gallery-thumb.active { opacity: 1; border-color: var(--ember); }
+@media (max-width: 600px) {
+  .gallery-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
+  .gallery-arrow-prev { left: -4px; }
+  .gallery-arrow-next { right: -4px; }
+  .gallery-thumb { width: 48px; height: 48px; }
+}
+
 </style>
 </head>
 <body>
@@ -1091,7 +1145,7 @@ footer::before {
 
       <!-- MATE CRIOLLO CALABAZA -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('criollo_calabaza')" style="cursor:pointer;">
           <img class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de Calabaza" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1106,7 +1160,7 @@ footer::before {
 
       <!-- TORPEDO -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('torpedo')" style="cursor:pointer;">
           <img class="product-img" src="Torpedo_con_virola_de_acero.jpeg" alt="Torpedo con Virola de Acero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1121,7 +1175,7 @@ footer::before {
 
       <!-- IMPERIAL DE CALABAZA -->
 <div class="product-card" data-cat="calabaza">
-  <div class="product-img-wrap">
+  <div class="product-img-wrap" onclick="openGallery('imperial_calabaza')" style="cursor:pointer;">
     <img class="product-img" src="Imperial_de_calabaza.jpeg" alt="Imperial de Calabaza" onerror="this.style.background='#D4C4A0'">
   </div>
   <div class="product-info">
@@ -1133,9 +1187,55 @@ footer::before {
     </div>
   </div>
 </div>
+
+      <!-- IMPERIAL DE CUERO CRUDO CON BASE -->
+      <div class="product-card" data-cat="calabaza">
+        <div class="product-img-wrap" onclick="openGallery('imperial_cuero_crudo')" style="cursor:pointer;">
+          <img class="product-img" src="IMG_7694.jpeg" alt="Imperial de Cuero Crudo con Base" onerror="this.style.background='#D4C4A0'">
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Imperial de Cuero Crudo con Base</h3>
+          <p class="product-desc">Mate imperial de calabaza natural, forrado en cuero crudo, con virola de acero inoxidable cincelada y base de cuero crudo que permite mantenerlo firme al apoyarlo. Su elaboración reúne materiales tradicionales y terminaciones de mayor nivel, con detalles trabajados en la virola, las costuras y el revestimiento. La combinación de calabaza natural, cuero y acero inoxidable da como resultado una pieza de categoría superior dentro de la línea de mates. Al tratarse de una calabaza natural y de elaboración artesanal, cada unidad presenta variaciones propias en forma, tono y terminaciones, haciendo que cada mate sea único.</p>
+          <div class="product-footer">
+            <span class="product-price">$50.000</span>
+            <button class="product-action" onclick="consultarProducto('Imperial de Cuero Crudo con Base', '$50.000')">Consultar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMPERIAL DE ALPACA -->
+      <div class="product-card" data-cat="calabaza">
+        <div class="product-img-wrap" onclick="openGallery('imperial_alpaca')" style="cursor:pointer;">
+          <img class="product-img" src="IMG_7704.jpeg" alt="Imperial de Alpaca" onerror="this.style.background='#D4C4A0'">
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Imperial de Alpaca</h3>
+          <p class="product-desc">Mate imperial de calabaza natural, forrado en cuero y con detalles de alpaca. Su diseño clásico resalta la combinación entre la calabaza, el cuero y el trabajo en alpaca, dando como resultado una pieza de terminación cuidada y gran presencia. Al tratarse de una calabaza natural, cada mate presenta características propias que lo hacen único.</p>
+          <div class="product-footer">
+            <span class="product-price">$37.000</span>
+            <button class="product-action" onclick="consultarProducto('Imperial de Alpaca', '$37.000')">Consultar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CAMIONERO 4 PATAS -->
+      <div class="product-card" data-cat="calabaza">
+        <div class="product-img-wrap" onclick="openGallery('camionero_4_patas')" style="cursor:pointer;">
+          <img class="product-img" src="IMG_7685.jpeg" alt="Camionero 4 Patas" onerror="this.style.background='#D4C4A0'">
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Camionero 4 Patas</h3>
+          <p class="product-desc">Mate camionero de calabaza natural, forrado en cuero y con virola de acero inoxidable. Su diseño tradicional se distingue por su formato robusto y su base de 4 patas, que le aporta un apoyo firme y una presencia característica. Disponible en colores bordó, negro y suela, combina materiales nobles y una terminación cuidada, dando como resultado una pieza funcional y de estilo clásico. Las variaciones naturales de la calabaza hacen que cada pieza conserve su propia identidad.</p>
+          <div class="product-footer">
+            <span class="product-price">$18.500</span>
+            <button class="product-action" onclick="consultarProducto('Camionero 4 Patas', '$18.500')">Consultar</button>
+          </div>
+        </div>
+      </div>
+
       <!-- IMPERIAL PREMIUM -->
       <div class="product-card product-vertical" data-cat="algarrobo">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('imperial_premium')" style="cursor:pointer;">
           <span class="product-badge">★ Premium</span>
           <img class="product-img product-img-vertical" src="Imperial_de_algarrobo_premium.jpeg" alt="Imperial de Algarrobo Premium" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1151,7 +1251,7 @@ footer::before {
 
       <!-- VAQUITA RANCHERO -->
       <div class="product-card" data-cat="algarrobo">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('vaquita_ranchero')" style="cursor:pointer;">
           <img class="product-img" src="matevaquita_ranchero.jpeg" alt="Mate Vaquita / Ranchero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1181,7 +1281,7 @@ footer::before {
 
       <!-- YERBERA -->
       <div class="product-card" data-cat="accesorios">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('yerbera')" style="cursor:pointer;">
           <img class="product-img" src="yerbera.jpeg" alt="Yerbera" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1196,7 +1296,7 @@ footer::before {
 
       <!-- BOMBILLA -->
       <div class="product-card" data-cat="bombillas">
-        <div class="product-img-wrap">
+        <div class="product-img-wrap" onclick="openGallery('bombilla')" style="cursor:pointer;">
           <img class="product-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla Pico de Loro (Inoxidable)" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1287,6 +1387,19 @@ footer::before {
   </a>
 </div>
 
+<!-- GALERÍA DE PRODUCTO -->
+<div class="gallery-modal" id="galleryModal" onclick="if(event.target===this) closeGallery()">
+  <div class="gallery-inner">
+    <button class="gallery-close" onclick="closeGallery()">✕</button>
+    <div class="gallery-main-wrap">
+      <button class="gallery-arrow gallery-arrow-prev" onclick="galleryPrev()">‹</button>
+      <img class="gallery-main-img" id="galleryMainImg" src="" alt="">
+      <button class="gallery-arrow gallery-arrow-next" onclick="galleryNext()">›</button>
+    </div>
+    <div class="gallery-thumbs" id="galleryThumbs"></div>
+  </div>
+</div>
+
 <!-- CHATBOT VIZCACHITA -->
 <div class="chat-bubble" id="chatBubble">
   <button class="chat-toggle" id="chatToggle" aria-label="Hablar con Vizcachita">
@@ -1367,6 +1480,63 @@ function consultarProducto(nombre, precio) {
   window.open(`https://wa.me/5491150998752?text=${msg}`, '_blank');
 }
 
+/* ── GALERÍA DE PRODUCTO ── */
+const PRODUCT_GALLERIES = {
+  yerbera: ['IMG_5997.jpeg', 'IMG_5998.jpeg', 'IMG_6003.jpeg', 'IMG_6001.jpeg'],
+  vaquita_ranchero: ['IMG_5992.jpeg', 'IMG_5990.jpeg'],
+  bombilla: ['IMG_5989.jpeg'],
+  torpedo: ['IMG_5977.jpeg', 'IMG_5978.jpeg'],
+  criollo_calabaza: ['IMG_5982.jpeg', 'IMG_5981.jpeg'],
+  imperial_premium: ['IMG_5962.jpeg', 'IMG_5965.jpeg', 'IMG_5967.jpeg'],
+  imperial_calabaza: ['IMG_7150.jpeg', 'IMG_7153.jpeg'],
+  imperial_cuero_crudo: ['IMG_7694.jpeg', 'IMG_7698.jpeg', 'IMG_7700.jpeg'],
+  imperial_alpaca: ['IMG_7704.jpeg', 'IMG_7707.jpeg'],
+  camionero_4_patas: ['IMG_7685.jpeg', 'IMG_7689.jpeg', 'IMG_7676.jpeg', 'IMG_7677.jpeg', 'IMG_7701.jpeg', 'IMG_7703.jpeg']
+};
+let currentGallery = [];
+let currentGalleryIndex = 0;
+
+function openGallery(productKey) {
+  const imgs = PRODUCT_GALLERIES[productKey];
+  if (!imgs || !imgs.length) return;
+  currentGallery = imgs;
+  currentGalleryIndex = 0;
+  renderGallery();
+  document.getElementById('galleryModal').classList.add('open');
+}
+function closeGallery() {
+  document.getElementById('galleryModal').classList.remove('open');
+}
+function galleryPrev() {
+  currentGalleryIndex = (currentGalleryIndex - 1 + currentGallery.length) % currentGallery.length;
+  renderGallery();
+}
+function galleryNext() {
+  currentGalleryIndex = (currentGalleryIndex + 1) % currentGallery.length;
+  renderGallery();
+}
+function galleryGoTo(i) {
+  currentGalleryIndex = i;
+  renderGallery();
+}
+function renderGallery() {
+  document.getElementById('galleryMainImg').src = currentGallery[currentGalleryIndex];
+  const thumbsWrap = document.getElementById('galleryThumbs');
+  thumbsWrap.innerHTML = '';
+  currentGallery.forEach((src, i) => {
+    const t = document.createElement('img');
+    t.src = src; t.className = 'gallery-thumb' + (i === currentGalleryIndex ? ' active' : '');
+    t.onclick = () => galleryGoTo(i);
+    thumbsWrap.appendChild(t);
+  });
+}
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('galleryModal').classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') galleryPrev();
+  if (e.key === 'ArrowRight') galleryNext();
+  if (e.key === 'Escape') closeGallery();
+});
+
 /* ── SCROLL REVEAL ── */
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity='1'; entry.target.style.transform='translateY(0)'; } });
@@ -1391,9 +1561,9 @@ let chatOpen = false;
 const KB = [
   { keys: ['hola','buenas','buen dia','hey','hi','que tal','como estas'], resp: ['¡Hola! 🤎 ¿Cómo andás? Soy Vizcachita, la asistente de Fogón Mates. ¿Qué andás buscando?','¡Buenas! 🔥 Bienvenido/a a Fogón Mates. ¿Te ayudo con algo?'] },
   { keys: ['combo','combos','kit'], resp: ['¡Los combos son lo más completo! 🤎 Combo Criollo + Bombilla — <b>$21.999</b> (antes $25.000) y Combo Camionero + Bombilla — <b>$25.500</b> (antes $28.000). Ambos listos para usar. ¿Cuál te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo Criollo + Bombilla — <b>$21.999</b>\n🌳 Combo Camionero + Bombilla — <b>$25.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de Calabaza — <b>$17.999,99</b>\nTorpedo con Virola — <b>$23.999,99</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero Clásico — <b>$21.500</b>\nImperial Premium — <b>$27.200</b>\nVaquita/Ranchero — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera — <b>$14.500</b>\nBombilla Pico de Loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500\n<b>🧉 Calabaza</b>: $17.999,99 / $23.999,99\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $14.500\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $39.500 (Vaquita Ranchero). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
+  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo Criollo + Bombilla — <b>$21.999</b>\n🌳 Combo Camionero + Bombilla — <b>$25.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de Calabaza — <b>$17.999,99</b>\nTorpedo con Virola — <b>$23.999,99</b>\nImperial de Calabaza — <b>$30.000</b>\nImperial de Cuero Crudo con Base — <b>$50.000</b>\nImperial de Alpaca — <b>$37.000</b>\nCamionero 4 Patas — <b>$18.500</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero Clásico — <b>$21.500</b>\nImperial Premium — <b>$27.200</b>\nVaquita/Ranchero — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera — <b>$14.500</b>\nBombilla Pico de Loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500\n<b>🧉 Calabaza</b>: $17.999,99 / $23.999,99 / $30.000 / $50.000 / $37.000 / $18.500\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $14.500\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $50.000 (Imperial de Cuero Crudo con Base). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
   { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera — $14.500 / 🧉 Criollo de Calabaza — $17.999,99 / 🤎 <b>Combo Criollo + Bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   {
     keys: ['curar','curado','como curar','cómo curar','primer uso','estrenar','preparar'],
@@ -1541,3 +1711,4 @@ chatToggle.addEventListener('click', hidePill);
 </script>
 </body>
 </html>
+
