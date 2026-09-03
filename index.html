@@ -318,6 +318,18 @@ nav.scrolled { padding: 0.8rem 3rem; }
   display: flex; justify-content: space-between; align-items: center;
   padding-top: 1rem; border-top: 1px dashed var(--sand);
 }
+.product-buttons {
+  display: flex; align-items: center; gap: 1rem; justify-content: space-between;
+  margin-top: 0.7rem;
+}
+.btn-comprar-ahora {
+  flex: 1; background: var(--ember); color: var(--cream); border: none;
+  padding: 0.6rem 1rem; font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  cursor: pointer; transition: background 0.25s ease, transform 0.2s ease;
+}
+.btn-comprar-ahora:hover { background: var(--ember-dark); transform: translateY(-1px); }
+.btn-comprar-ahora:disabled { opacity: 0.6; cursor: wait; transform: none; }
 .product-price {
   font-family: 'Playfair Display', serif; font-size: 1.3rem;
   font-weight: 900; color: var(--ember);
@@ -1220,6 +1232,9 @@ footer::before {
           <p class="product-desc">Mate de calabaza natural con base forrada en cuero y terminación artesanal. Bombilla incluida. Ideal para empezar con lo mejor.</p>
           <div class="product-footer">
             <div><span class="product-price-old">$25.000</span><span class="product-price">$21.999</span></div>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Combo criollo + bombilla', 21999.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Combo criollo + bombilla', '$21.999')">Consultar</button>
           </div>
         </div>
@@ -1239,7 +1254,10 @@ footer::before {
           <h3 class="product-name">Combo camionero de algarrobo + bombilla</h3>
           <p class="product-desc">Algarrobo con virola de acero inoxidable. Diseño tradicional. Viene con bombilla de regalo.</p>
           <div class="product-footer">
-            <div><span class="product-price-old">$28.000</span><span class="product-price">$25.500</span></div>
+            <div><span class="product-price-old">$25.000</span><span class="product-price">$25.500</span></div>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Combo camionero de algarrobo + bombilla', 25500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Combo camionero de algarrobo + bombilla', '$25.500')">Consultar</button>
           </div>
         </div>
@@ -1255,6 +1273,9 @@ footer::before {
           <p class="product-desc">Mate de calabaza natural, trabajado artesanalmente y combinado con base de cuero cosida a mano. Cada pieza conserva las marcas y tonalidades propias de la calabaza.</p>
           <div class="product-footer">
             <span class="product-price">$17.999,99</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Criollo de calabaza', 17999.99)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Criollo de calabaza', '$17.999,99')">Consultar</button>
           </div>
         </div>
@@ -1270,6 +1291,9 @@ footer::before {
           <p class="product-desc">Mate torpedo confeccionado en cuero, con interior de calabaza natural y virola de acero. Base incorporada para un apoyo firme.</p>
           <div class="product-footer">
             <span class="product-price">$23.999,99</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Torpedo con virola de acero', 23999.99)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Torpedo con virola de acero', '$23.999,99')">Consultar</button>
           </div>
         </div>
@@ -1285,6 +1309,9 @@ footer::before {
     <p class="product-desc">Mate imperial de calabaza natural, forrado en cuero negro y con virola de acero inoxidable cincelada. Su diseño clásico resalta la combinación entre la calabaza, el cuero y los detalles de la virola, dando como resultado una pieza elegante y de gran presencia. Al tratarse de una calabaza natural, cada mate presenta características propias que lo hacen único.</p>
     <div class="product-footer">
       <span class="product-price">$30.000</span>
+    </div>
+    <div class="product-buttons">
+      <button class="btn-comprar-ahora" onclick="comprarAhora('Imperial de calabaza', 30000.0)">Comprar ahora</button>
       <button class="product-action" onclick="consultarProducto('Imperial de calabaza', '$30.000')">Consultar</button>
     </div>
   </div>
@@ -1300,6 +1327,9 @@ footer::before {
           <p class="product-desc">Mate imperial de calabaza natural, forrado en cuero crudo, con virola de acero inoxidable cincelada y base de cuero crudo que permite mantenerlo firme al apoyarlo. Su elaboración reúne materiales tradicionales y terminaciones de mayor nivel, con detalles trabajados en la virola, las costuras y el revestimiento. La combinación de calabaza natural, cuero y acero inoxidable da como resultado una pieza de categoría superior dentro de la línea de mates. Al tratarse de una calabaza natural y de elaboración artesanal, cada unidad presenta variaciones propias en forma, tono y terminaciones, haciendo que cada mate sea único.</p>
           <div class="product-footer">
             <span class="product-price">$50.000</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Imperial de cuero crudo con base', 50000.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Imperial de cuero crudo con base', '$50.000')">Consultar</button>
           </div>
         </div>
@@ -1315,6 +1345,9 @@ footer::before {
           <p class="product-desc">Mate imperial de calabaza natural, forrado en cuero y con detalles de alpaca. Su diseño clásico resalta la combinación entre la calabaza, el cuero y el trabajo en alpaca, dando como resultado una pieza de terminación cuidada y gran presencia. Al tratarse de una calabaza natural, cada mate presenta características propias que lo hacen único.</p>
           <div class="product-footer">
             <span class="product-price">$37.000</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Imperial de alpaca', 37000.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Imperial de alpaca', '$37.000')">Consultar</button>
           </div>
         </div>
@@ -1330,6 +1363,9 @@ footer::before {
           <p class="product-desc">Mate camionero de calabaza natural, forrado en cuero y con virola de acero inoxidable. Su diseño tradicional se distingue por su formato robusto y su base de 4 patas, que le aporta un apoyo firme y una presencia característica. Disponible en colores bordó, negro y suela, combina materiales nobles y una terminación cuidada, dando como resultado una pieza funcional y de estilo clásico. Las variaciones naturales de la calabaza hacen que cada pieza conserve su propia identidad.</p>
           <div class="product-footer">
             <span class="product-price">$18.500</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Camionero 4 patas', 18500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Camionero 4 patas', '$18.500')">Consultar</button>
           </div>
         </div>
@@ -1345,6 +1381,9 @@ footer::before {
           <p class="product-desc">Terminaciones cuidadas, virola de acero cincelada y un diseño que combina tradición con elegancia.</p>
           <div class="product-footer">
             <span class="product-price">$27.200</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Imperial de algarrobo', 27200.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Imperial de algarrobo', '$27.200')">Consultar</button>
           </div>
         </div>
@@ -1360,6 +1399,9 @@ footer::before {
           <p class="product-desc">Pieza trabajada artesanalmente, con terminaciones cuidadas y pintura realizada a mano. Detalles en clavos de acero inspirados en la Cruz del Sur.</p>
           <div class="product-footer">
             <span class="product-price">$39.500</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Mate vaquita', 39500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Mate vaquita', '$39.500')">Consultar</button>
           </div>
         </div>
@@ -1375,6 +1417,9 @@ footer::before {
           <p class="product-desc">Diseño cómodo, resistente y con terminaciones naturales que resaltan la veta única de la madera.</p>
           <div class="product-footer">
             <span class="product-price">$21.500</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Camionero clásico de algarrobo', 21500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Camionero clásico de algarrobo', '$21.500')">Consultar</button>
           </div>
         </div>
@@ -1390,6 +1435,9 @@ footer::before {
           <p class="product-desc">Confeccionada en gamuza, con terminaciones simples y funcionales. Base para apoyar, cierre superior y logo de la marca grabado.</p>
           <div class="product-footer">
             <span class="product-price">$14.500</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Yerbera Fogón', 14500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Yerbera Fogón', '$14.500')">Consultar</button>
           </div>
         </div>
@@ -1405,6 +1453,9 @@ footer::before {
           <p class="product-desc">Fabricada en acero inoxidable, con terminaciones simples y funcionales. Resistente y fácil de limpiar.</p>
           <div class="product-footer">
             <span class="product-price">$6.500</span>
+          </div>
+          <div class="product-buttons">
+            <button class="btn-comprar-ahora" onclick="comprarAhora('Bombilla pico de loro (inoxidable)', 6500.0)">Comprar ahora</button>
             <button class="product-action" onclick="consultarProducto('Bombilla pico de loro (inoxidable)', '$6.500')">Consultar</button>
           </div>
         </div>
@@ -1513,6 +1564,7 @@ footer::before {
       <div class="gallery-detail-rule"></div>
       <div class="gallery-detail-price" id="galleryDetailPrice"></div>
       <p class="gallery-detail-desc" id="galleryDetailDesc"></p>
+      <button class="btn-comprar-ahora" id="galleryDetailBuyBtn" style="margin-bottom:0.9rem; padding:0.9rem 1.4rem; font-size:0.82rem;">Comprar ahora</button>
       <button class="gallery-detail-wa" id="galleryDetailWaBtn">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
         Consultar por WhatsApp
@@ -1601,6 +1653,37 @@ function consultarProducto(nombre, precio) {
   window.open(`https://wa.me/5491150998752?text=${msg}`, '_blank');
 }
 
+/* ── COMPRA DIRECTA CON MERCADO PAGO ── */
+function parsePriceARS(str) {
+  // Convierte "$21.999,99" -> 21999.99 (formato argentino: punto = miles, coma = decimales)
+  const clean = String(str).replace(/[^\d.,]/g, '').replace(/\./g, '').replace(',', '.');
+  return parseFloat(clean);
+}
+
+async function comprarAhora(nombre, precio, buttonEl) {
+  const btn = buttonEl || (event && event.target ? event.target.closest('.btn-comprar-ahora') : null);
+  const originalText = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Redirigiendo…'; }
+  try {
+    const res = await fetch('/api/create-preference', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: nombre, price: Number(precio), quantity: 1 })
+    });
+    if (!res.ok) throw new Error('bad response');
+    const data = await res.json();
+    if (data.init_point) {
+      window.location.href = data.init_point;
+    } else {
+      throw new Error('no init_point');
+    }
+  } catch (err) {
+    console.error('Error al iniciar el pago:', err);
+    alert('No pudimos iniciar el pago en este momento. Probá de nuevo en un rato, o escribinos por WhatsApp para coordinar la compra.');
+    if (btn) { btn.disabled = false; btn.textContent = originalText; }
+  }
+}
+
 /* ── GALERÍA DE PRODUCTO ── */
 const PRODUCT_GALLERIES = {
   yerbera: ['IMG_5997.jpeg', 'IMG_5998.jpeg', 'IMG_6003.jpeg', 'IMG_6001.jpeg'],
@@ -1635,6 +1718,7 @@ function openProductDetail(productKey) {
   document.getElementById('galleryDetailPrice').textContent = currentDetailPrice;
   document.getElementById('galleryDetailDesc').textContent = descEl ? descEl.textContent.trim() : '';
   document.getElementById('galleryDetailWaBtn').onclick = () => consultarProducto(currentDetailName, currentDetailPrice);
+  document.getElementById('galleryDetailBuyBtn').onclick = (e) => comprarAhora(currentDetailName, parsePriceARS(currentDetailPrice), e.target);
 
   currentGallery = imgs;
   currentGalleryIndex = 0;
