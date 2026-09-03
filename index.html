@@ -927,57 +927,118 @@ footer::before {
   opacity: 0.7;
 }
 
-/* ── GALERÍA DE PRODUCTO (LIGHTBOX) ── */
+/* ── HOVER DINÁMICO EN LA VIDRIERA ── */
+.product-img-wrap.has-gallery { cursor: pointer; }
+.product-img-wrap.has-gallery .product-img,
+.product-img-wrap.has-gallery .product-img-hover-layer {
+  transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease, filter 0.4s;
+}
+.product-img-wrap.has-gallery:hover .product-img,
+.product-img-wrap.has-gallery:hover .product-img-hover-layer {
+  transform: scale(1.1);
+  filter: sepia(4%) contrast(1.12);
+}
+.product-img-hover-layer {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0; display: block;
+}
+.product-img-wrap.vertical-wrap .product-img-hover-layer { object-fit: contain; background: var(--parchment); }
+.product-img-wrap.has-gallery::after {
+  content: '📷 Ver más fotos';
+  position: absolute; bottom: 0.7rem; right: 0.7rem; z-index: 4;
+  background: rgba(58, 36, 25, 0.88); color: var(--cream);
+  font-family: 'Cormorant Garamond', serif; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.35rem 0.8rem; border-radius: 20px; border: 1px solid rgba(184,150,78,0.5);
+  opacity: 0; transform: translateY(8px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+.product-img-wrap.has-gallery:hover::after { opacity: 1; transform: translateY(0); }
+
+/* ── GALERÍA / FICHA DE PRODUCTO (MODAL) ── */
 .gallery-modal {
   display: none; position: fixed; inset: 0; z-index: 500;
   background: rgba(26, 13, 5, 0.92);
   align-items: center; justify-content: center;
-  padding: 2rem;
+  padding: 2rem; overflow-y: auto;
+  opacity: 0; transition: opacity 0.3s ease;
 }
-.gallery-modal.open { display: flex; }
+.gallery-modal.open { display: flex; opacity: 1; }
 .gallery-inner {
-  position: relative; max-width: 700px; width: 100%;
-  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  position: relative; max-width: 920px; width: 100%;
+  display: flex; flex-wrap: wrap; gap: 2rem; align-items: flex-start;
+  background: var(--cream); border: 1px solid rgba(184,150,78,0.4);
+  padding: 2.2rem; margin: auto;
+  transform: scale(0.94) translateY(14px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
 }
+.gallery-modal.open .gallery-inner { transform: scale(1) translateY(0); opacity: 1; }
+.gallery-media { flex: 1 1 360px; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
+.gallery-info { flex: 1 1 300px; min-width: 260px; display: flex; flex-direction: column; }
 .gallery-main-wrap {
-  position: relative; width: 100%;
+  position: relative; width: 100%; aspect-ratio: 4/3;
   display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: var(--parchment);
+  border: 1px solid rgba(184,150,78,0.3);
 }
 .gallery-main-img {
-  max-width: 100%; max-height: 65vh; object-fit: contain;
-  border: 1px solid rgba(184,150,78,0.4);
-  background: var(--parchment);
+  max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: contain;
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .gallery-arrow {
   position: absolute; top: 50%; transform: translateY(-50%);
   background: var(--brown-dark); border: 1px solid var(--gold);
   color: var(--cream); width: 42px; height: 42px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 1.3rem; transition: background 0.2s;
+  cursor: pointer; font-size: 1.3rem; transition: background 0.2s, transform 0.2s; z-index: 3;
 }
-.gallery-arrow:hover { background: var(--ember); }
-.gallery-arrow-prev { left: -8px; }
-.gallery-arrow-next { right: -8px; }
+.gallery-arrow:hover { background: var(--ember); transform: translateY(-50%) scale(1.08); }
+.gallery-arrow-prev { left: 10px; }
+.gallery-arrow-next { right: 10px; }
 .gallery-close {
-  position: absolute; top: -3rem; right: -0.5rem;
-  background: none; border: none; color: var(--cream);
-  font-size: 1.8rem; cursor: pointer; line-height: 1;
+  position: absolute; top: -1rem; right: -1rem; z-index: 5;
+  background: var(--brown-dark); border: 1px solid var(--gold); border-radius: 50%;
+  width: 34px; height: 34px; color: var(--cream);
+  font-size: 1.2rem; cursor: pointer; line-height: 1; transition: background 0.2s, transform 0.2s;
 }
+.gallery-close:hover { background: var(--ember); transform: scale(1.08); }
 .gallery-thumbs {
   display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
 }
 .gallery-thumb {
-  width: 60px; height: 60px; object-fit: cover; cursor: pointer;
-  border: 2px solid transparent; opacity: 0.6;
-  transition: opacity 0.2s, border-color 0.2s;
+  width: 56px; height: 56px; object-fit: cover; cursor: pointer;
+  border: 2px solid transparent; opacity: 0.55;
+  transition: opacity 0.25s, border-color 0.25s, transform 0.25s;
 }
-.gallery-thumb:hover { opacity: 0.9; }
+.gallery-thumb:hover { opacity: 0.9; transform: translateY(-2px); }
 .gallery-thumb.active { opacity: 1; border-color: var(--ember); }
+.gallery-detail-name {
+  font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900;
+  color: var(--brown-dark); margin-bottom: 0.6rem; line-height: 1.1;
+}
+.gallery-detail-price {
+  font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900;
+  color: var(--ember); margin-bottom: 1.2rem;
+}
+.gallery-detail-desc {
+  font-size: 1.02rem; line-height: 1.8; color: var(--text-mid);
+  font-style: italic; margin-bottom: 1.8rem;
+}
+.gallery-detail-wa {
+  background: var(--whatsapp); color: white; padding: 1rem 1.6rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; font-weight: 700;
+  letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
+  border: none; cursor: pointer; transition: background 0.2s, transform 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+}
+.gallery-detail-wa:hover { background: #128C7E; transform: translateY(-2px); }
 @media (max-width: 600px) {
+  .gallery-inner { padding: 1.4rem; gap: 1.2rem; }
   .gallery-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
-  .gallery-arrow-prev { left: -4px; }
-  .gallery-arrow-next { right: -4px; }
-  .gallery-thumb { width: 48px; height: 48px; }
+  .gallery-thumb { width: 46px; height: 46px; }
+  .gallery-detail-name { font-size: 1.4rem; }
+  .gallery-detail-price { font-size: 1.25rem; }
 }
 
 </style>
@@ -1145,7 +1206,7 @@ footer::before {
 
       <!-- MATE CRIOLLO CALABAZA -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap" onclick="openGallery('criollo_calabaza')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="criollo_calabaza" onclick="openProductDetail('criollo_calabaza')">
           <img class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de Calabaza" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1160,7 +1221,7 @@ footer::before {
 
       <!-- TORPEDO -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap" onclick="openGallery('torpedo')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="torpedo" onclick="openProductDetail('torpedo')">
           <img class="product-img" src="Torpedo_con_virola_de_acero.jpeg" alt="Torpedo con Virola de Acero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1175,7 +1236,7 @@ footer::before {
 
       <!-- IMPERIAL DE CALABAZA -->
 <div class="product-card" data-cat="calabaza">
-  <div class="product-img-wrap" onclick="openGallery('imperial_calabaza')" style="cursor:pointer;">
+  <div class="product-img-wrap has-gallery" data-gallery-key="imperial_calabaza" onclick="openProductDetail('imperial_calabaza')">
     <img class="product-img" src="Imperial_de_calabaza.jpeg" alt="Imperial de Calabaza" onerror="this.style.background='#D4C4A0'">
   </div>
   <div class="product-info">
@@ -1190,7 +1251,7 @@ footer::before {
 
       <!-- IMPERIAL DE CUERO CRUDO CON BASE -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap" onclick="openGallery('imperial_cuero_crudo')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="imperial_cuero_crudo" onclick="openProductDetail('imperial_cuero_crudo')">
           <img class="product-img" src="IMG_7694.jpeg" alt="Imperial de Cuero Crudo con Base" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1205,7 +1266,7 @@ footer::before {
 
       <!-- IMPERIAL DE ALPACA -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap" onclick="openGallery('imperial_alpaca')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="imperial_alpaca" onclick="openProductDetail('imperial_alpaca')">
           <img class="product-img" src="IMG_7704.jpeg" alt="Imperial de Alpaca" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1220,7 +1281,7 @@ footer::before {
 
       <!-- CAMIONERO 4 PATAS -->
       <div class="product-card" data-cat="calabaza">
-        <div class="product-img-wrap" onclick="openGallery('camionero_4_patas')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="camionero_4_patas" onclick="openProductDetail('camionero_4_patas')">
           <img class="product-img" src="IMG_7685.jpeg" alt="Camionero 4 Patas" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1235,7 +1296,7 @@ footer::before {
 
       <!-- IMPERIAL PREMIUM -->
       <div class="product-card product-vertical" data-cat="algarrobo">
-        <div class="product-img-wrap" onclick="openGallery('imperial_premium')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery vertical-wrap" data-gallery-key="imperial_premium" onclick="openProductDetail('imperial_premium')">
           <span class="product-badge">★ Premium</span>
           <img class="product-img product-img-vertical" src="Imperial_de_algarrobo_premium.jpeg" alt="Imperial de Algarrobo Premium" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1251,7 +1312,7 @@ footer::before {
 
       <!-- VAQUITA RANCHERO -->
       <div class="product-card" data-cat="algarrobo">
-        <div class="product-img-wrap" onclick="openGallery('vaquita_ranchero')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="vaquita_ranchero" onclick="openProductDetail('vaquita_ranchero')">
           <img class="product-img" src="matevaquita_ranchero.jpeg" alt="Mate Vaquita / Ranchero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1281,7 +1342,7 @@ footer::before {
 
       <!-- YERBERA -->
       <div class="product-card" data-cat="accesorios">
-        <div class="product-img-wrap" onclick="openGallery('yerbera')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="yerbera" onclick="openProductDetail('yerbera')">
           <img class="product-img" src="yerbera.jpeg" alt="Yerbera" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1296,7 +1357,7 @@ footer::before {
 
       <!-- BOMBILLA -->
       <div class="product-card" data-cat="bombillas">
-        <div class="product-img-wrap" onclick="openGallery('bombilla')" style="cursor:pointer;">
+        <div class="product-img-wrap has-gallery" data-gallery-key="bombilla" onclick="openProductDetail('bombilla')">
           <img class="product-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla Pico de Loro (Inoxidable)" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
@@ -1387,16 +1448,27 @@ footer::before {
   </a>
 </div>
 
-<!-- GALERÍA DE PRODUCTO -->
+<!-- FICHA DE PRODUCTO (GALERÍA + INFO) -->
 <div class="gallery-modal" id="galleryModal" onclick="if(event.target===this) closeGallery()">
   <div class="gallery-inner">
     <button class="gallery-close" onclick="closeGallery()">✕</button>
-    <div class="gallery-main-wrap">
-      <button class="gallery-arrow gallery-arrow-prev" onclick="galleryPrev()">‹</button>
-      <img class="gallery-main-img" id="galleryMainImg" src="" alt="">
-      <button class="gallery-arrow gallery-arrow-next" onclick="galleryNext()">›</button>
+    <div class="gallery-media">
+      <div class="gallery-main-wrap">
+        <button class="gallery-arrow gallery-arrow-prev" onclick="galleryPrev()">‹</button>
+        <img class="gallery-main-img" id="galleryMainImg" src="" alt="">
+        <button class="gallery-arrow gallery-arrow-next" onclick="galleryNext()">›</button>
+      </div>
+      <div class="gallery-thumbs" id="galleryThumbs"></div>
     </div>
-    <div class="gallery-thumbs" id="galleryThumbs"></div>
+    <div class="gallery-info">
+      <h3 class="gallery-detail-name" id="galleryDetailName"></h3>
+      <div class="gallery-detail-price" id="galleryDetailPrice"></div>
+      <p class="gallery-detail-desc" id="galleryDetailDesc"></p>
+      <button class="gallery-detail-wa" id="galleryDetailWaBtn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Consultar por WhatsApp
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1495,13 +1567,27 @@ const PRODUCT_GALLERIES = {
 };
 let currentGallery = [];
 let currentGalleryIndex = 0;
+let currentDetailName = '';
+let currentDetailPrice = '';
 
-function openGallery(productKey) {
+function openProductDetail(productKey) {
   const imgs = PRODUCT_GALLERIES[productKey];
   if (!imgs || !imgs.length) return;
+  const wrap = document.querySelector(`[data-gallery-key="${productKey}"]`);
+  const card = wrap ? wrap.closest('.product-card') : null;
+  const nameEl = card ? card.querySelector('.product-name') : null;
+  const descEl = card ? card.querySelector('.product-desc') : null;
+  const priceEl = card ? card.querySelector('.product-price') : null;
+  currentDetailName = nameEl ? nameEl.textContent.trim() : '';
+  currentDetailPrice = priceEl ? priceEl.textContent.trim() : '';
+  document.getElementById('galleryDetailName').textContent = currentDetailName;
+  document.getElementById('galleryDetailPrice').textContent = currentDetailPrice;
+  document.getElementById('galleryDetailDesc').textContent = descEl ? descEl.textContent.trim() : '';
+  document.getElementById('galleryDetailWaBtn').onclick = () => consultarProducto(currentDetailName, currentDetailPrice);
+
   currentGallery = imgs;
   currentGalleryIndex = 0;
-  renderGallery();
+  renderGallery(true);
   document.getElementById('galleryModal').classList.add('open');
 }
 function closeGallery() {
@@ -1519,16 +1605,34 @@ function galleryGoTo(i) {
   currentGalleryIndex = i;
   renderGallery();
 }
-function renderGallery() {
-  document.getElementById('galleryMainImg').src = currentGallery[currentGalleryIndex];
-  const thumbsWrap = document.getElementById('galleryThumbs');
-  thumbsWrap.innerHTML = '';
-  currentGallery.forEach((src, i) => {
-    const t = document.createElement('img');
-    t.src = src; t.className = 'gallery-thumb' + (i === currentGalleryIndex ? ' active' : '');
-    t.onclick = () => galleryGoTo(i);
-    thumbsWrap.appendChild(t);
-  });
+function renderGallery(instant) {
+  const img = document.getElementById('galleryMainImg');
+  const nextSrc = currentGallery[currentGalleryIndex];
+  const paintThumbs = () => {
+    const thumbsWrap = document.getElementById('galleryThumbs');
+    thumbsWrap.innerHTML = '';
+    currentGallery.forEach((src, i) => {
+      const t = document.createElement('img');
+      t.src = src; t.className = 'gallery-thumb' + (i === currentGalleryIndex ? ' active' : '');
+      t.onclick = () => galleryGoTo(i);
+      thumbsWrap.appendChild(t);
+    });
+  };
+  if (instant) {
+    img.style.opacity = '0';
+    img.src = nextSrc;
+    requestAnimationFrame(() => { img.style.opacity = '1'; });
+    paintThumbs();
+    return;
+  }
+  img.style.opacity = '0';
+  img.style.transform = 'scale(0.97)';
+  setTimeout(() => {
+    img.src = nextSrc;
+    img.style.opacity = '1';
+    img.style.transform = 'scale(1)';
+    paintThumbs();
+  }, 220);
 }
 document.addEventListener('keydown', (e) => {
   if (!document.getElementById('galleryModal').classList.contains('open')) return;
@@ -1536,6 +1640,41 @@ document.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowRight') galleryNext();
   if (e.key === 'Escape') closeGallery();
 });
+
+/* ── CICLO AUTOMÁTICO DE FOTOS AL HACER HOVER EN LA VIDRIERA ── */
+function initHoverCycle() {
+  document.querySelectorAll('.product-img-wrap.has-gallery[data-gallery-key]').forEach(wrap => {
+    const key = wrap.dataset.galleryKey;
+    const imgs = PRODUCT_GALLERIES[key];
+    if (!imgs || imgs.length < 2) return;
+    const mainImg = wrap.querySelector('.product-img');
+    if (!mainImg) return;
+    const originalSrc = mainImg.getAttribute('src');
+    let hoverLayer = document.createElement('img');
+    hoverLayer.className = 'product-img-hover-layer';
+    wrap.appendChild(hoverLayer);
+    let idx = 0;
+    let interval = null;
+    wrap.addEventListener('mouseenter', () => {
+      idx = 0;
+      interval = setInterval(() => {
+        idx = (idx + 1) % imgs.length;
+        hoverLayer.src = imgs[idx];
+        hoverLayer.style.opacity = '1';
+        setTimeout(() => {
+          mainImg.src = imgs[idx];
+          hoverLayer.style.opacity = '0';
+        }, 480);
+      }, 1500);
+    });
+    wrap.addEventListener('mouseleave', () => {
+      clearInterval(interval);
+      mainImg.src = originalSrc;
+      hoverLayer.style.opacity = '0';
+    });
+  });
+}
+initHoverCycle();
 
 /* ── SCROLL REVEAL ── */
 const observer = new IntersectionObserver((entries) => {
@@ -1711,4 +1850,3 @@ chatToggle.addEventListener('click', hidePill);
 </script>
 </body>
 </html>
-
