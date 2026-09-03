@@ -111,8 +111,9 @@ nav.scrolled { padding: 0.8rem 3rem; }
 .nav-mobile-menu {
   display: none; position: fixed; top: 64px; left: 0; right: 0;
   background: rgba(242, 234, 216, 0.98); backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--sand); z-index: 199;
+  border-bottom: 1px solid var(--sand); z-index: 250;
   flex-direction: column; padding: 2rem;
+  max-height: calc(100vh - 64px); overflow-y: auto;
 }
 .nav-mobile-menu.open { display: flex; }
 .nav-mobile-menu a {
@@ -214,10 +215,14 @@ nav.scrolled { padding: 0.8rem 3rem; }
   color: var(--brown); font-family: 'Cormorant Garamond', serif;
   font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase;
   text-decoration: none; display: flex; align-items: center; gap: 0.6rem;
-  transition: color 0.3s, gap 0.3s; border: none; background: none; cursor: pointer;
+  transition: color 0.3s ease; border: none; background: none; cursor: pointer;
 }
-.btn-secondary:hover { color: var(--ember); gap: 1rem; }
-.btn-secondary::after { content: '→'; font-size: 1.1rem; }
+.btn-secondary:hover { color: var(--ember); }
+.btn-secondary::after {
+  content: '→'; font-size: 1.1rem; display: inline-block;
+  transition: transform 0.3s ease; will-change: transform;
+}
+.btn-secondary:hover::after { transform: translateX(6px); }
 
 /* ── STATS BAR ── */
 .stats-bar {
@@ -290,7 +295,7 @@ nav.scrolled { padding: 0.8rem 3rem; }
 .product-card.featured .product-img { max-height: 500px; }
 /* imagen vertical: sin recorte, se muestra completa */
 .product-img-vertical {
-  width: 100%; height: auto; max-height: none; object-fit: contain;
+  width: 100%; height: auto; max-height: 420px; object-fit: contain;
   background: var(--parchment);
 }
 .product-card:hover .product-img { filter: sepia(5%) contrast(1.1); transform: scale(1.03); }
@@ -324,11 +329,12 @@ nav.scrolled { padding: 0.8rem 3rem; }
 .product-action {
   font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
   color: var(--brown); display: flex; align-items: center; gap: 0.4rem;
-  transition: color 0.3s, gap 0.3s; cursor: pointer;
+  transition: color 0.3s ease; cursor: pointer;
   background: none; border: none; font-family: 'Cormorant Garamond', serif;
 }
-.product-action:hover { color: var(--ember); gap: 0.8rem; }
-.product-action::after { content: '→'; }
+.product-action:hover { color: var(--ember); }
+.product-action::after { content: '→'; display: inline-block; transition: transform 0.3s ease; will-change: transform; }
+.product-action:hover::after { transform: translateX(4px); }
 
 /* ── FEATURE BAND ── */
 .feature-band {
@@ -977,13 +983,15 @@ footer::before {
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
 }
 .gallery-modal.open .gallery-inner { transform: scale(1) translateY(0); opacity: 1; }
-.gallery-media { flex: 1 1 360px; min-width: 300px; display: flex; flex-direction: column; gap: 1rem; }
-.gallery-info { flex: 1 1 300px; min-width: 260px; display: flex; flex-direction: column; }
+.gallery-media { flex: 1 1 380px; min-width: 300px; display: flex; flex-direction: column; gap: 1.1rem; }
+.gallery-divider { width: 1px; align-self: stretch; background: linear-gradient(180deg, transparent, var(--gold), transparent); flex: 0 0 1px; }
+.gallery-info { flex: 1 1 320px; min-width: 260px; display: flex; flex-direction: column; justify-content: center; }
 .gallery-main-wrap {
   position: relative; width: 100%; aspect-ratio: 4/3;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden; background: var(--parchment);
   border: 1px solid rgba(184,150,78,0.3);
+  box-shadow: inset 0 0 40px rgba(58,36,25,0.06);
 }
 .gallery-main-img {
   max-width: 100%; max-height: 100%; width: 100%; height: 100%; object-fit: contain;
@@ -1017,27 +1025,41 @@ footer::before {
 }
 .gallery-close svg { width: 16px; height: 16px; }
 .gallery-close:hover { background: var(--ember); transform: scale(1.1) rotate(90deg); }
+.gallery-counter {
+  font-size: 0.68rem; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--brown-light); text-align: center;
+}
 .gallery-thumbs {
-  display: flex; gap: 0.6rem; flex-wrap: wrap; justify-content: center;
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+}
+.gallery-thumb-btn {
+  background: none; border: none; padding: 0 0 0.5rem; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
 }
 .gallery-thumb {
-  width: 56px; height: 56px; object-fit: cover; cursor: pointer;
-  border: 2px solid transparent; opacity: 0.55;
-  transition: opacity 0.25s, border-color 0.25s, transform 0.25s;
+  width: 54px; height: 54px; object-fit: cover;
+  opacity: 0.5; filter: grayscale(15%);
+  transition: opacity 0.25s, transform 0.25s, filter 0.25s;
 }
-.gallery-thumb:hover { opacity: 0.9; transform: translateY(-2px); }
-.gallery-thumb.active { opacity: 1; border-color: var(--ember); }
+.gallery-thumb-btn:hover .gallery-thumb { opacity: 0.85; transform: translateY(-2px); filter: grayscale(0%); }
+.gallery-thumb-underline {
+  width: 0; height: 2px; background: var(--ember);
+  transition: width 0.3s ease;
+}
+.gallery-thumb-btn.active .gallery-thumb { opacity: 1; filter: grayscale(0%); }
+.gallery-thumb-btn.active .gallery-thumb-underline { width: 100%; }
 .gallery-detail-name {
-  font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900;
-  color: var(--brown-dark); margin-bottom: 0.6rem; line-height: 1.1;
+  font-family: 'Playfair Display', serif; font-size: 1.9rem; font-weight: 900;
+  color: var(--brown-dark); margin-bottom: 0.9rem; line-height: 1.1;
 }
+.gallery-detail-rule { width: 2.5rem; height: 1px; background: var(--gold); margin: -0.5rem 0 1.2rem; }
 .gallery-detail-price {
-  font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900;
-  color: var(--ember); margin-bottom: 1.2rem;
+  font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 700;
+  color: var(--ember); margin-bottom: 1.4rem;
 }
 .gallery-detail-desc {
-  font-size: 1.02rem; line-height: 1.8; color: var(--text-mid);
-  font-style: italic; margin-bottom: 1.8rem;
+  font-size: 1.02rem; line-height: 1.85; color: var(--text-mid);
+  font-style: italic; margin-bottom: 1.9rem; max-width: 42ch;
 }
 .gallery-detail-wa {
   background: var(--whatsapp); color: white; padding: 1rem 1.6rem;
@@ -1045,12 +1067,17 @@ footer::before {
   letter-spacing: 0.12em; text-transform: uppercase; text-align: center;
   border: none; cursor: pointer; transition: background 0.2s, transform 0.2s;
   display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  width: fit-content;
 }
 .gallery-detail-wa:hover { background: #128C7E; transform: translateY(-2px); }
+@media (max-width: 720px) {
+  .gallery-divider { display: none; }
+  .gallery-detail-wa { width: 100%; }
+}
 @media (max-width: 600px) {
   .gallery-inner { padding: 1.4rem; gap: 1.2rem; }
   .gallery-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
-  .gallery-thumb { width: 46px; height: 46px; }
+  .gallery-thumb { width: 44px; height: 44px; }
   .gallery-detail-name { font-size: 1.4rem; }
   .gallery-detail-price { font-size: 1.25rem; }
 }
@@ -1180,13 +1207,13 @@ footer::before {
     <div class="products-grid">
 
       <!-- COMBO CRIOLLO -->
-      <div class="product-card featured" data-cat="combos">
+      <div class="product-card" data-cat="combos">
         <div class="product-img-wrap has-gallery" data-gallery-key="combo_criollo" onclick="openProductDetail('combo_criollo')">
           <span class="product-badge">Oferta</span>
           <div class="combo-img-split">
-            <img class="split-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo" onerror="this.style.background='#D4C4A0'">
+            <img loading="lazy" decoding="async" class="split-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo" onerror="this.style.background='#D4C4A0'">
             <div class="split-divider"></div>
-            <img class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
+            <img loading="lazy" decoding="async" class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
           </div>
         </div>
         <div class="product-info">
@@ -1203,9 +1230,9 @@ footer::before {
       <div class="product-card" data-cat="combos">
         <div class="product-img-wrap has-gallery" data-gallery-key="combo_camionero" onclick="openProductDetail('combo_camionero')">
           <div class="combo-img-split">
-            <img class="split-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero Algarrobo" onerror="this.style.background='#D4C4A0'">
+            <img loading="lazy" decoding="async" class="split-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero Algarrobo" onerror="this.style.background='#D4C4A0'">
             <div class="split-divider"></div>
-            <img class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
+            <img loading="lazy" decoding="async" class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
           </div>
         </div>
         <div class="product-info">
@@ -1221,7 +1248,7 @@ footer::before {
       <!-- MATE CRIOLLO CALABAZA -->
       <div class="product-card" data-cat="calabaza">
         <div class="product-img-wrap has-gallery" data-gallery-key="criollo_calabaza" onclick="openProductDetail('criollo_calabaza')">
-          <img class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de calabaza" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de calabaza" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Criollo de calabaza</h3>
@@ -1236,7 +1263,7 @@ footer::before {
       <!-- TORPEDO -->
       <div class="product-card" data-cat="calabaza">
         <div class="product-img-wrap has-gallery" data-gallery-key="torpedo" onclick="openProductDetail('torpedo')">
-          <img class="product-img" src="Torpedo_con_virola_de_acero.jpeg" alt="Torpedo con virola de Acero" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="Torpedo_con_virola_de_acero.jpeg" alt="Torpedo con virola de Acero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Torpedo con virola de acero</h3>
@@ -1251,7 +1278,7 @@ footer::before {
       <!-- IMPERIAL DE CALABAZA -->
 <div class="product-card" data-cat="calabaza">
   <div class="product-img-wrap has-gallery" data-gallery-key="imperial_calabaza" onclick="openProductDetail('imperial_calabaza')">
-    <img class="product-img" src="Imperial_de_calabaza.jpeg" alt="Imperial de calabaza" onerror="this.style.background='#D4C4A0'">
+    <img loading="lazy" decoding="async" class="product-img" src="Imperial_de_calabaza.jpeg" alt="Imperial de calabaza" onerror="this.style.background='#D4C4A0'">
   </div>
   <div class="product-info">
     <h3 class="product-name">Imperial de calabaza</h3>
@@ -1266,7 +1293,7 @@ footer::before {
       <!-- IMPERIAL DE CUERO CRUDO CON BASE -->
       <div class="product-card" data-cat="calabaza">
         <div class="product-img-wrap has-gallery" data-gallery-key="imperial_cuero_crudo" onclick="openProductDetail('imperial_cuero_crudo')">
-          <img class="product-img" src="IMG_7694.jpeg" alt="Imperial de cuero crudo con base" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="IMG_7694.jpeg" alt="Imperial de cuero crudo con base" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Imperial de cuero crudo con base</h3>
@@ -1281,7 +1308,7 @@ footer::before {
       <!-- IMPERIAL DE ALPACA -->
       <div class="product-card" data-cat="calabaza">
         <div class="product-img-wrap has-gallery" data-gallery-key="imperial_alpaca" onclick="openProductDetail('imperial_alpaca')">
-          <img class="product-img" src="IMG_7704.jpeg" alt="Imperial de alpaca" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="IMG_7704.jpeg" alt="Imperial de alpaca" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Imperial de alpaca</h3>
@@ -1296,7 +1323,7 @@ footer::before {
       <!-- CAMIONERO 4 PATAS -->
       <div class="product-card" data-cat="calabaza">
         <div class="product-img-wrap has-gallery" data-gallery-key="camionero_4_patas" onclick="openProductDetail('camionero_4_patas')">
-          <img class="product-img" src="IMG_7685.jpeg" alt="Camionero 4 patas" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="IMG_7685.jpeg" alt="Camionero 4 patas" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Camionero 4 patas</h3>
@@ -1311,7 +1338,7 @@ footer::before {
       <!-- IMPERIAL PREMIUM -->
       <div class="product-card product-vertical" data-cat="algarrobo">
         <div class="product-img-wrap has-gallery vertical-wrap" data-gallery-key="imperial_premium" onclick="openProductDetail('imperial_premium')">
-          <img class="product-img product-img-vertical" src="Imperial_de_algarrobo_premium.jpeg" alt="Imperial de algarrobo" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img product-img-vertical" src="Imperial_de_algarrobo_premium.jpeg" alt="Imperial de algarrobo" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Imperial de algarrobo</h3>
@@ -1326,7 +1353,7 @@ footer::before {
       <!-- VAQUITA RANCHERO -->
       <div class="product-card" data-cat="algarrobo">
         <div class="product-img-wrap has-gallery" data-gallery-key="vaquita_ranchero" onclick="openProductDetail('vaquita_ranchero')">
-          <img class="product-img" src="matevaquita_ranchero.jpeg" alt="Mate Vaquita / Ranchero" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="matevaquita_ranchero.jpeg" alt="Mate Vaquita / Ranchero" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Mate vaquita🐄</h3>
@@ -1341,7 +1368,7 @@ footer::before {
       <!-- CAMIONERO CLASICO -->
       <div class="product-card" data-cat="algarrobo">
         <div class="product-img-wrap">
-          <img class="product-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero clásico de Algarrobo" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero clásico de Algarrobo" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Camionero clásico de algarrobo</h3>
@@ -1356,7 +1383,7 @@ footer::before {
       <!-- YERBERA -->
       <div class="product-card" data-cat="accesorios">
         <div class="product-img-wrap has-gallery" data-gallery-key="yerbera" onclick="openProductDetail('yerbera')">
-          <img class="product-img" src="yerbera.jpeg" alt="Yerbera" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="yerbera.jpeg" alt="Yerbera" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Yerbera Fogón</h3>
@@ -1371,7 +1398,7 @@ footer::before {
       <!-- BOMBILLA -->
       <div class="product-card" data-cat="bombillas">
         <div class="product-img-wrap has-gallery" data-gallery-key="bombilla" onclick="openProductDetail('bombilla')">
-          <img class="product-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla pico de loro (Inoxidable)" onerror="this.style.background='#D4C4A0'">
+          <img loading="lazy" decoding="async" class="product-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla pico de loro (Inoxidable)" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Bombilla pico de loro (inoxidable)</h3>
@@ -1477,10 +1504,13 @@ footer::before {
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
       </div>
+      <div class="gallery-counter" id="galleryCounter"></div>
       <div class="gallery-thumbs" id="galleryThumbs"></div>
     </div>
+    <div class="gallery-divider"></div>
     <div class="gallery-info">
       <h3 class="gallery-detail-name" id="galleryDetailName"></h3>
+      <div class="gallery-detail-rule"></div>
       <div class="gallery-detail-price" id="galleryDetailPrice"></div>
       <p class="gallery-detail-desc" id="galleryDetailDesc"></p>
       <button class="gallery-detail-wa" id="galleryDetailWaBtn">
@@ -1629,21 +1659,29 @@ function galleryGoTo(i) {
 function renderGallery(instant) {
   const img = document.getElementById('galleryMainImg');
   const nextSrc = currentGallery[currentGalleryIndex];
-  const paintThumbs = () => {
+  const paint = () => {
     const thumbsWrap = document.getElementById('galleryThumbs');
     thumbsWrap.innerHTML = '';
     currentGallery.forEach((src, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'gallery-thumb-btn' + (i === currentGalleryIndex ? ' active' : '');
+      btn.setAttribute('aria-label', `Ver foto ${i + 1}`);
+      btn.onclick = () => galleryGoTo(i);
       const t = document.createElement('img');
-      t.src = src; t.className = 'gallery-thumb' + (i === currentGalleryIndex ? ' active' : '');
-      t.onclick = () => galleryGoTo(i);
-      thumbsWrap.appendChild(t);
+      t.src = src; t.loading = 'lazy'; t.decoding = 'async'; t.className = 'gallery-thumb';
+      const bar = document.createElement('span');
+      bar.className = 'gallery-thumb-underline';
+      btn.appendChild(t); btn.appendChild(bar);
+      thumbsWrap.appendChild(btn);
     });
+    const counterEl = document.getElementById('galleryCounter');
+    counterEl.textContent = currentGallery.length > 1 ? `${currentGalleryIndex + 1} / ${currentGallery.length}` : '';
   };
   if (instant) {
     img.style.opacity = '0';
     img.src = nextSrc;
     requestAnimationFrame(() => { img.style.opacity = '1'; });
-    paintThumbs();
+    paint();
     return;
   }
   img.style.opacity = '0';
@@ -1652,7 +1690,7 @@ function renderGallery(instant) {
     img.src = nextSrc;
     img.style.opacity = '1';
     img.style.transform = 'scale(1)';
-    paintThumbs();
+    paint();
   }, 220);
 }
 document.addEventListener('keydown', (e) => {
@@ -1871,4 +1909,3 @@ chatToggle.addEventListener('click', hidePill);
 </script>
 </body>
 </html>
-
