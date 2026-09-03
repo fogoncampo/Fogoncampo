@@ -764,13 +764,12 @@ footer::before {
 
 /* ── COMBO SPLIT IMAGE ── */
 .combo-img-split {
-  display: flex; width: 100%; overflow: hidden; position: relative;
+  display: flex; width: 100%; overflow: hidden; position: relative; height: 340px;
 }
 .combo-img-split .split-img {
-  width: 50%; height: auto; max-height: 420px; object-fit: cover; display: block;
+  width: 50%; height: 100%; object-fit: cover; display: block;
   filter: sepia(10%) contrast(1.04); transition: filter 0.4s, transform 0.4s;
 }
-.product-card.featured .combo-img-split .split-img { max-height: 500px; }
 .combo-img-split .split-divider {
   width: 2px; background: rgba(184,150,78,0.5); flex-shrink: 0; z-index: 2;
   position: relative;
@@ -1229,6 +1228,7 @@ footer::before {
       <!-- COMBO CAMIONERO -->
       <div class="product-card" data-cat="combos">
         <div class="product-img-wrap has-gallery" data-gallery-key="combo_camionero" onclick="openProductDetail('combo_camionero')">
+          <span class="product-badge">Oferta</span>
           <div class="combo-img-split">
             <img loading="lazy" decoding="async" class="split-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero Algarrobo" onerror="this.style.background='#D4C4A0'">
             <div class="split-divider"></div>
@@ -1711,25 +1711,41 @@ function initHoverCycle() {
     const originalSrc = mainImg.getAttribute('src');
     let hoverLayer = document.createElement('img');
     hoverLayer.className = 'product-img-hover-layer';
+    if (mainImg.classList.contains('product-img-vertical')) hoverLayer.classList.add('product-img-vertical');
     wrap.appendChild(hoverLayer);
+
+    let preloaded = false;
+    function preloadAll() {
+      if (preloaded) return;
+      preloaded = true;
+      imgs.forEach(src => { const im = new Image(); im.src = src; });
+    }
+
     let idx = 0;
     let interval = null;
+    let leaveTimer = null;
     wrap.addEventListener('mouseenter', () => {
+      clearTimeout(leaveTimer);
+      preloadAll();
       idx = 0;
       interval = setInterval(() => {
         idx = (idx + 1) % imgs.length;
         hoverLayer.src = imgs[idx];
-        hoverLayer.style.opacity = '1';
+        requestAnimationFrame(() => { hoverLayer.style.opacity = '1'; });
         setTimeout(() => {
           mainImg.src = imgs[idx];
           hoverLayer.style.opacity = '0';
-        }, 480);
-      }, 1500);
+        }, 650);
+      }, 2400);
     });
     wrap.addEventListener('mouseleave', () => {
       clearInterval(interval);
-      mainImg.src = originalSrc;
       hoverLayer.style.opacity = '0';
+      mainImg.style.opacity = '0';
+      leaveTimer = setTimeout(() => {
+        mainImg.src = originalSrc;
+        mainImg.style.opacity = '1';
+      }, 350);
     });
   });
 }
