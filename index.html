@@ -5,6 +5,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fogón Mates — Tradición que se comparte</title>
+<meta name="description" content="Mates y accesorios artesanales de calabaza y algarrobo, hechos a mano. Combos, bombillas y piezas únicas. Envíos a todo el país.">
+<link rel="canonical" href="https://fogoncampo.github.io/Fogoncampo/">
+
+<!-- Vista previa al compartir el link (WhatsApp, Instagram, Facebook, etc.) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://fogoncampo.github.io/Fogoncampo/">
+<meta property="og:site_name" content="Fogón Mates">
+<meta property="og:title" content="Fogón Mates — Tradición que se comparte">
+<meta property="og:description" content="Mates y accesorios artesanales de calabaza y algarrobo, hechos a mano. Combos, bombillas y piezas únicas. Envíos a todo el país.">
+<meta property="og:image" content="https://fogoncampo.github.io/Fogoncampo/Mate_Criollo_de_calabaza.jpeg">
+<meta property="og:locale" content="es_AR">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Fogón Mates — Tradición que se comparte">
+<meta name="twitter:description" content="Mates y accesorios artesanales de calabaza y algarrobo, hechos a mano. Combos, bombillas y piezas únicas. Envíos a todo el país.">
+<meta name="twitter:image" content="https://fogoncampo.github.io/Fogoncampo/Mate_Criollo_de_calabaza.jpeg">
+
 <link rel="icon" type="image/png" href="logo2.png">
 <!--
   FAVICON PERSONALIZADO:
@@ -262,9 +279,83 @@ nav.scrolled { padding: 0.8rem 3rem; }
 /* ── PRODUCTS ── */
 .products-section { padding: 0 4rem 6rem; }
 .category-nav {
-  display: flex; justify-content: center; gap: 0; margin-bottom: 3.5rem;
-  border: 1px solid var(--sand); width: fit-content; margin: 0 auto 3.5rem;
+  display: flex; justify-content: center; gap: 0; margin-bottom: 1.4rem;
+  border: 1px solid var(--sand); width: fit-content; margin: 0 auto 1.4rem;
   flex-wrap: wrap;
+}
+.price-filter {
+  max-width: 340px; margin: 0 auto 3.5rem; text-align: center;
+}
+.price-filter-label {
+  display: block; font-size: 0.78rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--brown-light); margin-bottom: 0.6rem;
+}
+.price-filter-label span { color: var(--ember); font-weight: 700; }
+.price-filter input[type="range"] {
+  width: 100%; -webkit-appearance: none; appearance: none;
+  height: 2px; background: var(--sand); outline: none; cursor: pointer;
+}
+.price-filter input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--ember); border: 2px solid var(--cream);
+  box-shadow: 0 0 0 1px var(--ember); cursor: pointer;
+}
+.price-filter input[type="range"]::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--ember); border: 2px solid var(--cream);
+  box-shadow: 0 0 0 1px var(--ember); cursor: pointer;
+}
+
+/* ── BUSCADOR DE REGALO ── */
+.gift-finder-trigger {
+  max-width: 420px; margin: 0 auto 2.5rem; text-align: center;
+  padding: 0.9rem 1.4rem; border: 1px dashed var(--gold);
+  cursor: pointer; transition: background 0.25s ease, border-color 0.25s ease;
+}
+.gift-finder-trigger:hover { background: var(--parchment); border-color: var(--ember); }
+.gift-finder-trigger span {
+  font-family: 'Cormorant Garamond', serif; font-style: italic;
+  font-size: 1.05rem; color: var(--brown-dark);
+}
+.gift-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(26, 13, 5, 0.92);
+  align-items: center; justify-content: center; padding: 2rem;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.gift-modal.open { display: flex; opacity: 1; }
+.gift-inner {
+  position: relative; max-width: 460px; width: 100%;
+  background: var(--cream); border: 1px solid rgba(184,150,78,0.4);
+  padding: 2.4rem 2rem; text-align: center;
+  transform: scale(0.94) translateY(14px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+.gift-modal.open .gift-inner { transform: scale(1) translateY(0); opacity: 1; }
+.gift-question {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900;
+  color: var(--brown-dark); margin-bottom: 1.6rem;
+}
+.gift-options { display: flex; flex-direction: column; gap: 0.8rem; }
+.gift-option-btn {
+  background: var(--parchment); border: 1px solid var(--sand); color: var(--brown-dark);
+  padding: 0.9rem 1.2rem; font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+  cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.gift-option-btn:hover { background: var(--brown-dark); color: var(--cream); border-color: var(--brown-dark); transform: translateY(-2px); }
+.gift-results-grid { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.6rem; text-align: left; }
+.gift-result-card {
+  display: flex; gap: 1rem; align-items: center; background: var(--parchment);
+  border: 1px solid var(--sand); padding: 0.8rem; cursor: pointer; transition: transform 0.2s ease;
+}
+.gift-result-card:hover { transform: translateY(-2px); }
+.gift-result-card img { width: 64px; height: 64px; object-fit: cover; flex-shrink: 0; }
+.gift-result-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--brown-dark); margin: 0 0 0.2rem; }
+.gift-result-price { font-size: 0.85rem; color: var(--ember); font-weight: 700; }
+.gift-restart {
+  background: none; border: none; color: var(--brown-light); text-decoration: underline;
+  font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; cursor: pointer;
 }
 .cat-btn {
   background: none; border: none; padding: 0.75rem 1.8rem;
@@ -1194,6 +1285,9 @@ footer::before {
     <div class="section-rule"></div>
     <p class="section-subtitle">Cada pieza, una historia. Cada mate, una tradición.</p>
   </div>
+  <div class="gift-finder-trigger" onclick="openGiftFinder()">
+    <span>🎁 ¿Buscás un regalo? Te ayudamos a elegir en 10 segundos</span>
+  </div>
   <div class="products-section">
     <div class="category-nav">
       <button class="cat-btn active" data-cat="todos">Todos</button>
@@ -1203,10 +1297,14 @@ footer::before {
       <button class="cat-btn" data-cat="accesorios">Accesorios</button>
       <button class="cat-btn" data-cat="bombillas">Bombillas</button>
     </div>
+    <div class="price-filter">
+      <label for="priceRange" class="price-filter-label">Hasta <span id="priceRangeVal">$50.000</span></label>
+      <input type="range" id="priceRange" min="6500" max="50000" step="500" value="50000">
+    </div>
     <div class="products-grid">
 
       <!-- COMBO CRIOLLO -->
-      <div class="product-card" data-cat="combos">
+      <div class="product-card" data-cat="combos" data-price="21999">
         <div class="product-img-wrap has-gallery" data-gallery-key="combo_criollo" onclick="openProductDetail('combo_criollo')">
           <span class="product-badge">Oferta</span>
           <div class="combo-img-split">
@@ -1226,11 +1324,11 @@ footer::before {
       </div>
 
       <!-- COMBO CAMIONERO -->
-      <div class="product-card" data-cat="combos">
+      <div class="product-card" data-cat="combos" data-price="25500">
         <div class="product-img-wrap has-gallery" data-gallery-key="combo_camionero" onclick="openProductDetail('combo_camionero')">
           <span class="product-badge">Oferta</span>
           <div class="combo-img-split">
-            <img loading="lazy" decoding="async" class="split-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero Algarrobo" onerror="this.style.background='#D4C4A0'">
+            <img loading="lazy" decoding="async" class="split-img" src="IMG_7691.jpeg" alt="Camionero Algarrobo" onerror="this.style.background='#D4C4A0'">
             <div class="split-divider"></div>
             <img loading="lazy" decoding="async" class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
           </div>
@@ -1246,7 +1344,7 @@ footer::before {
       </div>
 
       <!-- MATE CRIOLLO CALABAZA -->
-      <div class="product-card" data-cat="calabaza">
+      <div class="product-card" data-cat="calabaza" data-price="17999.99">
         <div class="product-img-wrap has-gallery" data-gallery-key="criollo_calabaza" onclick="openProductDetail('criollo_calabaza')">
           <img loading="lazy" decoding="async" class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de calabaza" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1261,7 +1359,7 @@ footer::before {
       </div>
 
       <!-- TORPEDO -->
-      <div class="product-card" data-cat="calabaza">
+      <div class="product-card" data-cat="calabaza" data-price="23999.99">
         <div class="product-img-wrap has-gallery" data-gallery-key="torpedo" onclick="openProductDetail('torpedo')">
           <img loading="lazy" decoding="async" class="product-img" src="Torpedo_con_virola_de_acero.jpeg" alt="Torpedo con virola de Acero" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1276,7 +1374,7 @@ footer::before {
       </div>
 
       <!-- IMPERIAL DE CALABAZA -->
-<div class="product-card" data-cat="calabaza">
+<div class="product-card" data-cat="calabaza" data-price="30000">
   <div class="product-img-wrap has-gallery" data-gallery-key="imperial_calabaza" onclick="openProductDetail('imperial_calabaza')">
     <img loading="lazy" decoding="async" class="product-img" src="Imperial_de_calabaza.jpeg" alt="Imperial de calabaza" onerror="this.style.background='#D4C4A0'">
   </div>
@@ -1291,7 +1389,7 @@ footer::before {
 </div>
 
       <!-- IMPERIAL DE CUERO CRUDO CON BASE -->
-      <div class="product-card" data-cat="calabaza">
+      <div class="product-card" data-cat="calabaza" data-price="50000">
         <div class="product-img-wrap has-gallery" data-gallery-key="imperial_cuero_crudo" onclick="openProductDetail('imperial_cuero_crudo')">
           <img loading="lazy" decoding="async" class="product-img" src="IMG_7694.jpeg" alt="Imperial de cuero crudo con base" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1306,7 +1404,7 @@ footer::before {
       </div>
 
       <!-- IMPERIAL DE ALPACA -->
-      <div class="product-card" data-cat="calabaza">
+      <div class="product-card" data-cat="calabaza" data-price="37000">
         <div class="product-img-wrap has-gallery" data-gallery-key="imperial_alpaca" onclick="openProductDetail('imperial_alpaca')">
           <img loading="lazy" decoding="async" class="product-img" src="IMG_7704.jpeg" alt="Imperial de alpaca" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1321,7 +1419,7 @@ footer::before {
       </div>
 
       <!-- CAMIONERO 4 PATAS -->
-      <div class="product-card" data-cat="calabaza">
+      <div class="product-card" data-cat="calabaza" data-price="18500">
         <div class="product-img-wrap has-gallery" data-gallery-key="camionero_4_patas" onclick="openProductDetail('camionero_4_patas')">
           <img loading="lazy" decoding="async" class="product-img" src="IMG_7685.jpeg" alt="Camionero 4 patas" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1336,7 +1434,7 @@ footer::before {
       </div>
 
       <!-- IMPERIAL PREMIUM -->
-      <div class="product-card product-vertical" data-cat="algarrobo">
+      <div class="product-card product-vertical" data-cat="algarrobo" data-price="27200">
         <div class="product-img-wrap has-gallery vertical-wrap" data-gallery-key="imperial_premium" onclick="openProductDetail('imperial_premium')">
           <img loading="lazy" decoding="async" class="product-img product-img-vertical" src="Imperial_de_algarrobo_premium.jpeg" alt="Imperial de algarrobo" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1351,7 +1449,7 @@ footer::before {
       </div>
 
       <!-- VAQUITA RANCHERO -->
-      <div class="product-card" data-cat="algarrobo">
+      <div class="product-card" data-cat="algarrobo" data-price="39500">
         <div class="product-img-wrap has-gallery" data-gallery-key="vaquita_ranchero" onclick="openProductDetail('vaquita_ranchero')">
           <img loading="lazy" decoding="async" class="product-img" src="matevaquita_ranchero.jpeg" alt="Mate Vaquita / Ranchero" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1366,9 +1464,9 @@ footer::before {
       </div>
 
       <!-- CAMIONERO CLASICO -->
-      <div class="product-card" data-cat="algarrobo">
-        <div class="product-img-wrap">
-          <img loading="lazy" decoding="async" class="product-img" src="Camionero_clásico_de_algarobo.jpeg" alt="Camionero clásico de Algarrobo" onerror="this.style.background='#D4C4A0'">
+      <div class="product-card" data-cat="algarrobo" data-price="21500">
+        <div class="product-img-wrap has-gallery" data-gallery-key="camionero_clasico" onclick="openProductDetail('camionero_clasico')">
+          <img loading="lazy" decoding="async" class="product-img" src="IMG_7691.jpeg" alt="Camionero clásico de Algarrobo" onerror="this.style.background='#D4C4A0'">
         </div>
         <div class="product-info">
           <h3 class="product-name">Camionero clásico de algarrobo</h3>
@@ -1381,7 +1479,7 @@ footer::before {
       </div>
 
       <!-- YERBERA -->
-      <div class="product-card" data-cat="accesorios">
+      <div class="product-card" data-cat="accesorios" data-price="14500">
         <div class="product-img-wrap has-gallery" data-gallery-key="yerbera" onclick="openProductDetail('yerbera')">
           <img loading="lazy" decoding="async" class="product-img" src="yerbera.jpeg" alt="Yerbera" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1396,7 +1494,7 @@ footer::before {
       </div>
 
       <!-- BOMBILLA -->
-      <div class="product-card" data-cat="bombillas">
+      <div class="product-card" data-cat="bombillas" data-price="6500">
         <div class="product-img-wrap has-gallery" data-gallery-key="bombilla" onclick="openProductDetail('bombilla')">
           <img loading="lazy" decoding="async" class="product-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla pico de loro (Inoxidable)" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1521,6 +1619,36 @@ footer::before {
   </div>
 </div>
 
+<!-- BUSCADOR DE REGALO -->
+<div class="gift-modal" id="giftModal" onclick="if(event.target===this) closeGiftFinder()">
+  <div class="gift-inner">
+    <button class="gallery-close" onclick="closeGiftFinder()" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+    <div id="giftStep1">
+      <p class="gift-question">¿Cuál es tu presupuesto?</p>
+      <div class="gift-options">
+        <button class="gift-option-btn" onclick="giftSetBudget(12000)">Hasta $18.000</button>
+        <button class="gift-option-btn" onclick="giftSetBudget(24000)">$18.000 – $32.000</button>
+        <button class="gift-option-btn" onclick="giftSetBudget(40000)">Más de $32.000</button>
+      </div>
+    </div>
+    <div id="giftStep2" style="display:none;">
+      <p class="gift-question">¿Qué estilo preferís?</p>
+      <div class="gift-options">
+        <button class="gift-option-btn" onclick="giftSetStyle('calabaza')">Calabaza natural</button>
+        <button class="gift-option-btn" onclick="giftSetStyle('algarrobo')">Algarrobo oscuro</button>
+        <button class="gift-option-btn" onclick="giftSetStyle('cualquiera')">Sorprendeme</button>
+      </div>
+    </div>
+    <div id="giftResults" style="display:none;">
+      <p class="gift-question">Estos son los que más pegan:</p>
+      <div class="gift-results-grid" id="giftResultsGrid"></div>
+      <button class="gift-restart" onclick="restartGiftFinder()">Empezar de nuevo</button>
+    </div>
+  </div>
+</div>
+
 <!-- CHATBOT VIZCACHITA -->
 <div class="chat-bubble" id="chatBubble">
   <button class="chat-toggle" id="chatToggle" aria-label="Hablar con Vizcachita">
@@ -1583,17 +1711,37 @@ window.addEventListener('scroll', () => { nav.classList.toggle('scrolled', windo
 hamburger.addEventListener('click', () => { hamburger.classList.toggle('open'); mobileMenu.classList.toggle('open'); });
 function closeMobile() { hamburger.classList.remove('open'); mobileMenu.classList.remove('open'); }
 
-/* ── CATEGORY FILTER ── */
+/* ── FILTROS: CATEGORÍA + PRECIO ── */
 const catBtns = document.querySelectorAll('.cat-btn');
 const cards = document.querySelectorAll('.product-card');
+const priceRange = document.getElementById('priceRange');
+const priceRangeVal = document.getElementById('priceRangeVal');
+let activeCat = 'todos';
+
+function applyFilters() {
+  const maxPrice = Number(priceRange.value);
+  cards.forEach(card => {
+    const matchesCat = activeCat === 'todos' || card.dataset.cat === activeCat;
+    const matchesPrice = Number(card.dataset.price) <= maxPrice;
+    card.style.display = (matchesCat && matchesPrice) ? '' : 'none';
+  });
+}
+
 catBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     catBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    const cat = btn.dataset.cat;
-    cards.forEach(card => { card.style.display = (cat === 'todos' || card.dataset.cat === cat) ? '' : 'none'; });
+    activeCat = btn.dataset.cat;
+    applyFilters();
   });
 });
+
+if (priceRange) {
+  priceRange.addEventListener('input', () => {
+    priceRangeVal.textContent = '$' + Number(priceRange.value).toLocaleString('es-AR');
+    applyFilters();
+  });
+}
 
 /* ── PRODUCT CONSULT ── */
 function consultarProducto(nombre, precio) {
@@ -1614,7 +1762,8 @@ const PRODUCT_GALLERIES = {
   imperial_alpaca: ['IMG_7704.jpeg', 'IMG_7707.jpeg'],
   camionero_4_patas: ['IMG_7685.jpeg', 'IMG_7689.jpeg', 'IMG_7676.jpeg', 'IMG_7677.jpeg', 'IMG_7701.jpeg', 'IMG_7703.jpeg'],
   combo_criollo: ['IMG_5982.jpeg', 'IMG_5981.jpeg', 'IMG_5989.jpeg'],
-  combo_camionero: ['Camionero_clásico_de_algarobo.jpeg', 'IMG_5989.jpeg']
+  combo_camionero: ['IMG_7691.jpeg', 'IMG_5989.jpeg'],
+  camionero_clasico: ['IMG_7691.jpeg', 'IMG_7693.jpeg']
 };
 let currentGallery = [];
 let currentGalleryIndex = 0;
@@ -1750,6 +1899,65 @@ function initHoverCycle() {
   });
 }
 initHoverCycle();
+
+/* ── BUSCADOR DE REGALO ── */
+const GIFT_PRODUCTS = [
+  { key: 'combo_criollo', name: 'Combo criollo + bombilla', price: 21999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
+  { key: 'combo_camionero', name: 'Combo camionero de algarrobo + bombilla', price: 25500, cat: 'algarrobo', img: 'IMG_7691.jpeg' },
+  { key: 'criollo_calabaza', name: 'Criollo de calabaza', price: 17999.99, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
+  { key: 'torpedo', name: 'Torpedo con virola de acero', price: 23999.99, cat: 'calabaza', img: 'Torpedo_con_virola_de_acero.jpeg' },
+  { key: 'imperial_calabaza', name: 'Imperial de calabaza', price: 30000, cat: 'calabaza', img: 'Imperial_de_calabaza.jpeg' },
+  { key: 'imperial_cuero_crudo', name: 'Imperial de cuero crudo con base', price: 50000, cat: 'calabaza', img: 'IMG_7694.jpeg' },
+  { key: 'imperial_alpaca', name: 'Imperial de alpaca', price: 37000, cat: 'calabaza', img: 'IMG_7704.jpeg' },
+  { key: 'camionero_4_patas', name: 'Camionero 4 patas', price: 18500, cat: 'calabaza', img: 'IMG_7685.jpeg' },
+  { key: 'imperial_premium', name: 'Imperial de algarrobo', price: 27200, cat: 'algarrobo', img: 'Imperial_de_algarrobo_premium.jpeg' },
+  { key: 'vaquita_ranchero', name: 'Mate vaquita', price: 39500, cat: 'algarrobo', img: 'matevaquita_ranchero.jpeg' },
+  { key: 'camionero_clasico', name: 'Camionero clásico de algarrobo', price: 21500, cat: 'algarrobo', img: 'IMG_7691.jpeg' },
+  { key: 'yerbera', name: 'Yerbera Fogón', price: 14500, cat: 'accesorios', img: 'yerbera.jpeg' },
+  { key: 'bombilla', name: 'Bombilla pico de loro (inoxidable)', price: 6500, cat: 'accesorios', img: 'Bombilla_pico_de_loro__inoxidable_.jpeg' }
+];
+let giftBudget = null;
+
+function openGiftFinder() {
+  document.getElementById('giftStep1').style.display = '';
+  document.getElementById('giftStep2').style.display = 'none';
+  document.getElementById('giftResults').style.display = 'none';
+  document.getElementById('giftModal').classList.add('open');
+}
+function closeGiftFinder() {
+  document.getElementById('giftModal').classList.remove('open');
+}
+function restartGiftFinder() {
+  giftBudget = null;
+  document.getElementById('giftStep1').style.display = '';
+  document.getElementById('giftStep2').style.display = 'none';
+  document.getElementById('giftResults').style.display = 'none';
+}
+function giftSetBudget(midpoint) {
+  giftBudget = midpoint;
+  document.getElementById('giftStep1').style.display = 'none';
+  document.getElementById('giftStep2').style.display = '';
+}
+function giftSetStyle(style) {
+  let candidates = style === 'cualquiera' ? GIFT_PRODUCTS.slice() : GIFT_PRODUCTS.filter(p => p.cat === style);
+  if (candidates.length < 3) candidates = GIFT_PRODUCTS.slice();
+  candidates.sort((a, b) => Math.abs(a.price - giftBudget) - Math.abs(b.price - giftBudget));
+  const top = candidates.slice(0, 3);
+
+  const grid = document.getElementById('giftResultsGrid');
+  grid.innerHTML = '';
+  top.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'gift-result-card';
+    card.innerHTML = `<img src="${p.img}" alt="${p.name}" loading="lazy">
+      <div><p class="gift-result-name">${p.name}</p><p class="gift-result-price">$${p.price.toLocaleString('es-AR')}</p></div>`;
+    card.onclick = () => { closeGiftFinder(); openProductDetail(p.key); };
+    grid.appendChild(card);
+  });
+
+  document.getElementById('giftStep2').style.display = 'none';
+  document.getElementById('giftResults').style.display = '';
+}
 
 /* ── SCROLL REVEAL ── */
 const observer = new IntersectionObserver((entries) => {
