@@ -817,6 +817,8 @@ footer::before {
   /* ── FLOATING BUTTONS ── */
   .float-btns { bottom: 1.2rem; right: 1rem; }
   .float-btn { width: 46px; height: 46px; }
+  .cart-fab { width: 46px; height: 46px; }
+  .cart-fab svg { width: 20px; height: 20px; }
 
   /* ── STATS ── */
   .stats-bar { padding: 1.2rem 1rem; gap: 0.8rem; }
@@ -1202,12 +1204,53 @@ footer::before {
 }
 .ronda-card {
   background: var(--cream); border: 1px solid rgba(184, 150, 78, 0.25);
-  overflow: hidden; transition: transform 0.35s ease, box-shadow 0.35s ease;
+  overflow: hidden; transition: transform 0.35s ease, box-shadow 0.35s ease; cursor: pointer;
 }
 .ronda-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(58, 36, 25, 0.18); }
 .ronda-card img {
   width: 100%; height: 220px; object-fit: cover; display: block;
   filter: sepia(8%) contrast(1.03);
+}
+
+/* lightbox de la Ronda Fogonera */
+.ronda-lightbox {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(26, 13, 5, 0.94);
+  align-items: center; justify-content: center; padding: 2rem;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.ronda-lightbox.open { display: flex; opacity: 1; }
+.ronda-lightbox-inner {
+  position: relative; max-width: 560px; width: 100%;
+  display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  transform: scale(0.94) translateY(14px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+.ronda-lightbox.open .ronda-lightbox-inner { transform: scale(1) translateY(0); opacity: 1; }
+.ronda-lightbox-img { max-width: 100%; max-height: 62vh; object-fit: contain; border: 1px solid rgba(184,150,78,0.4); background: var(--brown-dark); }
+.ronda-lightbox-close {
+  position: absolute; top: -3.2rem; right: 0; background: none; border: none;
+  cursor: pointer; color: var(--cream); width: 32px; height: 32px;
+}
+.ronda-lightbox-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  background: rgba(242,234,216,0.15); border: none; border-radius: 50%;
+  width: 48px; height: 48px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--cream); transition: background 0.2s ease;
+}
+.ronda-lightbox-arrow:hover { background: rgba(242,234,216,0.3); }
+.ronda-lightbox-arrow svg { width: 24px; height: 24px; }
+.ronda-lightbox-prev { left: -1rem; }
+.ronda-lightbox-next { right: -1rem; }
+.ronda-lightbox-info { text-align: center; }
+.ronda-lightbox-user {
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; color: var(--gold-light);
+}
+.ronda-lightbox-caption { font-size: 0.95rem; font-style: italic; color: var(--cream); opacity: 0.85; margin-top: 0.3rem; }
+@media (max-width: 640px) {
+  .ronda-lightbox-arrow { width: 40px; height: 40px; }
+  .ronda-lightbox-prev { left: -0.4rem; }
+  .ronda-lightbox-next { right: -0.4rem; }
 }
 .ronda-card-info { padding: 1rem 1.1rem; }
 .ronda-card-user {
@@ -1311,11 +1354,13 @@ footer::before {
 .podium { display: flex; justify-content: center; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
 .podium-card {
   background: var(--brown-dark); color: var(--cream); padding: 1.5rem 1.2rem;
-  min-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  min-width: 130px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem;
   position: relative; transition: transform 0.3s ease; border: 1px solid rgba(184,150,78,0.4);
 }
 .podium-card:hover { transform: translateY(-8px); }
-.podium-card.gold { padding-top: 2rem; box-shadow: 0 0 30px rgba(184,150,78,0.4); }
+.podium-card.gold { min-height: 340px; padding-top: 2.2rem; box-shadow: 0 0 30px rgba(184,150,78,0.4); z-index: 2; }
+.podium-card.silver { min-height: 270px; }
+.podium-card.bronze { min-height: 215px; }
 .podium-medal { font-size: 2rem; animation: medalBounce 2.4s ease-in-out infinite; }
 .podium-code { font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 0.04em; font-size: 1.05rem; color: var(--gold-light); }
 .podium-pct { font-size: 0.85rem; }
@@ -1336,13 +1381,24 @@ footer::before {
 
 /* ══════════════════════════ CARRITO ══════════════════════════ */
 .cart-fab {
-  position: fixed; bottom: 5.6rem; right: 1.6rem; z-index: 460;
-  width: 56px; height: 56px; border-radius: 50%;
+  position: relative; width: 56px; height: 56px; border-radius: 50%;
   background: var(--brown-dark); border: none; cursor: pointer;
   display: flex; align-items: center; justify-content: center;
   box-shadow: 0 8px 24px rgba(58,36,25,0.35); transition: background 0.3s, transform 0.3s;
 }
 .cart-fab:hover { background: var(--ember); transform: scale(1.06); }
+.cart-fab-bump { animation: cartFabBump 0.35s ease; }
+@keyframes cartFabBump {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+.cart-flyer {
+  position: fixed; z-index: 900; width: 64px; height: 64px;
+  object-fit: cover; border-radius: 50%; border: 2px solid var(--cream);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35); pointer-events: none;
+  top: 0; left: 0; will-change: transform;
+}
 .cart-fab svg { width: 24px; height: 24px; color: var(--cream); }
 .cart-fab-badge {
   position: absolute; top: -4px; right: -4px;
@@ -1432,7 +1488,6 @@ footer::before {
 
 @media (max-width: 720px) {
   .ronda-section { padding: 3.5rem 1.2rem 4rem; }
-  .cart-fab { bottom: 5rem; right: 1rem; }
 }
 
 @media (max-width: 600px) {
@@ -1592,7 +1647,7 @@ footer::before {
           <div class="product-footer">
             <div><span class="product-price-old">$25.000</span><span class="product-price">$21.999</span></div>
             <button class="product-action" onclick="consultarProducto('Combo criollo + bombilla', '$21.999')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_criollo','Combo criollo + bombilla',21999,'Mate_Criollo_de_calabaza.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_criollo','Combo criollo + bombilla',21999,'Mate_Criollo_de_calabaza.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1613,7 +1668,7 @@ footer::before {
           <div class="product-footer">
             <div><span class="product-price-old">$28.000</span><span class="product-price">$25.500</span></div>
             <button class="product-action" onclick="consultarProducto('Combo camionero de algarrobo + bombilla', '$25.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_camionero','Combo camionero de algarrobo + bombilla',25500,'IMG_7691.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_camionero','Combo camionero de algarrobo + bombilla',25500,'IMG_7691.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1629,7 +1684,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$17.999,99</span>
             <button class="product-action" onclick="consultarProducto('Criollo de calabaza', '$17.999,99')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('criollo_calabaza','Criollo de calabaza',17999.99,'Mate_Criollo_de_calabaza.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('criollo_calabaza','Criollo de calabaza',17999.99,'Mate_Criollo_de_calabaza.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1645,7 +1700,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$23.999,99</span>
             <button class="product-action" onclick="consultarProducto('Torpedo con virola de acero', '$23.999,99')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('torpedo','Torpedo con virola de acero',23999.99,'Torpedo_con_virola_de_acero.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('torpedo','Torpedo con virola de acero',23999.99,'Torpedo_con_virola_de_acero.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1661,7 +1716,7 @@ footer::before {
     <div class="product-footer">
       <span class="product-price">$30.000</span>
       <button class="product-action" onclick="consultarProducto('Imperial de calabaza', '$30.000')">Consultar</button>
-      <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_calabaza','Imperial de calabaza',30000,'Imperial_de_calabaza.jpeg')">🛒 Agregar</button>
+      <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_calabaza','Imperial de calabaza',30000,'Imperial_de_calabaza.jpeg',this)">🛒 Agregar</button>
     </div>
   </div>
 </div>
@@ -1677,7 +1732,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$50.000</span>
             <button class="product-action" onclick="consultarProducto('Imperial de cuero crudo con base', '$50.000')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_cuero_crudo','Imperial de cuero crudo con base',50000,'IMG_7694.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_cuero_crudo','Imperial de cuero crudo con base',50000,'IMG_7694.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1693,7 +1748,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$37.000</span>
             <button class="product-action" onclick="consultarProducto('Imperial de alpaca', '$37.000')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_alpaca','Imperial de alpaca',37000,'IMG_7704.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_alpaca','Imperial de alpaca',37000,'IMG_7704.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1709,7 +1764,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$18.500</span>
             <button class="product-action" onclick="consultarProducto('Camionero 4 patas', '$18.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_4_patas','Camionero 4 patas',18500,'IMG_7685.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_4_patas','Camionero 4 patas',18500,'IMG_7685.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1725,7 +1780,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$27.200</span>
             <button class="product-action" onclick="consultarProducto('Imperial de algarrobo', '$27.200')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_premium','Imperial de algarrobo',27200,'Imperial_de_algarrobo_premium.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_premium','Imperial de algarrobo',27200,'Imperial_de_algarrobo_premium.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1741,7 +1796,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$39.500</span>
             <button class="product-action" onclick="consultarProducto('Mate vaquita', '$39.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('vaquita_ranchero','Mate vaquita',39500,'matevaquita_ranchero.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('vaquita_ranchero','Mate vaquita',39500,'matevaquita_ranchero.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1757,7 +1812,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$21.500</span>
             <button class="product-action" onclick="consultarProducto('Camionero clásico de algarrobo', '$21.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_clasico','Camionero clásico de algarrobo',21500,'IMG_7691.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_clasico','Camionero clásico de algarrobo',21500,'IMG_7691.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1773,7 +1828,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$14.500</span>
             <button class="product-action" onclick="consultarProducto('Yerbera Fogón', '$14.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('yerbera','Yerbera Fogón',14500,'yerbera.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('yerbera','Yerbera Fogón',14500,'yerbera.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1789,7 +1844,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$6.500</span>
             <button class="product-action" onclick="consultarProducto('Bombilla pico de loro (inoxidable)', '$6.500')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('bombilla','Bombilla pico de loro (inoxidable)',6500,'Bombilla_pico_de_loro__inoxidable_.jpeg')">🛒 Agregar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('bombilla','Bombilla pico de loro (inoxidable)',6500,'Bombilla_pico_de_loro__inoxidable_.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1837,39 +1892,58 @@ footer::before {
   <div class="ronda-counter">🔥 <span id="rondaCounterNum">5</span> fogoneros ya se sumaron a la ronda</div>
 
   <div class="ronda-grid">
-    <div class="ronda-card">
+    <div class="ronda-card" onclick="openRondaLightbox(0)">
       <img loading="lazy" decoding="async" src="ronda_rama_nunez.jpeg" alt="Mate de @rama_nunez_">
       <div class="ronda-card-info">
         <div class="ronda-card-user">@rama_nunez_</div>
         <div class="ronda-card-caption">A @rama_nunez_ le encantó su imperial de algarrobo 🧉🔥</div>
       </div>
     </div>
-    <div class="ronda-card">
+    <div class="ronda-card" onclick="openRondaLightbox(1)">
       <img loading="lazy" decoding="async" src="ronda_santivillagarcia.jpeg" alt="Combo de @santivillagarcia">
       <div class="ronda-card-info">
         <div class="ronda-card-user">@santivillagarcia</div>
         <div class="ronda-card-caption">@santivillagarcia mostrando su combo Fogón bien completo 🧉🔥</div>
       </div>
     </div>
-    <div class="ronda-card">
+    <div class="ronda-card" onclick="openRondaLightbox(2)">
       <img loading="lazy" decoding="async" src="ronda_tomyandress.jpeg" alt="Mate y yerbera de @tomyandress">
       <div class="ronda-card-info">
         <div class="ronda-card-user">@tomyandress</div>
         <div class="ronda-card-caption">@tomyandress con su mate y su yerbera Fogón, combo completo 🧉🔥</div>
       </div>
     </div>
-    <div class="ronda-card">
+    <div class="ronda-card" onclick="openRondaLightbox(3)">
       <img loading="lazy" decoding="async" src="ronda_agustina_palermo.jpeg" alt="Torpedo de @agustina.palermoo">
       <div class="ronda-card-info">
         <div class="ronda-card-user">@agustina.palermoo</div>
         <div class="ronda-card-caption">@agustina.palermoo con su torpedo recién llegado, combo Fogón completo 🧉🔥</div>
       </div>
     </div>
-    <div class="ronda-card">
+    <div class="ronda-card" onclick="openRondaLightbox(4)">
       <img loading="lazy" decoding="async" src="ronda_valendevanna.jpeg" alt="Mate y termo de @valendevanna_">
       <div class="ronda-card-info">
         <div class="ronda-card-user">@valendevanna_</div>
         <div class="ronda-card-caption">@valendevanna_ listo para cebar con su termo y mate Fogón 🧉🔥</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ronda-lightbox" id="rondaLightbox" onclick="if(event.target===this) closeRondaLightbox()">
+    <div class="ronda-lightbox-inner">
+      <button class="ronda-lightbox-close" onclick="closeRondaLightbox()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+      </button>
+      <button class="ronda-lightbox-arrow ronda-lightbox-prev" onclick="rondaLightboxNav(-1)" aria-label="Anterior">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <img class="ronda-lightbox-img" id="rondaLightboxImg" src="" alt="">
+      <button class="ronda-lightbox-arrow ronda-lightbox-next" onclick="rondaLightboxNav(1)" aria-label="Siguiente">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <div class="ronda-lightbox-info">
+        <div class="ronda-lightbox-user" id="rondaLightboxUser"></div>
+        <div class="ronda-lightbox-caption" id="rondaLightboxCaption"></div>
       </div>
     </div>
   </div>
@@ -1937,17 +2011,17 @@ footer::before {
   <div class="sorteo-panel" id="panelCupones">
     <div class="sorteo-countdown" id="countdownCupones">⏳ cargando...</div>
     <div class="podium">
-      <div class="podium-card silver">
-        <span class="podium-medal">🥈</span>
-        <span class="podium-code">2° puesto</span>
-        <span class="podium-pct">25% OFF</span>
-        <span class="podium-min">Mínimo $20.000</span>
-      </div>
       <div class="podium-card gold">
         <span class="podium-medal">🥇</span>
         <span class="podium-code">1° puesto</span>
         <span class="podium-pct">30% OFF</span>
         <span class="podium-min">Mínimo $35.000</span>
+      </div>
+      <div class="podium-card silver">
+        <span class="podium-medal">🥈</span>
+        <span class="podium-code">2° puesto</span>
+        <span class="podium-pct">25% OFF</span>
+        <span class="podium-min">Mínimo $20.000</span>
       </div>
       <div class="podium-card bronze">
         <span class="podium-medal">🥉</span>
@@ -2012,6 +2086,10 @@ footer::before {
 
 <!-- FLOATING BUTTONS -->
 <div class="float-btns">
+  <button class="cart-fab" id="cartFab" onclick="openCart()" aria-label="Ver carrito">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span class="cart-fab-badge" id="cartFabBadge" style="display:none;">0</span>
+  </button>
   <a href="https://www.instagram.com/fogonmates/" target="_blank" rel="noopener" class="float-btn float-btn-ig" title="Instagram">
     <svg viewBox="0 0 24 24" fill="white"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
   </a>
@@ -2019,12 +2097,6 @@ footer::before {
     <svg viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
   </a>
 </div>
-
-<!-- CARRITO -->
-<button class="cart-fab" id="cartFab" onclick="openCart()" aria-label="Ver carrito">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-  <span class="cart-fab-badge" id="cartFabBadge" style="display:none;">0</span>
-</button>
 
 <div class="cart-modal" id="cartModal" onclick="if(event.target===this) closeCart()">
   <div class="cart-inner">
@@ -2232,7 +2304,7 @@ const PRODUCT_GALLERIES = {
   imperial_calabaza: ['IMG_7150.jpeg', 'IMG_7153.jpeg'],
   imperial_cuero_crudo: ['IMG_7694.jpeg', 'IMG_7698.jpeg', 'IMG_7700.jpeg'],
   imperial_alpaca: ['IMG_7704.jpeg', 'IMG_7707.jpeg'],
-  camionero_4_patas: ['IMG_7685.jpeg', 'IMG_7689.jpeg', 'IMG_7676.jpeg', 'IMG_7677.jpeg', 'IMG_7701.jpeg', 'IMG_7703.jpeg'],
+  camionero_4_patas: ['IMG_7685.jpeg', 'IMG_7689.jpeg', 'IMG_7676.jpeg', 'IMG_7701.jpeg', 'IMG_7703.jpeg'],
   combo_criollo: ['IMG_5982.jpeg', 'IMG_5981.jpeg', 'IMG_5989.jpeg'],
   combo_camionero: ['IMG_7691.jpeg', 'IMG_5989.jpeg'],
   camionero_clasico: ['IMG_7691.jpeg', 'IMG_7693.jpeg']
@@ -2258,7 +2330,7 @@ function openProductDetail(productKey) {
   document.getElementById('galleryDetailWaBtn').onclick = () => consultarProducto(currentDetailName, currentDetailPrice);
   const catalogEntry = GIFT_PRODUCTS.find(p => p.key === productKey);
   document.getElementById('galleryDetailCartBtn').onclick = () => {
-    if (catalogEntry) addToCart(catalogEntry.key, catalogEntry.name, catalogEntry.price, catalogEntry.img);
+    if (catalogEntry) addToCart(catalogEntry.key, catalogEntry.name, catalogEntry.price, catalogEntry.img, document.getElementById('galleryDetailCartBtn'));
   };
 
   currentGallery = imgs;
@@ -2454,14 +2526,56 @@ function saveCart() {
 function fmtMoney(n) {
   return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: n % 1 !== 0 ? 2 : 0, maximumFractionDigits: 2 });
 }
-function addToCart(key, name, price, img) {
+function addToCart(key, name, price, img, originEl) {
   const existing = CART.find(i => i.key === key);
   if (existing) existing.qty += 1;
   else CART.push({ key, name, price, img, qty: 1 });
   saveCart();
   updateCartFabBadge();
   renderCart();
-  openCart();
+  flyToCart(originEl, img);
+}
+
+function flyToCart(originEl, img) {
+  const cartFab = document.getElementById('cartFab');
+  if (!cartFab) return;
+  const cartRect = cartFab.getBoundingClientRect();
+  const targetX = cartRect.left + cartRect.width / 2;
+  const targetY = cartRect.top + cartRect.height / 2;
+
+  let startX, startY;
+  if (originEl && originEl.getBoundingClientRect) {
+    const r = originEl.getBoundingClientRect();
+    startX = r.left + r.width / 2;
+    startY = r.top + r.height / 2;
+  } else {
+    startX = targetX; startY = targetY;
+  }
+
+  const flyer = document.createElement('img');
+  flyer.src = img;
+  flyer.className = 'cart-flyer';
+  flyer.style.left = startX + 'px';
+  flyer.style.top = startY + 'px';
+  document.body.appendChild(flyer);
+
+  // arc control point (slightly above the straight line)
+  const midX = (startX + targetX) / 2;
+  const midY = Math.min(startY, targetY) - 90;
+
+  const anim = flyer.animate([
+    { transform: 'translate(-50%, -50%) scale(1)', opacity: 1, offset: 0,
+      easing: 'ease-in' },
+    { transform: `translate(${midX-startX}px, ${midY-startY}px) translate(-50%,-50%) scale(0.75)`, opacity: 1, offset: 0.5,
+      easing: 'ease-out' },
+    { transform: `translate(${targetX-startX}px, ${targetY-startY}px) translate(-50%,-50%) scale(0.15)`, opacity: 0.3, offset: 1 }
+  ], { duration: 650, fill: 'forwards' });
+
+  anim.onfinish = () => {
+    flyer.remove();
+    cartFab.classList.add('cart-fab-bump');
+    setTimeout(() => cartFab.classList.remove('cart-fab-bump'), 350);
+  };
 }
 function removeFromCart(key) {
   CART = CART.filter(i => i.key !== key);
@@ -2583,6 +2697,40 @@ function checkoutCart() {
 updateCartFabBadge();
 
 /* ── MAPA DE FOGONEROS (tooltip pines) ── */
+/* ── LIGHTBOX RONDA FOGONERA ── */
+const RONDA_PHOTOS = [
+  { img: 'ronda_rama_nunez.jpeg', user: '@rama_nunez_', caption: 'A @rama_nunez_ le encantó su imperial de algarrobo 🧉🔥' },
+  { img: 'ronda_santivillagarcia.jpeg', user: '@santivillagarcia', caption: '@santivillagarcia mostrando su combo Fogón bien completo 🧉🔥' },
+  { img: 'ronda_tomyandress.jpeg', user: '@tomyandress', caption: '@tomyandress con su mate y su yerbera Fogón, combo completo 🧉🔥' },
+  { img: 'ronda_agustina_palermo.jpeg', user: '@agustina.palermoo', caption: '@agustina.palermoo con su torpedo recién llegado, combo Fogón completo 🧉🔥' },
+  { img: 'ronda_valendevanna.jpeg', user: '@valendevanna_', caption: '@valendevanna_ listo para cebar con su termo y mate Fogón 🧉🔥' },
+];
+let rondaLightboxIndex = 0;
+function renderRondaLightbox() {
+  const p = RONDA_PHOTOS[rondaLightboxIndex];
+  document.getElementById('rondaLightboxImg').src = p.img;
+  document.getElementById('rondaLightboxUser').textContent = p.user;
+  document.getElementById('rondaLightboxCaption').textContent = p.caption;
+}
+function openRondaLightbox(index) {
+  rondaLightboxIndex = index;
+  renderRondaLightbox();
+  document.getElementById('rondaLightbox').classList.add('open');
+}
+function closeRondaLightbox() {
+  document.getElementById('rondaLightbox').classList.remove('open');
+}
+function rondaLightboxNav(delta) {
+  rondaLightboxIndex = (rondaLightboxIndex + delta + RONDA_PHOTOS.length) % RONDA_PHOTOS.length;
+  renderRondaLightbox();
+}
+document.addEventListener('keydown', (e) => {
+  if (!document.getElementById('rondaLightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowLeft') rondaLightboxNav(-1);
+  if (e.key === 'ArrowRight') rondaLightboxNav(1);
+  if (e.key === 'Escape') closeRondaLightbox();
+});
+
 function showMapTooltip(evt, city, count) {
   const wrap = document.getElementById('rondaMapWrap');
   const tooltip = document.getElementById('rondaMapTooltip');
