@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -408,6 +409,7 @@ nav.scrolled { padding: 0.8rem 3rem; }
 .product-footer {
   display: flex; justify-content: space-between; align-items: center;
   padding-top: 1rem; border-top: 1px dashed var(--sand);
+  flex-wrap: wrap; gap: 0.6rem;
 }
 .product-price {
   font-family: 'Playfair Display', serif; font-size: 1.3rem;
@@ -1164,6 +1166,275 @@ footer::before {
   .gallery-divider { display: none; }
   .gallery-detail-wa { width: 100%; }
 }
+/* ══════════════════════════ RONDA FOGONERA ══════════════════════════ */
+.ronda-section {
+  padding: 5rem 4rem 6rem;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--sand) 100%);
+  position: relative; overflow: hidden;
+}
+.ronda-section::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196, 98, 45, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.ronda-disclaimer {
+  max-width: 620px; margin: 0 auto 3rem; text-align: center;
+  padding: 1.4rem 1.8rem; border: 1px dashed var(--gold); background: var(--cream);
+  position: relative; z-index: 1;
+}
+.ronda-disclaimer p { font-size: 0.95rem; line-height: 1.7; color: var(--brown-dark); font-style: italic; }
+.ronda-disclaimer strong { font-style: normal; color: var(--ember); }
+.ronda-disclaimer-link {
+  font-style: normal; font-weight: 700; color: var(--ember); text-decoration: underline;
+  text-decoration-style: dotted; cursor: pointer; transition: color 0.2s;
+}
+.ronda-disclaimer-link:hover { color: var(--ember-dark); }
+.ronda-counter {
+  text-align: center; margin: 0 auto 3rem; font-family: 'Playfair Display', serif;
+  font-size: 1.3rem; font-weight: 700; color: var(--brown-dark);
+  position: relative; z-index: 1;
+}
+.ronda-counter span { color: var(--ember); }
+.ronda-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.4rem;
+  max-width: 1100px; margin: 0 auto 4rem;
+  position: relative; z-index: 1;
+}
+.ronda-card {
+  background: var(--cream); border: 1px solid rgba(184, 150, 78, 0.25);
+  overflow: hidden; transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+.ronda-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(58, 36, 25, 0.18); }
+.ronda-card img {
+  width: 100%; height: 220px; object-fit: cover; display: block;
+  filter: sepia(8%) contrast(1.03);
+}
+.ronda-card-info { padding: 1rem 1.1rem; }
+.ronda-card-user {
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.95rem;
+  color: var(--ember); margin-bottom: 0.35rem;
+}
+.ronda-card-caption { font-size: 0.85rem; line-height: 1.5; color: var(--text-mid); font-style: italic; }
+
+/* mapa anónimo */
+.ronda-map-title, .ronda-sorteo-title {
+  text-align: center; font-family: 'Playfair Display', serif; font-size: 1.2rem;
+  font-weight: 700; color: var(--brown-dark); margin-bottom: 1.4rem;
+  position: relative; z-index: 1;
+}
+.ronda-map-note { text-align: center; font-size: 0.8rem; color: var(--brown-light); font-style: italic; margin: 0.8rem auto 4rem; max-width: 500px; position: relative; z-index: 1; }
+
+/* mapa SVG interactivo */
+.ronda-map-wrap {
+  position: relative; max-width: 260px; margin: 0 auto;
+  z-index: 1; animation: mapCardIn 0.8s ease both;
+}
+@keyframes mapCardIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.ronda-map-svg { width: 100%; height: auto; display: block; filter: drop-shadow(0 16px 26px rgba(58,36,25,0.35)); }
+.map-country { stroke: var(--gold-light); stroke-width: 1.3; stroke-linejoin: round; fill: url(#mapGradient); }
+.map-country-tdf { stroke-width: 1; }
+.map-sheen { animation: mapShimmer 5s ease-in-out infinite; }
+@keyframes mapShimmer {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.6; }
+}
+.map-route {
+  stroke: var(--gold-light); stroke-width: 1.4; stroke-dasharray: 3 3;
+  opacity: 0.9; animation: mapRouteDash 1.2s linear infinite;
+}
+@keyframes mapRouteDash { to { stroke-dashoffset: -12; } }
+
+.map-pin-group { cursor: pointer; animation: pinDrop 0.7s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes pinDrop {
+  0% { transform: translateY(-30px); opacity: 0; }
+  60% { transform: translateY(3px); opacity: 1; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.map-pin-shadow { fill: var(--brown-dark); opacity: 0.2; }
+.map-pin-pulse {
+  fill: var(--ember); opacity: 0.5; transform-box: fill-box; transform-origin: center;
+  animation: mapPulse 2.2s ease-out infinite;
+}
+.map-pin-marker { fill: url(#pinGlow); stroke: var(--cream); stroke-width: 1.4; transition: transform 0.25s ease; transform-box: fill-box; transform-origin: bottom center; }
+.map-pin-center { fill: var(--cream); }
+.map-pin-group:hover .map-pin-marker { transform: scale(1.15); }
+@keyframes mapPulse {
+  0% { transform: scale(0.6); opacity: 0.55; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+.map-tooltip {
+  position: absolute; transform: translate(-50%, -125%);
+  background: var(--brown-dark); color: var(--cream);
+  padding: 0.5rem 0.9rem; font-size: 0.82rem; font-weight: 700;
+  white-space: nowrap; pointer-events: none;
+  opacity: 0; transition: opacity 0.2s ease; z-index: 5;
+}
+.map-tooltip::after {
+  content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+  border: 6px solid transparent; border-top-color: var(--brown-dark);
+}
+.map-tooltip.visible { opacity: 1; }
+.ronda-map-legend {
+  display: flex; justify-content: center; margin-top: 1.1rem;
+  font-size: 0.78rem; color: var(--brown-light); font-style: italic;
+  position: relative; z-index: 1;
+}
+.ronda-map-legend .dot {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ember); margin-right: 0.4rem;
+}
+
+/* sorteos con tabs */
+.sorteo-tabs {
+  display: flex; justify-content: center; margin: 0 auto 2.2rem; max-width: 480px;
+  position: relative; z-index: 1; border: 1px solid rgba(184,150,78,0.4);
+}
+.sorteo-tab {
+  flex: 1; background: none; border: none; padding: 0.9rem 1rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--brown-light); cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.sorteo-tab.active, .sorteo-tab:hover { background: var(--brown-dark); color: var(--cream); }
+.sorteo-panel { max-width: 620px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+.sorteo-countdown {
+  display: inline-flex; gap: 0.5rem; background: var(--brown-dark); color: var(--cream);
+  padding: 0.85rem 1.4rem; margin-bottom: 1.8rem; font-family: 'Playfair Display', serif;
+  font-weight: 700; letter-spacing: 0.03em; box-shadow: 0 10px 30px rgba(58,36,25,0.25);
+}
+.sorteo-countdown .num { color: var(--gold-light); font-size: 1.1rem; }
+.sorteo-panel-desc { font-size: 0.92rem; font-style: italic; color: var(--brown-light); line-height: 1.7; margin-top: 1.8rem; }
+
+.podium { display: flex; justify-content: center; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+.podium-card {
+  background: var(--brown-dark); color: var(--cream); padding: 1.5rem 1.2rem;
+  min-width: 130px; display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+  position: relative; transition: transform 0.3s ease; border: 1px solid rgba(184,150,78,0.4);
+}
+.podium-card:hover { transform: translateY(-8px); }
+.podium-card.gold { padding-top: 2rem; box-shadow: 0 0 30px rgba(184,150,78,0.4); }
+.podium-medal { font-size: 2rem; animation: medalBounce 2.4s ease-in-out infinite; }
+.podium-code { font-family: 'Playfair Display', serif; font-weight: 900; letter-spacing: 0.04em; font-size: 1.05rem; color: var(--gold-light); }
+.podium-pct { font-size: 0.85rem; }
+.podium-min { font-size: 0.7rem; color: rgba(242,234,216,0.65); }
+@keyframes medalBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+
+.sorteo-prize-card {
+  display: flex; flex-direction: column; align-items: center; gap: 0.6rem;
+  background: var(--brown-dark); color: var(--cream); padding: 2rem; max-width: 280px; margin: 0 auto;
+  box-shadow: 0 20px 50px rgba(58,36,25,0.3); border: 1px solid rgba(184,150,78,0.4);
+}
+.sorteo-prize-icon { font-size: 3rem; display: inline-block; animation: prizeFloat 3s ease-in-out infinite; }
+.sorteo-prize-name { font-family: 'Playfair Display', serif; font-weight: 900; font-size: 1.15rem; color: var(--gold-light); }
+@keyframes prizeFloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-8px) rotate(3deg); }
+}
+
+/* ══════════════════════════ CARRITO ══════════════════════════ */
+.cart-fab {
+  position: fixed; bottom: 5.6rem; right: 1.6rem; z-index: 460;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--brown-dark); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 24px rgba(58,36,25,0.35); transition: background 0.3s, transform 0.3s;
+}
+.cart-fab:hover { background: var(--ember); transform: scale(1.06); }
+.cart-fab svg { width: 24px; height: 24px; color: var(--cream); }
+.cart-fab-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--ember); color: var(--cream); border-radius: 50%;
+  min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; border: 2px solid var(--cream);
+}
+.cart-modal {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(26, 13, 5, 0.92); align-items: center; justify-content: center; padding: 2rem;
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.cart-modal.open { display: flex; opacity: 1; }
+.cart-inner {
+  position: relative; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto;
+  background: var(--cream); border: 1px solid rgba(184,150,78,0.4);
+  padding: 2rem 1.8rem; transform: scale(0.94) translateY(14px); opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
+}
+.cart-modal.open .cart-inner { transform: scale(1) translateY(0); opacity: 1; }
+.cart-close {
+  position: absolute; top: 1rem; right: 1rem; background: none; border: none;
+  cursor: pointer; color: var(--brown-dark); width: 28px; height: 28px;
+}
+.cart-title {
+  font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900;
+  color: var(--brown-dark); margin-bottom: 1.4rem;
+}
+.cart-empty { text-align: center; color: var(--brown-light); font-style: italic; padding: 2rem 0; }
+.cart-item {
+  display: flex; gap: 0.9rem; align-items: center; padding: 0.8rem 0;
+  border-bottom: 1px dashed var(--sand);
+}
+.cart-item img { width: 56px; height: 56px; object-fit: cover; flex-shrink: 0; }
+.cart-item-info { flex: 1; min-width: 0; }
+.cart-item-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; color: var(--brown-dark); }
+.cart-item-price { font-size: 0.82rem; color: var(--ember); }
+.cart-item-qty { display: flex; align-items: center; gap: 0.5rem; }
+.cart-qty-btn {
+  width: 24px; height: 24px; border: 1px solid var(--sand); background: var(--parchment);
+  cursor: pointer; font-size: 0.9rem; color: var(--brown-dark); line-height: 1;
+}
+.cart-qty-btn:hover { background: var(--brown-dark); color: var(--cream); }
+.cart-item-remove {
+  background: none; border: none; cursor: pointer; color: var(--brown-light);
+  font-size: 0.75rem; text-decoration: underline;
+}
+.cart-summary { margin-top: 1.4rem; padding-top: 1.2rem; border-top: 1px solid var(--sand); }
+.cart-discount-row { display: flex; gap: 0.5rem; margin-bottom: 0.9rem; }
+.cart-discount-row input {
+  flex: 1; padding: 0.6rem 0.8rem; border: 1px solid var(--sand); background: var(--parchment);
+  font-family: 'Cormorant Garamond', serif; font-size: 0.9rem; color: var(--text-dark);
+  text-transform: uppercase;
+}
+.cart-discount-row button {
+  padding: 0.6rem 1rem; background: var(--brown-dark); color: var(--cream); border: none;
+  cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.cart-discount-row button:hover { background: var(--ember); }
+.cart-discount-msg { font-size: 0.8rem; margin-bottom: 0.8rem; min-height: 1.2em; }
+.cart-discount-msg.ok { color: #3a7d3a; }
+.cart-discount-msg.error { color: var(--ember-dark); }
+.cart-discount-note { font-size: 0.72rem; color: var(--brown-light); font-style: italic; margin-bottom: 1rem; line-height: 1.5; }
+.cart-total-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.3rem; font-size: 0.95rem; color: var(--text-mid); }
+.cart-total-row.final { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 900; color: var(--ember); margin-top: 0.5rem; }
+.cart-total-old { text-decoration: line-through; color: var(--brown-light); }
+.cart-checkout-btn {
+  width: 100%; margin-top: 1.2rem; padding: 1rem; background: var(--whatsapp); color: white;
+  border: none; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 0.95rem;
+  letter-spacing: 0.1em; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 0.6rem;
+  transition: filter 0.3s;
+}
+.cart-checkout-btn:hover { filter: brightness(1.08); }
+.add-to-cart-btn {
+  font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--cream); background: var(--brown-dark); border: none;
+  padding: 0.5rem 0.8rem; cursor: pointer; font-family: 'Cormorant Garamond', serif;
+  transition: background 0.3s ease; margin-left: 0.6rem;
+}
+.add-to-cart-btn:hover { background: var(--ember); }
+.gallery-detail-cart-btn {
+  width: 100%; margin-top: 0.7rem; padding: 0.9rem; background: var(--brown-dark); color: var(--cream);
+  border: none; cursor: pointer; font-family: 'Cormorant Garamond', serif; font-size: 0.9rem;
+  letter-spacing: 0.08em; text-transform: uppercase; transition: background 0.3s;
+}
+.gallery-detail-cart-btn:hover { background: var(--ember); }
+
+@media (max-width: 720px) {
+  .ronda-section { padding: 3.5rem 1.2rem 4rem; }
+  .cart-fab { bottom: 5rem; right: 1rem; }
+}
+
 @media (max-width: 600px) {
   .gallery-inner { padding: 1.4rem; gap: 1.2rem; }
   .gallery-arrow { width: 36px; height: 36px; font-size: 1.1rem; }
@@ -1185,6 +1456,7 @@ footer::before {
   <ul class="nav-links">
     <li><a href="#productos">Productos</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#ronda-fogonera">Ronda Fogonera</a></li>
     <li><a href="#contacto">Contacto</a></li>
     <li><a href="https://www.instagram.com/fogonmates/" target="_blank" rel="noopener" class="nav-cta">Instagram</a></li>
   </ul>
@@ -1197,6 +1469,7 @@ footer::before {
 <div class="nav-mobile-menu" id="mobile-menu">
   <a href="#productos" onclick="closeMobile()">Productos</a>
   <a href="#nosotros" onclick="closeMobile()">Nosotros</a>
+  <a href="#ronda-fogonera" onclick="closeMobile()">Ronda Fogonera</a>
   <a href="#contacto" onclick="closeMobile()">Contacto</a>
   <a href="https://www.instagram.com/fogonmates/" target="_blank" rel="noopener">Instagram</a>
 </div>
@@ -1319,6 +1592,7 @@ footer::before {
           <div class="product-footer">
             <div><span class="product-price-old">$25.000</span><span class="product-price">$21.999</span></div>
             <button class="product-action" onclick="consultarProducto('Combo criollo + bombilla', '$21.999')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_criollo','Combo criollo + bombilla',21999,'Mate_Criollo_de_calabaza.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1339,6 +1613,7 @@ footer::before {
           <div class="product-footer">
             <div><span class="product-price-old">$28.000</span><span class="product-price">$25.500</span></div>
             <button class="product-action" onclick="consultarProducto('Combo camionero de algarrobo + bombilla', '$25.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_camionero','Combo camionero de algarrobo + bombilla',25500,'IMG_7691.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1354,6 +1629,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$17.999,99</span>
             <button class="product-action" onclick="consultarProducto('Criollo de calabaza', '$17.999,99')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('criollo_calabaza','Criollo de calabaza',17999.99,'Mate_Criollo_de_calabaza.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1369,6 +1645,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$23.999,99</span>
             <button class="product-action" onclick="consultarProducto('Torpedo con virola de acero', '$23.999,99')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('torpedo','Torpedo con virola de acero',23999.99,'Torpedo_con_virola_de_acero.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1384,6 +1661,7 @@ footer::before {
     <div class="product-footer">
       <span class="product-price">$30.000</span>
       <button class="product-action" onclick="consultarProducto('Imperial de calabaza', '$30.000')">Consultar</button>
+      <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_calabaza','Imperial de calabaza',30000,'Imperial_de_calabaza.jpeg')">🛒 Agregar</button>
     </div>
   </div>
 </div>
@@ -1399,6 +1677,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$50.000</span>
             <button class="product-action" onclick="consultarProducto('Imperial de cuero crudo con base', '$50.000')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_cuero_crudo','Imperial de cuero crudo con base',50000,'IMG_7694.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1414,6 +1693,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$37.000</span>
             <button class="product-action" onclick="consultarProducto('Imperial de alpaca', '$37.000')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_alpaca','Imperial de alpaca',37000,'IMG_7704.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1429,6 +1709,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$18.500</span>
             <button class="product-action" onclick="consultarProducto('Camionero 4 patas', '$18.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_4_patas','Camionero 4 patas',18500,'IMG_7685.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1444,6 +1725,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$27.200</span>
             <button class="product-action" onclick="consultarProducto('Imperial de algarrobo', '$27.200')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_premium','Imperial de algarrobo',27200,'Imperial_de_algarrobo_premium.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1459,6 +1741,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$39.500</span>
             <button class="product-action" onclick="consultarProducto('Mate vaquita', '$39.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('vaquita_ranchero','Mate vaquita',39500,'matevaquita_ranchero.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1474,6 +1757,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$21.500</span>
             <button class="product-action" onclick="consultarProducto('Camionero clásico de algarrobo', '$21.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('camionero_clasico','Camionero clásico de algarrobo',21500,'IMG_7691.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1489,6 +1773,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$14.500</span>
             <button class="product-action" onclick="consultarProducto('Yerbera Fogón', '$14.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('yerbera','Yerbera Fogón',14500,'yerbera.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1504,6 +1789,7 @@ footer::before {
           <div class="product-footer">
             <span class="product-price">$6.500</span>
             <button class="product-action" onclick="consultarProducto('Bombilla pico de loro (inoxidable)', '$6.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('bombilla','Bombilla pico de loro (inoxidable)',6500,'Bombilla_pico_de_loro__inoxidable_.jpeg')">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -1533,6 +1819,154 @@ footer::before {
   <p class="quote-text">"El mate no es solo una bebida. Es el tiempo que le regalás a alguien."</p>
   <span class="ornament">◆ · ◆ · ◆</span>
   <span class="quote-attr">— Fogón Mates</span>
+</section>
+
+<!-- RONDA FOGONERA -->
+<section id="ronda-fogonera" class="ronda-section">
+  <div class="section-header" style="padding-top:0; position:relative; z-index:1;">
+    <p class="section-eyebrow">— Comunidad —</p>
+    <h2 class="section-title">Ronda Fogonera</h2>
+    <div class="section-rule"></div>
+    <p class="section-subtitle">Los fogoneros que ya se sumaron con su mate 🧉🔥</p>
+  </div>
+
+  <div class="ronda-disclaimer">
+    <p>Para aparecer en la Ronda Fogonera, mencioná a <strong>@fogonmates</strong> y subí una historia con el mate a tu Instagram etiquetándonos. Como no siempre nos llega la notificación cuando nos mencionan, avisanos por <a href="https://ig.me/m/fogonmates" target="_blank" rel="noopener" class="ronda-disclaimer-link">DM de Instagram</a> o <a href="https://wa.me/5491150998752?text=Hola%20Fog%C3%B3n!%20Ya%20sub%C3%AD%20mi%20historia%20mencionando%20a%20%40fogonmates%20para%20sumarme%20a%20la%20Ronda%20Fogonera%20%F0%9F%A7%89" target="_blank" rel="noopener" class="ronda-disclaimer-link">WhatsApp</a> que subiste la historia para que te sumemos 🔥</p>
+  </div>
+
+  <div class="ronda-counter">🔥 <span id="rondaCounterNum">5</span> fogoneros ya se sumaron a la ronda</div>
+
+  <div class="ronda-grid">
+    <div class="ronda-card">
+      <img loading="lazy" decoding="async" src="ronda_rama_nunez.jpeg" alt="Mate de @rama_nunez_">
+      <div class="ronda-card-info">
+        <div class="ronda-card-user">@rama_nunez_</div>
+        <div class="ronda-card-caption">A @rama_nunez_ le encantó su imperial de algarrobo 🧉🔥</div>
+      </div>
+    </div>
+    <div class="ronda-card">
+      <img loading="lazy" decoding="async" src="ronda_santivillagarcia.jpeg" alt="Combo de @santivillagarcia">
+      <div class="ronda-card-info">
+        <div class="ronda-card-user">@santivillagarcia</div>
+        <div class="ronda-card-caption">@santivillagarcia mostrando su combo Fogón bien completo 🧉🔥</div>
+      </div>
+    </div>
+    <div class="ronda-card">
+      <img loading="lazy" decoding="async" src="ronda_tomyandress.jpeg" alt="Mate y yerbera de @tomyandress">
+      <div class="ronda-card-info">
+        <div class="ronda-card-user">@tomyandress</div>
+        <div class="ronda-card-caption">@tomyandress con su mate y su yerbera Fogón, combo completo 🧉🔥</div>
+      </div>
+    </div>
+    <div class="ronda-card">
+      <img loading="lazy" decoding="async" src="ronda_agustina_palermo.jpeg" alt="Torpedo de @agustina.palermoo">
+      <div class="ronda-card-info">
+        <div class="ronda-card-user">@agustina.palermoo</div>
+        <div class="ronda-card-caption">@agustina.palermoo con su torpedo recién llegado, combo Fogón completo 🧉🔥</div>
+      </div>
+    </div>
+    <div class="ronda-card">
+      <img loading="lazy" decoding="async" src="ronda_valendevanna.jpeg" alt="Mate y termo de @valendevanna_">
+      <div class="ronda-card-info">
+        <div class="ronda-card-user">@valendevanna_</div>
+        <div class="ronda-card-caption">@valendevanna_ listo para cebar con su termo y mate Fogón 🧉🔥</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="ronda-map-title">🗺️ Mapa de fogoneros</p>
+  <div class="ronda-map-wrap" id="rondaMapWrap">
+    <svg class="ronda-map-svg" viewBox="0 0 200 418" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="mapGradient" x1="10%" y1="0%" x2="90%" y2="100%">
+          <stop offset="0%" stop-color="#C89A5E"/>
+          <stop offset="50%" stop-color="#8B6B4A"/>
+          <stop offset="100%" stop-color="#4A2F1F"/>
+        </linearGradient>
+        <radialGradient id="mapSheen" cx="30%" cy="15%" r="80%">
+          <stop offset="0%" stop-color="#F2D9A8" stop-opacity="0.5"/>
+          <stop offset="45%" stop-color="#F2D9A8" stop-opacity="0.1"/>
+          <stop offset="100%" stop-color="#F2D9A8" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="pinGlow" cx="50%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#F4A15C"/>
+          <stop offset="100%" stop-color="#C4622D"/>
+        </radialGradient>
+        <filter id="mapSoftGlow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Territorio continental (contorno real, simplificado) -->
+      <path id="argShape" class="map-country" filter="url(#mapSoftGlow)" d="M86.29,8.96 L91.88,17.73 L95.58,7.96 L106.42,8.46 L107.95,11.06 L125.42,30.88 L133.19,32.73 L144.8,41.7 L154.58,46.45 L155.94,51.81 L146.59,70.27 L156.17,73.58 L166.84,75.43 L174.36,73.48 L182.97,64.17 L184.53,53.45 L189.23,51.13 L194.0,58.14 L193.81,67.84 L185.81,74.53 L179.43,79.48 L168.7,91.27 L156.03,107.83 L153.65,117.55 L151.11,130.04 L151.2,142.14 L149.14,144.84 L148.41,152.69 L147.76,159.03 L159.82,169.44 L158.52,177.81 L164.46,183.1 L163.98,189.04 L154.85,204.61 L140.76,211.12 L121.7,213.65 L111.27,212.43 L113.26,219.67 L111.32,228.77 L113.07,234.89 L107.37,239.16 L97.64,240.84 L88.5,236.42 L84.83,239.6 L86.16,251.67 L92.57,255.32 L97.78,251.49 L100.61,257.8 L91.86,261.57 L84.23,269.13 L82.83,281.34 L80.59,287.85 L71.61,287.88 L64.16,294.1 L61.44,303.21 L70.78,312.11 L79.87,314.56 L76.6,325.46 L65.38,332.31 L59.2,346.55 L50.53,351.34 L46.64,357.03 L49.7,369.64 L56.03,376.68 L52.02,376.06 L43.22,374.16 L20.26,372.53 L16.32,365.45 L16.5,356.36 L10.18,357.14 L6.83,352.73 L6.0,339.85 L13.29,334.51 L16.3,326.81 L15.2,320.66 L20.23,310.29 L23.7,294.21 L22.69,287.08 L26.83,284.78 L25.82,280.2 L21.41,277.77 L24.54,272.67 L20.25,268.07 L18.03,254.06 L21.85,251.59 L20.25,236.78 L22.48,224.34 L25.02,213.5 L30.71,209.09 L27.82,197.24 L27.79,186.08 L34.98,178.15 L34.76,168.0 L40.19,156.14 L40.21,144.97 L37.74,142.75 L33.37,121.79 L39.22,109.29 L38.32,97.53 L41.72,86.49 L47.94,75.1 L54.64,67.55 L51.8,62.78 L53.79,58.87 L53.48,38.63 L63.83,32.64 L67.09,20.02 L65.94,16.98 L73.86,6.0 L86.29,8.96 Z"/>
+      <!-- Tierra del Fuego -->
+      <path class="map-country map-country-tdf" filter="url(#mapSoftGlow)" d="M81.21,411.29 L72.18,411.9 L67.33,407.61 L61.61,407.28 L51.44,407.28 L51.43,380.15 L55.08,385.79 L59.83,394.89 L72.18,402.18 L85.48,405.22 L81.21,411.29 Z"/>
+      <!-- brillo superior -->
+      <use href="#argShape" fill="url(#mapSheen)" stroke="none" class="map-sheen"/>
+
+      <!-- línea que conecta las ciudades -->
+      <line class="map-route" x1="148.7" y1="161.2" x2="141.7" y2="194.1"/>
+
+      <!-- pin Buenos Aires -->
+      <g class="map-pin-group" tabindex="0" onmouseenter="showMapTooltip(event,'Buenos Aires',34)" onmouseleave="hideMapTooltip()" onclick="showMapTooltip(event,'Buenos Aires',34)" style="animation-delay:0.1s;">
+        <ellipse class="map-pin-shadow" cx="148.7" cy="163" rx="9" ry="3.2"/>
+        <circle class="map-pin-pulse" cx="148.7" cy="161.2" r="6"/>
+        <path class="map-pin-marker" d="M148.7,148 C143,148 139,152.4 139,158.3 C139,165.4 148.7,175 148.7,175 C148.7,175 158.4,165.4 158.4,158.3 C158.4,152.4 154.4,148 148.7,148 Z"/>
+        <circle class="map-pin-center" cx="148.7" cy="158" r="3.4"/>
+      </g>
+      <!-- pin Tandil -->
+      <g class="map-pin-group" tabindex="0" onmouseenter="showMapTooltip(event,'Tandil',1)" onmouseleave="hideMapTooltip()" onclick="showMapTooltip(event,'Tandil',1)" style="animation-delay:0.5s;">
+        <ellipse class="map-pin-shadow" cx="141.7" cy="196" rx="7.5" ry="2.6"/>
+        <circle class="map-pin-pulse" cx="141.7" cy="194.1" r="5"/>
+        <path class="map-pin-marker" d="M141.7,183 C137,183 133.6,186.6 133.6,191.5 C133.6,197.4 141.7,206 141.7,206 C141.7,206 149.8,197.4 149.8,191.5 C149.8,186.6 146.4,183 141.7,183 Z"/>
+        <circle class="map-pin-center" cx="141.7" cy="191.3" r="2.8"/>
+      </g>
+    </svg>
+    <div class="map-tooltip" id="rondaMapTooltip"></div>
+  </div>
+  <div class="ronda-map-legend"><span><span class="dot"></span>Tocá o pasá el mouse sobre un pin para ver la ciudad</span></div>
+  <p class="ronda-map-note">Solo mostramos la ciudad y la cantidad de fogoneros — nunca decimos qué foto le corresponde a cada ciudad, para cuidar la privacidad de todos.</p>
+
+  <p class="ronda-sorteo-title">🎉 Sorteos Fogoneros</p>
+  <div class="sorteo-tabs">
+    <button class="sorteo-tab active" id="tabCupones" onclick="switchSorteoTab('cupones')">🎟️ Cupones · Mensual</button>
+    <button class="sorteo-tab" id="tabProducto" onclick="switchSorteoTab('producto')">🎁 Producto · Trimestral</button>
+  </div>
+
+  <div class="sorteo-panel" id="panelCupones">
+    <div class="sorteo-countdown" id="countdownCupones">⏳ cargando...</div>
+    <div class="podium">
+      <div class="podium-card silver">
+        <span class="podium-medal">🥈</span>
+        <span class="podium-code">2° puesto</span>
+        <span class="podium-pct">25% OFF</span>
+        <span class="podium-min">Mínimo $20.000</span>
+      </div>
+      <div class="podium-card gold">
+        <span class="podium-medal">🥇</span>
+        <span class="podium-code">1° puesto</span>
+        <span class="podium-pct">30% OFF</span>
+        <span class="podium-min">Mínimo $35.000</span>
+      </div>
+      <div class="podium-card bronze">
+        <span class="podium-medal">🥉</span>
+        <span class="podium-code">3° puesto</span>
+        <span class="podium-pct">20% OFF</span>
+        <span class="podium-min">Sin mínimo</span>
+      </div>
+    </div>
+    <p class="sorteo-panel-desc">Cada mes sorteamos estos 3 cupones de descuento entre todos los fogoneros que aparecieron en la Ronda ese mes. El código de cada cupón se entrega en privado a cada ganador, junto con sus condiciones de uso. ¡Subí tu historia mencionando a @fogonmates para entrar! 🔥</p>
+  </div>
+
+  <div class="sorteo-panel" id="panelProducto" style="display:none;">
+    <div class="sorteo-countdown" id="countdownProducto">⏳ cargando...</div>
+    <div class="sorteo-prize-card">
+      <span class="sorteo-prize-icon">🧉</span>
+      <span class="sorteo-prize-name">Yerbera Fogón</span>
+    </div>
+    <p class="sorteo-panel-desc">Cada 3 meses sorteamos un producto entre todos los fogoneros que aparecieron en la Ronda durante el período. ¡El primer sorteo es esta Yerbera Fogón!</p>
+  </div>
 </section>
 
 <!-- BANNER ENVÍOS -->
@@ -1586,6 +2020,43 @@ footer::before {
   </a>
 </div>
 
+<!-- CARRITO -->
+<button class="cart-fab" id="cartFab" onclick="openCart()" aria-label="Ver carrito">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <span class="cart-fab-badge" id="cartFabBadge" style="display:none;">0</span>
+</button>
+
+<div class="cart-modal" id="cartModal" onclick="if(event.target===this) closeCart()">
+  <div class="cart-inner">
+    <button class="cart-close" onclick="closeCart()" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </button>
+    <h3 class="cart-title">Tu carrito 🧉</h3>
+    <div id="cartItemsWrap"></div>
+    <div class="cart-summary" id="cartSummary" style="display:none;">
+      <div class="cart-discount-row">
+        <input type="text" id="cartDiscountInput" placeholder="Código de descuento">
+        <button onclick="applyDiscountCode()">Aplicar</button>
+      </div>
+      <p class="cart-discount-msg" id="cartDiscountMsg"></p>
+      <p class="cart-discount-note">Los cupones son de un solo uso y válidos por 30 días desde que se entregan. La validez se confirma manualmente al recibir tu pedido.</p>
+      <div class="cart-total-row" id="cartTotalOriginalRow" style="display:none;">
+        <span>Subtotal</span><span id="cartTotalOriginal"></span>
+      </div>
+      <div class="cart-total-row" id="cartTotalDiscountRow" style="display:none;">
+        <span>Descuento</span><span id="cartTotalDiscount"></span>
+      </div>
+      <div class="cart-total-row final">
+        <span>Total</span><span id="cartTotalFinal"></span>
+      </div>
+      <button class="cart-checkout-btn" onclick="checkoutCart()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        Finalizar pedido por WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- FICHA DE PRODUCTO (GALERÍA + INFO) -->
 <div class="gallery-modal" id="galleryModal" onclick="if(event.target===this) closeGallery()">
   <div class="gallery-inner">
@@ -1615,6 +2086,7 @@ footer::before {
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
         Consultar por WhatsApp
       </button>
+      <button class="gallery-detail-cart-btn" id="galleryDetailCartBtn">🛒 Agregar al carrito</button>
     </div>
   </div>
 </div>
@@ -1784,6 +2256,10 @@ function openProductDetail(productKey) {
   document.getElementById('galleryDetailPrice').textContent = currentDetailPrice;
   document.getElementById('galleryDetailDesc').textContent = descEl ? descEl.textContent.trim() : '';
   document.getElementById('galleryDetailWaBtn').onclick = () => consultarProducto(currentDetailName, currentDetailPrice);
+  const catalogEntry = GIFT_PRODUCTS.find(p => p.key === productKey);
+  document.getElementById('galleryDetailCartBtn').onclick = () => {
+    if (catalogEntry) addToCart(catalogEntry.key, catalogEntry.name, catalogEntry.price, catalogEntry.img);
+  };
 
   currentGallery = imgs;
   currentGalleryIndex = 0;
@@ -1958,6 +2434,209 @@ function giftSetStyle(style) {
   document.getElementById('giftStep2').style.display = 'none';
   document.getElementById('giftResults').style.display = '';
 }
+
+/* ── CARRITO DE COMPRAS ── */
+const COUPONS = {
+  FUEGO30:  { pct: 30, min: 35000 },
+  BRASA25:  { pct: 25, min: 20000 },
+  CHISPA20: { pct: 20, min: 0 }
+};
+let CART = [];
+let appliedCoupon = null;
+try {
+  const saved = localStorage.getItem('fogon_cart');
+  if (saved) CART = JSON.parse(saved);
+} catch (e) { CART = []; }
+
+function saveCart() {
+  try { localStorage.setItem('fogon_cart', JSON.stringify(CART)); } catch (e) {}
+}
+function fmtMoney(n) {
+  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: n % 1 !== 0 ? 2 : 0, maximumFractionDigits: 2 });
+}
+function addToCart(key, name, price, img) {
+  const existing = CART.find(i => i.key === key);
+  if (existing) existing.qty += 1;
+  else CART.push({ key, name, price, img, qty: 1 });
+  saveCart();
+  updateCartFabBadge();
+  renderCart();
+  openCart();
+}
+function removeFromCart(key) {
+  CART = CART.filter(i => i.key !== key);
+  saveCart();
+  updateCartFabBadge();
+  renderCart();
+}
+function changeQty(key, delta) {
+  const item = CART.find(i => i.key === key);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) { removeFromCart(key); return; }
+  saveCart();
+  updateCartFabBadge();
+  renderCart();
+}
+function updateCartFabBadge() {
+  const totalQty = CART.reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('cartFabBadge');
+  if (totalQty > 0) { badge.style.display = 'flex'; badge.textContent = totalQty; }
+  else badge.style.display = 'none';
+}
+function cartSubtotal() {
+  return CART.reduce((s, i) => s + i.price * i.qty, 0);
+}
+function renderCart() {
+  const wrap = document.getElementById('cartItemsWrap');
+  const summary = document.getElementById('cartSummary');
+  if (!CART.length) {
+    wrap.innerHTML = '<p class="cart-empty">Todavía no agregaste productos.</p>';
+    summary.style.display = 'none';
+    return;
+  }
+  summary.style.display = '';
+  wrap.innerHTML = '';
+  CART.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img src="${item.img}" alt="${item.name}">
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-price">${fmtMoney(item.price)} c/u</div>
+        <div class="cart-item-qty">
+          <button class="cart-qty-btn" onclick="changeQty('${item.key}', -1)">−</button>
+          <span>${item.qty}</span>
+          <button class="cart-qty-btn" onclick="changeQty('${item.key}', 1)">+</button>
+          <button class="cart-item-remove" onclick="removeFromCart('${item.key}')">Quitar</button>
+        </div>
+      </div>`;
+    wrap.appendChild(div);
+  });
+  recalcTotals();
+}
+function recalcTotals() {
+  const subtotal = cartSubtotal();
+  const originalRow = document.getElementById('cartTotalOriginalRow');
+  const discountRow = document.getElementById('cartTotalDiscountRow');
+  let final = subtotal;
+  if (appliedCoupon && subtotal >= appliedCoupon.min) {
+    const discountAmount = subtotal * appliedCoupon.pct / 100;
+    final = subtotal - discountAmount;
+    originalRow.style.display = ''; discountRow.style.display = '';
+    document.getElementById('cartTotalOriginal').textContent = fmtMoney(subtotal);
+    document.getElementById('cartTotalDiscount').textContent = '-' + fmtMoney(discountAmount) + ` (${appliedCoupon.code} -${appliedCoupon.pct}%)`;
+  } else {
+    originalRow.style.display = 'none'; discountRow.style.display = 'none';
+    appliedCoupon = null;
+  }
+  document.getElementById('cartTotalFinal').textContent = fmtMoney(final);
+}
+function applyDiscountCode() {
+  const input = document.getElementById('cartDiscountInput');
+  const msgEl = document.getElementById('cartDiscountMsg');
+  const code = input.value.trim().toUpperCase();
+  const coupon = COUPONS[code];
+  const subtotal = cartSubtotal();
+  if (!code) { msgEl.textContent = ''; msgEl.className = 'cart-discount-msg'; return; }
+  if (!coupon) {
+    appliedCoupon = null;
+    msgEl.textContent = 'Ese código no es válido.';
+    msgEl.className = 'cart-discount-msg error';
+    recalcTotals();
+    return;
+  }
+  if (subtotal < coupon.min) {
+    appliedCoupon = null;
+    msgEl.textContent = `Este código requiere una compra mínima de ${fmtMoney(coupon.min)}. Te faltan ${fmtMoney(coupon.min - subtotal)}.`;
+    msgEl.className = 'cart-discount-msg error';
+    recalcTotals();
+    return;
+  }
+  appliedCoupon = { code, pct: coupon.pct, min: coupon.min };
+  msgEl.textContent = `¡Código aplicado! ${coupon.pct}% de descuento.`;
+  msgEl.className = 'cart-discount-msg ok';
+  recalcTotals();
+}
+function openCart() {
+  renderCart();
+  document.getElementById('cartModal').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('cartModal').classList.remove('open');
+}
+function checkoutCart() {
+  if (!CART.length) return;
+  const subtotal = cartSubtotal();
+  let lines = CART.map(i => `• ${i.name} x${i.qty} — ${fmtMoney(i.price * i.qty)}`).join('\n');
+  let msg = `Hola Fogón! 🧉 Quiero hacer este pedido:\n\n${lines}\n\n`;
+  if (appliedCoupon && subtotal >= appliedCoupon.min) {
+    const discountAmount = subtotal * appliedCoupon.pct / 100;
+    const final = subtotal - discountAmount;
+    msg += `Subtotal: ${fmtMoney(subtotal)}\nCupón ${appliedCoupon.code} (-${appliedCoupon.pct}%): -${fmtMoney(discountAmount)}\nTotal final: ${fmtMoney(final)}`;
+  } else {
+    msg += `Total: ${fmtMoney(subtotal)}`;
+  }
+  window.open(`https://wa.me/5491150998752?text=${encodeURIComponent(msg)}`, '_blank');
+}
+updateCartFabBadge();
+
+/* ── MAPA DE FOGONEROS (tooltip pines) ── */
+function showMapTooltip(evt, city, count) {
+  const wrap = document.getElementById('rondaMapWrap');
+  const tooltip = document.getElementById('rondaMapTooltip');
+  const pinRect = evt.currentTarget.getBoundingClientRect();
+  const wrapRect = wrap.getBoundingClientRect();
+  tooltip.textContent = `📍 ${city} — ${count} fogonero${count === 1 ? '' : 's'}`;
+  tooltip.style.left = (pinRect.left - wrapRect.left + pinRect.width / 2) + 'px';
+  tooltip.style.top = (pinRect.top - wrapRect.top) + 'px';
+  tooltip.classList.add('visible');
+}
+function hideMapTooltip() {
+  document.getElementById('rondaMapTooltip').classList.remove('visible');
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.map-pin-group')) hideMapTooltip();
+});
+
+/* ── SORTEOS: TABS + CUENTA REGRESIVA EN VIVO ── */
+function switchSorteoTab(tab) {
+  document.getElementById('tabCupones').classList.toggle('active', tab === 'cupones');
+  document.getElementById('tabProducto').classList.toggle('active', tab === 'producto');
+  document.getElementById('panelCupones').style.display = tab === 'cupones' ? '' : 'none';
+  document.getElementById('panelProducto').style.display = tab === 'producto' ? '' : 'none';
+}
+function getNextCouponDate() {
+  // Primer sorteo de cupones: 7 de octubre de 2026. Se repite cada mes el día 7.
+  const first = new Date(2026, 9, 7, 0, 0, 0);
+  const now = new Date();
+  let target = new Date(first);
+  while (target <= now) target.setMonth(target.getMonth() + 1);
+  return target;
+}
+function getNextProductDate() {
+  // Primer sorteo de producto (yerbera): 9 de diciembre de 2026. Se repite cada 3 meses.
+  const first = new Date(2026, 11, 9, 0, 0, 0);
+  const now = new Date();
+  let target = new Date(first);
+  while (target <= now) target.setMonth(target.getMonth() + 3);
+  return target;
+}
+function formatCountdown(target) {
+  let diff = target - new Date();
+  if (diff < 0) diff = 0;
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff / 3600000) % 24);
+  const mins = Math.floor((diff / 60000) % 60);
+  return `<span class="num">${days}</span>d <span class="num">${hours}</span>h <span class="num">${mins}</span>m`;
+}
+function updateCountdowns() {
+  document.getElementById('countdownCupones').innerHTML = '⏳ ' + formatCountdown(getNextCouponDate());
+  document.getElementById('countdownProducto').innerHTML = '⏳ ' + formatCountdown(getNextProductDate());
+}
+updateCountdowns();
+setInterval(updateCountdowns, 60000);
 
 /* ── SCROLL REVEAL ── */
 const observer = new IntersectionObserver((entries) => {
