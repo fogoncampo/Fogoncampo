@@ -1711,7 +1711,7 @@ footer::before {
           <h3 class="product-name">Combo criollo + bombilla</h3>
           <p class="product-desc">Mate de calabaza natural con base forrada en cuero y terminación artesanal. Bombilla incluida. Ideal para empezar con lo mejor.</p>
           <div class="product-footer">
-            <div><span class="product-price-old">$25.000</span><span class="product-price">$21.999</span></div>
+            <div><span class="product-price-old">$24.499</span><span class="product-price">$21.999</span></div>
             <button class="product-action" onclick="consultarProducto('Combo criollo + bombilla', '$21.999')">Consultar</button>
             <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_criollo','Combo criollo + bombilla',21999,'Mate_Criollo_de_calabaza.jpeg',this)">🛒 Agregar</button>
           </div>
@@ -1761,7 +1761,7 @@ footer::before {
       </div>
 
       <!-- MATE CRIOLLO CALABAZA -->
-      <div class="product-card" data-cat="calabaza" data-price="17999.99">
+      <div class="product-card" data-cat="calabaza" data-price="17999">
         <div class="product-img-wrap has-gallery" data-gallery-key="criollo_calabaza" onclick="openProductDetail('criollo_calabaza')">
           <img loading="lazy" decoding="async" class="product-img" src="Mate_Criollo_de_calabaza.jpeg" alt="Mate Criollo de calabaza" onerror="this.style.background='#D4C4A0'">
         </div>
@@ -1769,9 +1769,9 @@ footer::before {
           <h3 class="product-name">Criollo de calabaza</h3>
           <p class="product-desc">Mate de calabaza natural, trabajado artesanalmente y combinado con base de cuero cosida a mano. Cada pieza conserva las marcas y tonalidades propias de la calabaza.</p>
           <div class="product-footer">
-            <span class="product-price">$17.999,99</span>
-            <button class="product-action" onclick="consultarProducto('Criollo de calabaza', '$17.999,99')">Consultar</button>
-            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('criollo_calabaza','Criollo de calabaza',17999.99,'Mate_Criollo_de_calabaza.jpeg',this)">🛒 Agregar</button>
+            <span class="product-price">$17.999</span>
+            <button class="product-action" onclick="consultarProducto('Criollo de calabaza', '$17.999')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('criollo_calabaza','Criollo de calabaza',17999,'Mate_Criollo_de_calabaza.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -2560,7 +2560,7 @@ const GIFT_PRODUCTS = [
   { key: 'combo_criollo', name: 'Combo criollo + bombilla', price: 21999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
   { key: 'combo_camionero', name: 'Combo camionero de algarrobo + bombilla', price: 25500, cat: 'algarrobo', img: 'mate-camionero-algarrobo-1.jpeg' },
   { key: 'combo_camionero_4_patas', name: 'Combo camionero 4 patas + bombilla', price: 22500, cat: 'calabaza', img: 'mate-camionero-4-patas-1.jpeg' },
-  { key: 'criollo_calabaza', name: 'Criollo de calabaza', price: 17999.99, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
+  { key: 'criollo_calabaza', name: 'Criollo de calabaza', price: 17999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
   { key: 'torpedo', name: 'Torpedo con virola de acero', price: 26999, cat: 'calabaza', img: 'Torpedo_con_virola_de_acero.jpeg' },
   { key: 'imperial_calabaza', name: 'Imperial de calabaza', price: 30000, cat: 'calabaza', img: 'Imperial_de_calabaza.jpeg' },
   { key: 'imperial_cuero_crudo', name: 'Imperial de cuero crudo con base', price: 50000, cat: 'calabaza', img: 'mate-imperial-cuero-crudo-con-base-1.jpeg' },
@@ -2939,11 +2939,11 @@ let chatOpen = false;
 
 const KB = [
   { keys: ['hola','buenas','buen dia','hey','hi','que tal','como estas'], resp: ['¡Hola! 🤎 ¿Cómo andás? Soy Vizcachita, la asistente de Fogón Mates. ¿Qué andás buscando?','¡Buenas! 🔥 Bienvenido/a a Fogón Mates. ¿Te ayudo con algo?'] },
-  { keys: ['combo','combos','kit'], resp: ['¡Los combos son lo más completo! 🤎 Combo criollo + bombilla — <b>$21.999</b> (antes $25.000), Combo camionero + bombilla — <b>$25.500</b> (antes $28.000) y Combo camionero 4 patas + bombilla — <b>$22.500</b> (antes $25.000). Todos listos para usar. ¿Cuál te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo criollo + bombilla — <b>$21.999</b>\n🌳 Combo camionero + bombilla — <b>$25.500</b>\nCombo camionero 4 patas + bombilla — <b>$22.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de calabaza — <b>$17.999,99</b>\nTorpedo con virola — <b>$26.999</b>\nImperial de calabaza — <b>$30.000</b>\nImperial de cuero crudo con base — <b>$50.000</b>\nTorpedo de cuero crudo — <b>$48.000</b>\nImperial de alpaca — <b>$37.000</b>\nCamionero 4 patas — <b>$18.500</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero clásico — <b>$21.500</b>\nImperial de algarrobo — <b>$27.200</b>\nMate vaquita — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera Fogón — <b>$16.000</b>\nBombilla pico de loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500 / $22.500\n<b>🧉 Calabaza</b>: $17.999,99 / $26.999 / $30.000 / $50.000 / $48.000 / $37.000 / $18.500\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $16.000\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['combo','combos','kit'], resp: ['¡Los combos son lo más completo! 🤎 Combo criollo + bombilla — <b>$21.999</b> (antes $24.499), Combo camionero + bombilla — <b>$25.500</b> (antes $28.000) y Combo camionero 4 patas + bombilla — <b>$22.500</b> (antes $25.000). Todos listos para usar. ¿Cuál te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo criollo + bombilla — <b>$21.999</b>\n🌳 Combo camionero + bombilla — <b>$25.500</b>\nCombo camionero 4 patas + bombilla — <b>$22.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de calabaza — <b>$17.999</b>\nTorpedo con virola — <b>$26.999</b>\nImperial de calabaza — <b>$30.000</b>\nImperial de cuero crudo con base — <b>$50.000</b>\nTorpedo de cuero crudo — <b>$48.000</b>\nImperial de alpaca — <b>$37.000</b>\nCamionero 4 patas — <b>$18.500</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero clásico — <b>$21.500</b>\nImperial de algarrobo — <b>$27.200</b>\nMate vaquita — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera Fogón — <b>$16.000</b>\nBombilla pico de loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500 / $22.500\n<b>🧉 Calabaza</b>: $17.999 / $26.999 / $30.000 / $50.000 / $48.000 / $37.000 / $18.500\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $16.000\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $50.000 (Imperial de cuero crudo con base). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
-  { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera Fogón — $16.000 / 🧉 Criollo de calabaza — $17.999,99 / 🤎 <b>Combo criollo + bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera Fogón — $16.000 / 🧉 Criollo de calabaza — $17.999 / 🤎 <b>Combo criollo + bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   {
     keys: ['curar','curado','como curar','cómo curar','primer uso','estrenar','preparar'],
     resp: ['¡Buenísima pregunta! 🔥 Curar bien el mate es clave para sacarle todo el sabor. El proceso varía un poco según el material. ¿Tu mate es de <b>calabaza</b> o de <b>algarrobo</b>?'],
@@ -3351,6 +3351,116 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) load
   const n = document.querySelectorAll('.product-card:not([data-cat="combos"])').length;
   if (n) document.querySelectorAll('.piezas-count').forEach(el => el.textContent = n);
 })();
+</script>
+<script>
+/* =====================================================================
+   PRECIOS EN VIVO — lee la pestaña "Precios finales x UNIDAD" del Sheet
+   (publicada como CSV). Cambiás un precio en el Sheet → cambia en las
+   tarjetas, el detalle, el carrito, el buscador de regalos y Vizcachita.
+   El precio tachado de los combos es la suma real de mate + bombilla.
+   Si el Sheet no responde, quedan los precios escritos en la web.
+   ===================================================================== */
+const PRICE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQYu2FqWn5-NCtVI77d2jcZeajfqh9uIh7Acddu-GWDU_nok1pX5LDS5AVUUHhxc4whvb_iJL8ksAL/pub?gid=2097814812&single=true&output=csv';
+// Producto de la web → fila del Sheet de precios
+const PRICE_MAP = {
+  combo_criollo: 'CRIOLLOS CON BOMBILLA',
+  combo_camionero: 'CAMIONERO CON BOMBILLA',
+  combo_camionero_4_patas: 'CAMIONERO 4 PATAS CON BOMBILLA'
+};
+Object.entries(STOCK_MAP).forEach(([key, names]) => { if (!PRICE_MAP[key] && names.length === 1) PRICE_MAP[key] = names[0]; });
+// Combos: para el precio "antes" se suman sus partes
+const COMBO_PARTS = {
+  combo_criollo: ['CRIOLLOS', 'BOMBILLAS'],
+  combo_camionero: ['CAMIONEROS', 'BOMBILLAS'],
+  combo_camionero_4_patas: ['CAMIONERO 4 PATAS', 'BOMBILLAS']
+};
+let PRICES = {};
+
+function priceNum(raw) {
+  let t = String(raw || '').replace(/[^\d.,-]/g, '');
+  if (!t) return NaN;
+  const lc = t.lastIndexOf(','), ld = t.lastIndexOf('.');
+  if (lc >= 0 && ld >= 0) t = lc > ld ? t.replace(/\./g, '').replace(',', '.') : t.replace(/,/g, '');
+  else if (lc >= 0) t = /^\d{1,3}(,\d{3})+$/.test(t) ? t.replace(/,/g, '') : t.replace(',', '.');
+  else if (/^\d{1,3}(\.\d{3})+$/.test(t)) t = t.replace(/\./g, '');
+  const n = parseFloat(t);
+  return n > 0 && n < 1e7 ? n : NaN;
+}
+function priceFmt(n) { return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 2 }); }
+
+function applyPrices(table) {
+  const next = {};
+  Object.entries(PRICE_MAP).forEach(([key, name]) => { const v = table[stockNorm(name)]; if (!isNaN(v)) next[key] = v; });
+  if (!Object.keys(next).length) return;
+  PRICES = next;
+
+  document.querySelectorAll('.product-card').forEach(card => {
+    const key = cardKey(card); const v = PRICES[key];
+    if (v === undefined) return;
+    card.dataset.price = v;
+    const priceEl = card.querySelector('.product-price');
+    if (priceEl) priceEl.textContent = priceFmt(v);
+    // Precio tachado honesto: suma de las partes del combo
+    if (COMBO_PARTS[key] && priceEl) {
+      const parts = COMBO_PARTS[key].map(n => table[stockNorm(n)]);
+      let oldEl = card.querySelector('.product-price-old');
+      const sum = parts.every(x => !isNaN(x)) ? parts.reduce((a, b) => a + b, 0) : NaN;
+      if (!isNaN(sum) && sum > v) {
+        if (!oldEl) { oldEl = document.createElement('span'); oldEl.className = 'product-price-old'; priceEl.parentNode.insertBefore(oldEl, priceEl); }
+        oldEl.textContent = priceFmt(sum);
+      } else if (oldEl) oldEl.remove();
+    }
+    card.querySelectorAll('[onclick]').forEach(el => {
+      const oc = el.getAttribute('onclick');
+      const nc = oc
+        .replace(/(consultarProducto\('(?:[^'\\]|\\.)*',\s*')[^']*(')/, (m, a, z) => a + priceFmt(v) + z)
+        .replace(/(addToCart\('[^']+',\s*'(?:[^'\\]|\\.)*',\s*)[\d.]+/, (m, a) => a + v);
+      if (nc !== oc) el.setAttribute('onclick', nc);
+    });
+  });
+
+  if (typeof GIFT_PRODUCTS !== 'undefined') GIFT_PRODUCTS.forEach(p => { if (PRICES[p.key] !== undefined) p.price = PRICES[p.key]; });
+
+  if (typeof CART !== 'undefined') {
+    let changed = false;
+    CART.forEach(i => { if (PRICES[i.key] !== undefined && i.price !== PRICES[i.key]) { i.price = PRICES[i.key]; changed = true; } });
+    if (changed) { saveCart(); updateCartFabBadge(); renderCart(); }
+  }
+
+  // Filtro "Hasta $..." ajustado al rango real de precios
+  const pr = document.getElementById('priceRange');
+  if (pr) {
+    const all = [...document.querySelectorAll('.product-card')].map(c => Number(c.dataset.price)).filter(n => n > 0);
+    const wasMax = Number(pr.value) >= Number(pr.max);
+    pr.min = Math.floor(Math.min(...all) / 500) * 500;
+    pr.max = Math.ceil(Math.max(...all) / 500) * 500;
+    if (wasMax) pr.value = pr.max;
+    pr.dispatchEvent(new Event('input'));
+  }
+}
+
+async function loadPrices() {
+  try {
+    const res = await fetch(PRICE_CSV_URL + '&_=' + Date.now(), { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const table = {};
+    parseCSV(await res.text()).forEach(r => {
+      const name = stockNorm(r[0]); const v = priceNum(r[1]);
+      if (name && !isNaN(v) && !(name in table)) table[name] = v;
+    });
+    applyPrices(table);
+  } catch (err) {
+    console.warn('[Precios] No se pudo leer los precios del Sheet:', err.message);
+  }
+}
+// El carrito y el detalle usan siempre el precio en vivo
+const _addToCartPrecio = addToCart;
+addToCart = function (key, name, price, img, originEl) {
+  return _addToCartPrecio(key, name, PRICES[key] !== undefined ? PRICES[key] : price, img, originEl);
+};
+loadPrices();
+setInterval(() => { if (!document.hidden) loadPrices(); }, STOCK_REFRESH_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadPrices(); });
 </script>
 <script>
 /* =====================================================================
