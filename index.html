@@ -1498,6 +1498,49 @@ footer::before {
   .gallery-detail-price { font-size: 1.25rem; }
 }
 
+
+/* ===== STOCK EN VIVO (desde el Google Sheet) ===== */
+.stock-msg {
+  display: inline-block; margin: -0.3rem 0 0.9rem;
+  font-family: 'Cormorant Garamond', serif; font-size: 0.82rem; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--ember-dark); background: rgba(196, 98, 45, 0.1);
+  border-left: 3px solid var(--ember); padding: 0.3rem 0.7rem;
+}
+.stock-msg.stock-out { color: var(--brown-light); background: rgba(92, 61, 46, 0.08); border-left-color: var(--brown-light); }
+.product-card.is-soldout .product-img { filter: grayscale(55%) sepia(10%) opacity(0.75); }
+.product-card.is-soldout .product-price { color: var(--brown-light); }
+.soldout-badge {
+  position: absolute; top: 1rem; left: 1rem; z-index: 3;
+  background: var(--brown-dark); color: var(--cream);
+  font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.35rem 0.8rem;
+}
+.add-to-cart-btn:disabled, .gallery-detail-cart-btn:disabled,
+.add-to-cart-btn:disabled:hover, .gallery-detail-cart-btn:disabled:hover {
+  background: var(--sand); color: var(--brown-light); cursor: not-allowed;
+}
+.notify-back-btn {
+  font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ember-dark); background: transparent; border: 1px solid var(--ember);
+  padding: 0.5rem 0.8rem; cursor: pointer; font-family: 'Cormorant Garamond', serif;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+.notify-back-btn:hover { background: var(--ember); color: var(--cream); }
+.gallery-detail-notify { width: 100%; margin-top: 0.7rem; padding: 0.9rem; font-size: 0.9rem; }
+.stock-toast {
+  position: fixed; left: 50%; top: 6rem; transform: translateX(-50%);
+  background: var(--brown-dark); color: var(--cream); z-index: 9999;
+  font-family: 'Cormorant Garamond', serif; font-size: 1rem;
+  padding: 0.7rem 1.2rem; max-width: calc(100vw - 32px); text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); opacity: 0; transition: opacity 0.3s;
+  pointer-events: none;
+}
+.stock-toast.show { opacity: 1; }
+.add-to-cart-btn.no-more-stock, .gallery-detail-cart-btn.no-more-stock { background: var(--ember-dark); }
+.cart-qty-btn.cart-qty-max { opacity: 0.35; cursor: not-allowed; }
+.cart-stock-note {
+  margin-top: 0.35rem; font-size: 0.78rem; font-style: italic; color: var(--ember-dark);
+}
 </style>
 </head>
 <body>
@@ -2998,6 +3041,263 @@ setTimeout(() => {
 }, 4000);
 // Ocultar pill cuando se abre el chat
 chatToggle.addEventListener('click', hidePill);
+</script>
+<script>
+/* =====================================================================
+   STOCK EN VIVO — lee el stock del Google Sheet "Fogón Mates contabilidad"
+   ---------------------------------------------------------------------
+   1) En el Sheet: Archivo → Compartir → Publicar en la web
+      → elegí SOLO la pestaña de stock → formato "Valores separados por comas (.csv)"
+      → Publicar → copiá el link y pegalo abajo en STOCK_CSV_URL.
+   2) Reglas: >3 no muestra nada · 3 "Últimas unidades" · 2 "Últimas 2 unidades"
+      · 1 "Última unidad" · 0 "Agotado" (sin carrito + "Avisame cuando vuelva").
+   3) Si el Sheet no responde, la web funciona como siempre (no bloquea ventas).
+   ===================================================================== */
+const STOCK_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQYu2FqWn5-NCtVI77d2jcZeajfqh9uIh7Acddu-GWDU_nok1pX5LDS5AVUUHhxc4whvb_iJL8ksAL/pub?gid=763035755&single=true&output=csv'; // pestaña "Stock" publicada como CSV
+const STOCK_REFRESH_MS = 2 * 60 * 1000; // vuelve a consultar cada 2 minutos
+
+// Producto de la web → nombre(s) en la columna "Producto" del Sheet.
+// Si un producto usa varias filas (combos), el stock es el menor de ellas.
+const STOCK_MAP = {
+  combo_criollo:           ['CRIOLLOS', 'BOMBILLAS'],
+  combo_camionero:         ['CAMIONEROS', 'BOMBILLAS'],
+  combo_camionero_4_patas: ['CAMIONERO 4 PATAS', 'BOMBILLAS'],
+  criollo_calabaza:        ['CRIOLLOS'],
+  torpedo:                 ['TORPEDOS'],
+  imperial_calabaza:       ['IMPERIAL DE CALABAZA'],
+  imperial_cuero_crudo:    ['IMPERIAL CRUDO'],
+  torpedo_crudo:           ['TORPEDO CRUDO'],
+  imperial_alpaca:         ['IMPERIALES DE ALPACA LISA'],
+  camionero_4_patas:       ['CAMIONERO 4 PATAS'],
+  imperial_premium:        ['IMPERIALES DE ALGARROBO'],
+  vaquita_ranchero:        ['VAQUITA'],
+  camionero_clasico:       ['CAMIONEROS'],
+  yerbera:                 ['YERBERAS'],
+  bombilla:                ['BOMBILLAS']
+};
+
+let STOCK = {}; // key de la web → unidades disponibles (solo si hay dato)
+
+function stockNorm(s) {
+  return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toUpperCase().replace(/\s+/g, ' ');
+}
+function parseCSV(text) {
+  const rows = []; let row = [], cell = '', q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"' && text[i + 1] === '"') { cell += '"'; i++; }
+      else if (c === '"') q = false;
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cell); cell = ''; }
+    else if (c === '\n') { row.push(cell); rows.push(row); row = []; cell = ''; }
+    else if (c !== '\r') cell += c;
+  }
+  row.push(cell); rows.push(row);
+  return rows;
+}
+// Busca la primera tabla con encabezados "Producto" y "Stock actual" (o "Stock")
+// y lee filas hasta la primera fila vacía. Así sirve la pestaña de stock tal cual.
+function readStockTable(rows) {
+  const out = {};
+  for (let r = 0; r < rows.length; r++) {
+    const head = rows[r].map(stockNorm);
+    const pCol = head.indexOf('PRODUCTO');
+    let sCol = head.indexOf('STOCK ACTUAL');
+    if (sCol < 0) sCol = head.indexOf('STOCK');
+    if (pCol < 0 || sCol < 0) continue;
+    for (let k = r + 1; k < rows.length; k++) {
+      const name = stockNorm(rows[k][pCol]);
+      if (!name) break;
+      const n = parseInt(String(rows[k][sCol]).replace(/[^\d-]/g, ''), 10);
+      if (!isNaN(n)) out[name] = Math.max(0, n);
+    }
+    break;
+  }
+  return out;
+}
+function stockFor(key) { return Object.prototype.hasOwnProperty.call(STOCK, key) ? STOCK[key] : null; }
+function stockLabel(n) {
+  if (n === null || n > 3) return '';
+  if (n === 3) return 'Últimas unidades';
+  if (n === 2) return 'Últimas 2 unidades';
+  if (n === 1) return 'Última unidad';
+  return 'Agotado';
+}
+function cardKey(card) {
+  const w = card.querySelector('[data-gallery-key]');
+  if (w) return w.getAttribute('data-gallery-key');
+  const b = card.querySelector('.add-to-cart-btn');
+  const m = b && (b.getAttribute('onclick') || '').match(/addToCart\('([^']+)'/);
+  return m ? m[1] : null;
+}
+function avisameCuandoVuelva(name) {
+  const msg = `Hola Fogón! Vi que el "${name}" está agotado. ¿Me avisan cuando vuelva a entrar? 🧉`;
+  window.open('https://wa.me/5491150998752?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+}
+function stockToast(text) {
+  let t = document.getElementById('stockToast');
+  if (!t) { t = document.createElement('div'); t.id = 'stockToast'; t.className = 'stock-toast'; document.body.appendChild(t); }
+  t.textContent = text; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 4200);
+}
+
+function stockLimitText(name, n) {
+  return n === 1
+    ? `No podés sumar más: de "${name}" queda 1 sola unidad en stock y ya está en tu carrito.`
+    : `No podés sumar más: de "${name}" quedan ${n} unidades en stock y ya están todas en tu carrito.`;
+}
+// Cambia un momento el texto del botón para que se entienda por qué no se agregó
+function flashNoStock(btn, text) {
+  if (!btn || !btn.tagName || btn.tagName !== 'BUTTON' || btn.disabled) return;
+  if (btn._stockFlash) clearTimeout(btn._stockFlash);
+  else btn.dataset.prevLabel = btn.innerHTML;
+  btn.innerHTML = text; btn.classList.add('no-more-stock');
+  btn._stockFlash = setTimeout(() => { btn.innerHTML = btn.dataset.prevLabel; btn.classList.remove('no-more-stock'); btn._stockFlash = null; }, 2200);
+}
+// En el carrito: si ya tiene todo el stock disponible, lo avisa debajo del producto
+function annotateCartStock() {
+  document.querySelectorAll('#cartItemsWrap .cart-item').forEach(el => {
+    const plus = [...el.querySelectorAll('.cart-qty-btn')].find(b => /changeQty\('[^']+',\s*1\)/.test(b.getAttribute('onclick') || ''));
+    if (!plus) return;
+    const key = (plus.getAttribute('onclick').match(/changeQty\('([^']+)'/) || [])[1];
+    const item = typeof CART !== 'undefined' && CART.find(i => i.key === key);
+    const n = stockFor(key);
+    let note = el.querySelector('.cart-stock-note');
+    const atMax = item && n !== null && item.qty >= n;
+    plus.classList.toggle('cart-qty-max', !!atMax);
+    plus.title = atMax ? 'No hay más stock' : '';
+    if (atMax) {
+      if (!note) { note = document.createElement('div'); note.className = 'cart-stock-note'; el.querySelector('.cart-item-info').appendChild(note); }
+      note.textContent = n === 1 ? 'Es la última unidad en stock' : `Llevás las ${n} unidades que quedan en stock`;
+    } else if (note) note.remove();
+  });
+}
+
+function applyStockToCards() {
+  document.querySelectorAll('.product-card').forEach(card => {
+    const key = cardKey(card); if (!key) return;
+    const n = stockFor(key);
+    const label = stockLabel(n);
+    const info = card.querySelector('.product-info');
+    const footer = card.querySelector('.product-footer');
+    const cartBtn = card.querySelector('.add-to-cart-btn');
+    const imgWrap = card.querySelector('.product-img-wrap');
+    const name = (card.querySelector('.product-name') || {}).textContent || '';
+
+    let msg = card.querySelector('.stock-msg');
+    if (label) {
+      if (!msg) { msg = document.createElement('div'); msg.className = 'stock-msg'; info.insertBefore(msg, footer); }
+      msg.textContent = label;
+      msg.classList.toggle('stock-out', n === 0);
+    } else if (msg) msg.remove();
+
+    const out = n === 0;
+    card.classList.toggle('is-soldout', out);
+    if (cartBtn) {
+      if (!cartBtn.dataset.label) cartBtn.dataset.label = cartBtn.innerHTML;
+      cartBtn.disabled = out;
+      cartBtn.innerHTML = out ? 'Agotado' : cartBtn.dataset.label;
+    }
+    let badge = imgWrap && imgWrap.querySelector('.soldout-badge');
+    if (out && imgWrap && !badge) { badge = document.createElement('span'); badge.className = 'soldout-badge'; badge.textContent = 'Agotado'; imgWrap.appendChild(badge); }
+    if (!out && badge) badge.remove();
+
+    let notify = card.querySelector('.notify-back-btn');
+    if (out && footer && !notify) {
+      notify = document.createElement('button');
+      notify.className = 'notify-back-btn';
+      notify.textContent = '🔔 Avisame cuando vuelva';
+      notify.onclick = e => { e.stopPropagation(); avisameCuandoVuelva(name.trim()); };
+      footer.appendChild(notify);
+    }
+    if (!out && notify) notify.remove();
+  });
+}
+
+// Si alguien ya tenía en el carrito más unidades de las que hay, se ajusta.
+function clampCartToStock() {
+  if (typeof CART === 'undefined') return;
+  let changed = false;
+  CART = CART.filter(item => {
+    const n = stockFor(item.key);
+    if (n === null) return true;
+    if (n === 0) { changed = true; return false; }
+    if (item.qty > n) { item.qty = n; changed = true; }
+    return true;
+  });
+  if (changed) { saveCart(); updateCartFabBadge(); renderCart(); }
+}
+
+// ---- Enganches con el carrito y la vista de detalle existentes ----
+const _addToCartOriginal = addToCart;
+addToCart = function (key, name, price, img, originEl) {
+  const n = stockFor(key);
+  if (n !== null) {
+    const inCart = (CART.find(i => i.key === key) || { qty: 0 }).qty;
+    if (n === 0) { stockToast(`No hay stock de "${name}" en este momento. Podés tocar "Avisame cuando vuelva" y te escribimos.`); flashNoStock(originEl, 'Sin stock'); return; }
+    if (inCart >= n) { stockToast(stockLimitText(name, n)); flashNoStock(originEl, 'No hay más stock'); return; }
+  }
+  return _addToCartOriginal(key, name, price, img, originEl);
+};
+const _changeQtyOriginal = changeQty;
+changeQty = function (key, delta) {
+  const n = stockFor(key);
+  const item = CART.find(i => i.key === key);
+  if (delta > 0 && n !== null && item && item.qty + delta > n) {
+    stockToast(stockLimitText(item.name, n)); return;
+  }
+  return _changeQtyOriginal(key, delta);
+};
+const _renderCartOriginal = renderCart;
+renderCart = function () { _renderCartOriginal(); annotateCartStock(); };
+const _openProductDetailOriginal = openProductDetail;
+openProductDetail = function (productKey) {
+  _openProductDetailOriginal(productKey);
+  const n = stockFor(productKey);
+  const label = stockLabel(n);
+  const priceEl = document.getElementById('galleryDetailPrice');
+  const cartBtn = document.getElementById('galleryDetailCartBtn');
+  let msg = document.getElementById('galleryDetailStock');
+  if (!msg) { msg = document.createElement('div'); msg.id = 'galleryDetailStock'; msg.className = 'stock-msg'; priceEl.insertAdjacentElement('afterend', msg); }
+  msg.style.display = label ? '' : 'none';
+  msg.textContent = label;
+  msg.classList.toggle('stock-out', n === 0);
+  cartBtn.disabled = n === 0;
+  cartBtn.textContent = n === 0 ? 'Agotado' : '🛒 Agregar al carrito';
+  let notify = document.getElementById('galleryDetailNotify');
+  if (n === 0) {
+    if (!notify) { notify = document.createElement('button'); notify.id = 'galleryDetailNotify'; notify.className = 'notify-back-btn gallery-detail-notify'; notify.textContent = '🔔 Avisame cuando vuelva'; cartBtn.insertAdjacentElement('afterend', notify); }
+    notify.style.display = '';
+    notify.onclick = () => avisameCuandoVuelva(document.getElementById('galleryDetailName').textContent.trim());
+  } else if (notify) notify.style.display = 'none';
+};
+
+async function loadStock() {
+  if (!STOCK_CSV_URL) return;
+  try {
+    const url = STOCK_CSV_URL + (STOCK_CSV_URL.includes('?') ? '&' : '?') + '_=' + Date.now();
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const table = readStockTable(parseCSV(await res.text()));
+    if (!Object.keys(table).length) throw new Error('No encontré la tabla "Producto / Stock actual"');
+    const next = {};
+    Object.entries(STOCK_MAP).forEach(([key, names]) => {
+      const vals = names.map(nm => table[stockNorm(nm)]).filter(v => typeof v === 'number');
+      if (vals.length === names.length) next[key] = Math.min(...vals);
+    });
+    STOCK = next;
+    applyStockToCards();
+    clampCartToStock();
+    annotateCartStock();
+  } catch (err) {
+    console.warn('[Stock] No se pudo leer el stock del Sheet:', err.message);
+  }
+}
+loadStock();
+setInterval(() => { if (!document.hidden) loadStock(); }, STOCK_REFRESH_MS);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadStock(); });
 </script>
 </body>
 </html>
