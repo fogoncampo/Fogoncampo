@@ -334,6 +334,7 @@ nav.scrolled { padding: 0.8rem 3rem; }
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s ease;
 }
 .gift-modal.open .gift-inner { transform: scale(1) translateY(0); opacity: 1; }
+.gift-note { font-size: 0.9rem; font-style: italic; color: var(--brown-light); margin: -0.4rem 0 1rem; text-align: center; }
 .gift-question {
   font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 900;
   color: var(--brown-dark); margin-bottom: 1.6rem;
@@ -1707,7 +1708,7 @@ footer::before {
         </div>
         <div class="product-info">
           <h3 class="product-name">Combo camionero de algarrobo + bombilla</h3>
-          <p class="product-desc">Algarrobo con virola de acero inoxidable. Diseño tradicional. Viene con bombilla de regalo.</p>
+          <p class="product-desc">Algarrobo con virola de acero inoxidable. Diseño tradicional. Incluye bombilla pico de loro.</p>
           <div class="product-footer">
             <div><span class="product-price-old">$28.000</span><span class="product-price">$25.500</span></div>
             <button class="product-action" onclick="consultarProducto('Combo camionero de algarrobo + bombilla', '$25.500')">Consultar</button>
@@ -1728,7 +1729,7 @@ footer::before {
         </div>
         <div class="product-info">
           <h3 class="product-name">Combo camionero 4 patas + bombilla</h3>
-          <p class="product-desc">Calabaza natural forrada en cuero, con virola de acero inoxidable y base de 4 patas. Viene con bombilla de regalo.</p>
+          <p class="product-desc">Calabaza natural forrada en cuero, con virola de acero inoxidable y base de 4 patas. Incluye bombilla pico de loro.</p>
           <div class="product-footer">
             <div><span class="product-price-old">$25.000</span><span class="product-price">$22.500</span></div>
             <button class="product-action" onclick="consultarProducto('Combo camionero 4 patas + bombilla', '$22.500')">Consultar</button>
@@ -2252,9 +2253,9 @@ footer::before {
     <div id="giftStep1">
       <p class="gift-question">¿Cuál es tu presupuesto?</p>
       <div class="gift-options">
-        <button class="gift-option-btn" onclick="giftSetBudget(12000)">Hasta $18.000</button>
-        <button class="gift-option-btn" onclick="giftSetBudget(24000)">$18.000 – $32.000</button>
-        <button class="gift-option-btn" onclick="giftSetBudget(40000)">Más de $32.000</button>
+        <button class="gift-option-btn" onclick="giftSetBudget(0, 18000)">Hasta $18.000</button>
+        <button class="gift-option-btn" onclick="giftSetBudget(18000, 32000)">$18.000 – $32.000</button>
+        <button class="gift-option-btn" onclick="giftSetBudget(32000, Infinity)">Más de $32.000</button>
       </div>
     </div>
     <div id="giftStep2" style="display:none;">
@@ -2266,7 +2267,8 @@ footer::before {
       </div>
     </div>
     <div id="giftResults" style="display:none;">
-      <p class="gift-question">Estos son los que más pegan:</p>
+      <p class="gift-question" id="giftResultsTitle">Estos son los que más pegan:</p>
+      <p class="gift-note" id="giftNote" style="display:none;"></p>
       <div class="gift-results-grid" id="giftResultsGrid"></div>
       <button class="gift-restart" onclick="restartGiftFinder()">Empezar de nuevo</button>
     </div>
@@ -2565,16 +2567,37 @@ function restartGiftFinder() {
   document.getElementById('giftStep2').style.display = 'none';
   document.getElementById('giftResults').style.display = 'none';
 }
-function giftSetBudget(midpoint) {
-  giftBudget = midpoint;
+function giftSetBudget(min, max) {
+  giftBudget = { min, max };
   document.getElementById('giftStep1').style.display = 'none';
   document.getElementById('giftStep2').style.display = '';
 }
 function giftSetStyle(style) {
-  let candidates = style === 'cualquiera' ? GIFT_PRODUCTS.slice() : GIFT_PRODUCTS.filter(p => p.cat === style);
-  if (candidates.length < 3) candidates = GIFT_PRODUCTS.slice();
-  candidates.sort((a, b) => Math.abs(a.price - giftBudget) - Math.abs(b.price - giftBudget));
+  const STYLE_NAMES = { calabaza: 'calabaza', algarrobo: 'algarrobo' };
+  // Solo productos que entran en el presupuesto elegido y que tienen stock
+  const hayStock = p => typeof stockFor !== 'function' || stockFor(p.key) !== 0;
+  const enPresupuesto = GIFT_PRODUCTS.filter(p => p.price >= giftBudget.min && p.price <= giftBudget.max && hayStock(p));
+  let candidates = style === 'cualquiera' ? enPresupuesto.slice() : enPresupuesto.filter(p => p.cat === style);
+  let note = '';
+  if (!candidates.length && style !== 'cualquiera') {
+    candidates = enPresupuesto.slice();
+    if (candidates.length) note = `No tenemos mates de ${STYLE_NAMES[style]} en ese presupuesto, pero estas opciones sí entran:`;
+  }
+  // Primero lo que mejor aprovecha el presupuesto (más cerca del centro del rango)
+  const centro = giftBudget.max === Infinity ? giftBudget.min * 1.25 : (giftBudget.min + giftBudget.max) / 2;
+  candidates.sort((a, b) => Math.abs(a.price - centro) - Math.abs(b.price - centro));
   const top = candidates.slice(0, 3);
+
+  const noteEl = document.getElementById('giftNote');
+  const titleEl = document.getElementById('giftResultsTitle');
+  if (!top.length) {
+    titleEl.textContent = 'Por ahora no tenemos opciones en ese presupuesto 😕';
+    note = 'Escribinos por WhatsApp y te armamos algo a medida.';
+  } else {
+    titleEl.textContent = 'Estos son los que más pegan:';
+  }
+  noteEl.textContent = note;
+  noteEl.style.display = note ? '' : 'none';
 
   const grid = document.getElementById('giftResultsGrid');
   grid.innerHTML = '';
@@ -2921,7 +2944,7 @@ const KB = [
   { keys: ['whatsapp','wsp','contacto','contactar','telefono','hablar'], resp: ['¡Podés escribirnos al +54 9 11 5099-8752! 📲 Te atendemos para confirmar stock, envío y cerrar la compra.'], link: { text: '💬 Abrir WhatsApp', url: WA_LINK } },
   { keys: ['envio','envíos','mandan','llega','correo','todo el pais'], resp: ['¡Sí, enviamos a todo el país! 📦 Despachamos por correo. Para el costo, escribinos con tu código postal y te calculamos al toque.'], link: { text: '💬 Consultar envío', url: WA_LINK } },
   { keys: ['pago','pagar','transferencia','efectivo','como pago'], resp: ['Aceptamos transferencia bancaria y efectivo 💸 Se coordina por WhatsApp al confirmar el pedido. ¡Simple y directo!'], link: { text: '💬 Coordinar compra', url: WA_LINK } },
-  { keys: ['regalo','regalar','cumpleaños','dia del padre','dia de la madre'], resp: ['¡Un mate artesanal es el regalo perfecto! 🎁 Los combos son los más elegidos: Criollo ($21.999) o Camionero ($25.500). También el Mate vaquita ($39.500) para algo exclusivo. ¿Para quién es?'], link: { text: '💬 Armar regalo', url: WA_LINK } },
+  { keys: ['regalo','regalar','cumpleaños','dia del padre','dia de la madre'], resp: ['¡Un mate artesanal es el regalo perfecto! 🎁 Los combos son los más elegidos: Combo criollo + bombilla ($21.999) o Combo camionero + bombilla ($25.500). Si tenés un presupuesto en mente, probá el buscador de regalos 🎁 de la web: te muestra solo lo que entra en tu presupuesto y tiene stock. ¿Para quién es?'], link: { text: '💬 Armar regalo', url: WA_LINK } },
   { keys: ['como compro','quiero comprar','quiero uno','proceso de compra'], resp: ['¡Muy fácil! 1️⃣ Elegís el mate 2️⃣ Nos escribís por WhatsApp 3️⃣ Te calculamos el envío 4️⃣ Coordinamos el pago 5️⃣ ¡Lo despachamos! 📦'], link: { text: '💬 Empezar por WhatsApp', url: WA_LINK } },
   { keys: ['gracias','genial','copado','perfecto','ok','dale','listo'], resp: ['¡De nada! 🤎 Si necesitás algo más, acá estoy. ¡Que disfrutes el mate!','¡Buenísimo! 🔥 Seguinos en @fogonmates para novedades. ¡Y que arda el fogón!'] },
 ];
