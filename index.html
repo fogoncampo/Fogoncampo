@@ -3099,7 +3099,7 @@ chatToggle.addEventListener('click', hidePill);
       · 1 "Última unidad" · 0 "Agotado" (sin carrito + "Avisame cuando vuelva").
    3) Si el Sheet no responde, la web funciona como siempre (no bloquea ventas).
    ===================================================================== */
-const STOCK_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQYu2FqWn5-NCtVI77d2jcZeajfqh9uIh7Acddu-GWDU_nok1pX5LDS5AVUUHhxc4whvb_iJL8ksAL/pub?gid=763035755&single=true&output=csv'; // pestaña "Stock" publicada como CSV
+const STOCK_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQYu2FqWn5-NCtVI77d2jcZeajfqh9uIh7Acddu-GWDU_nok1pX5LDS5AVUUHhxc4whvb_iJL8ksAL/pub?gid=811582944&single=true&output=csv'; // pestaña "WEB" del Sheet (solo producto, stock y precio), publicada como CSV
 const STOCK_REFRESH_MS = 2 * 60 * 1000; // vuelve a consultar cada 2 minutos
 
 // Producto de la web → nombre(s) en la columna "Producto" del Sheet.
@@ -3354,13 +3354,13 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) load
 </script>
 <script>
 /* =====================================================================
-   PRECIOS EN VIVO — lee la pestaña "Precios finales x UNIDAD" del Sheet
-   (publicada como CSV). Cambiás un precio en el Sheet → cambia en las
+   PRECIOS EN VIVO — lee la columna Precio de la pestaña "WEB" del Sheet,
+   que toma los valores de "Precios finales x UNIDAD". Cambiás un precio → cambia en las
    tarjetas, el detalle, el carrito, el buscador de regalos y Vizcachita.
    El precio tachado de los combos es la suma real de mate + bombilla.
    Si el Sheet no responde, quedan los precios escritos en la web.
    ===================================================================== */
-const PRICE_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQYu2FqWn5-NCtVI77d2jcZeajfqh9uIh7Acddu-GWDU_nok1pX5LDS5AVUUHhxc4whvb_iJL8ksAL/pub?gid=2097814812&single=true&output=csv';
+const PRICE_CSV_URL = STOCK_CSV_URL; // misma pestaña "WEB": columna Precio
 // Producto de la web → fila del Sheet de precios
 const PRICE_MAP = {
   combo_criollo: 'CRIOLLOS CON BOMBILLA',
@@ -3444,8 +3444,13 @@ async function loadPrices() {
     const res = await fetch(PRICE_CSV_URL + '&_=' + Date.now(), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const table = {};
-    parseCSV(await res.text()).forEach(r => {
-      const name = stockNorm(r[0]); const v = priceNum(r[1]);
+    const rows = parseCSV(await res.text());
+    // Usa las columnas "Producto" y "Precio" si existen (pestaña WEB); si no, A y B
+    let pCol = 0, vCol = 1;
+    const head = rows.length ? rows[0].map(stockNorm) : [];
+    if (head.includes('PRODUCTO') && head.includes('PRECIO')) { pCol = head.indexOf('PRODUCTO'); vCol = head.indexOf('PRECIO'); }
+    rows.forEach(r => {
+      const name = stockNorm(r[pCol]); const v = priceNum(r[vCol]);
       if (name && !isNaN(v) && !(name in table)) table[name] = v;
     });
     applyPrices(table);
