@@ -310,14 +310,34 @@ nav.scrolled { padding: 0.8rem 3rem; }
 
 /* ── BUSCADOR DE REGALO ── */
 .gift-finder-trigger {
-  max-width: 420px; margin: 0 auto 2.5rem; text-align: center;
-  padding: 0.9rem 1.4rem; border: 1px dashed var(--gold);
-  cursor: pointer; transition: background 0.25s ease, border-color 0.25s ease;
+  display: flex; align-items: center; gap: 0.9rem;
+  width: calc(100% - 32px); max-width: 460px; margin: 0 auto 2.5rem;
+  padding: 0.85rem 0.9rem 0.85rem 1rem; text-align: left;
+  background: var(--brown-dark); color: var(--cream);
+  border: 1px solid var(--gold); border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(58, 36, 25, 0.28), inset 0 0 0 1px rgba(212, 175, 112, 0.15);
+  cursor: pointer; font: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.25s ease;
+  animation: giftNudge 3.2s ease-in-out 1.5s infinite;
 }
-.gift-finder-trigger:hover { background: var(--parchment); border-color: var(--ember); }
-.gift-finder-trigger span {
-  font-family: 'Cormorant Garamond', serif; font-style: italic;
-  font-size: 1.05rem; color: var(--brown-dark);
+.gift-finder-trigger:hover { background: var(--brown); transform: translateY(-2px); box-shadow: 0 10px 24px rgba(58, 36, 25, 0.35); }
+.gift-finder-trigger:active { transform: translateY(1px) scale(0.99); box-shadow: 0 3px 10px rgba(58, 36, 25, 0.3); }
+.gift-finder-trigger:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.gift-trigger-icon { font-size: 1.7rem; line-height: 1; flex-shrink: 0; }
+.gift-trigger-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.gift-trigger-text strong { font-family: 'Playfair Display', serif; font-size: 1.02rem; font-weight: 700; color: var(--cream); }
+.gift-trigger-text small { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.95rem; color: var(--gold-light); }
+.gift-trigger-cta {
+  flex-shrink: 0; background: var(--ember); color: var(--cream);
+  font-family: 'Cormorant Garamond', serif; font-weight: 700; font-size: 0.85rem;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.55rem 0.8rem; border-radius: 4px; white-space: nowrap;
+}
+@keyframes giftNudge { 0%, 88%, 100% { transform: translateY(0); } 92% { transform: translateY(-3px); } 96% { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .gift-finder-trigger { animation: none; } }
+@media (max-width: 380px) {
+  .gift-trigger-cta { padding: 0.5rem 0.6rem; font-size: 0.78rem; }
+  .gift-trigger-text strong { font-size: 0.95rem; }
 }
 .gift-modal {
   display: none; position: fixed; inset: 0; z-index: 500;
@@ -1657,9 +1677,11 @@ footer::before {
     <div class="section-rule"></div>
     <p class="section-subtitle">Cada pieza, una historia. Cada mate, una tradición.</p>
   </div>
-  <div class="gift-finder-trigger" onclick="openGiftFinder()">
-    <span>🎁 ¿Buscás un regalo? Te ayudamos a elegir en 10 segundos</span>
-  </div>
+  <button type="button" class="gift-finder-trigger" onclick="openGiftFinder()">
+    <span class="gift-trigger-icon" aria-hidden="true">🎁</span>
+    <span class="gift-trigger-text"><strong>¿Buscás un regalo?</strong><small>Te ayudamos a elegir en 10 segundos</small></span>
+    <span class="gift-trigger-cta">Empezar →</span>
+  </button>
   <div class="products-section">
     <div class="category-nav">
       <button class="cat-btn active" data-cat="todos">Todos</button>
@@ -2318,6 +2340,7 @@ footer::before {
       <button class="chat-suggestion" onclick="sendSuggestion('¿Hacen envíos?')">📦 Envíos</button>
       <button class="chat-suggestion" onclick="sendSuggestion('¿Cómo compro?')">🛍️ ¿Cómo compro?</button>
       <button class="chat-suggestion" onclick="sendSuggestion('Quiero hacer un regalo')">🎁 Regalar un mate</button>
+      <button class="chat-suggestion" onclick="sendSuggestion('¿Qué hay en stock?')">📦 ¿Qué hay en stock?</button>
       <a href="https://www.instagram.com/fogonmates/" target="_blank" rel="noopener" class="chat-suggestion chat-sug-ig">📸 Instagram</a>
       <a href="https://wa.me/5491150998752?text=Hola%20Fog%C3%B3n!%20Quiero%20consultar%20por%20los%20productos%20y%20combos%20que%20vi%20en%20la%20web." target="_blank" rel="noopener" class="chat-suggestion chat-sug-wa">💬 WhatsApp</a>
     </div>
@@ -3328,6 +3351,151 @@ document.addEventListener('visibilitychange', () => { if (!document.hidden) load
   const n = document.querySelectorAll('.product-card:not([data-cat="combos"])').length;
   if (n) document.querySelectorAll('.piezas-count').forEach(el => el.textContent = n);
 })();
+</script>
+<script>
+/* =====================================================================
+   VIZCACHITA EN VIVO — responde con el catálogo y precios de la web
+   y con el stock real del Google Sheet (el mismo que usan las tarjetas).
+   Si agregás o cambiás un producto en la web, Vizcachita lo toma solo.
+   ===================================================================== */
+const VIZ_CAT_ORDER = [
+  ['combos', '🤝 COMBOS'], ['calabaza', '🧉 CALABAZA'], ['algarrobo', '🪵 ALGARROBO'],
+  ['accesorios', '👜 ACCESORIOS'], ['bombillas', '🥄 BOMBILLAS']
+];
+// Formas en que la gente nombra cada producto (la más larga gana)
+const VIZ_ALIASES = {
+  vaquita_ranchero: ['vaquita', 'ranchero'],
+  torpedo_crudo: ['torpedo de cuero crudo', 'torpedo crudo', 'torpedo de cuero'],
+  torpedo: ['torpedo con virola', 'torpedo'],
+  imperial_alpaca: ['imperial de alpaca', 'alpaca'],
+  imperial_cuero_crudo: ['imperial de cuero crudo', 'imperial crudo', 'cuero crudo'],
+  imperial_calabaza: ['imperial de calabaza', 'imperial calabaza'],
+  imperial_premium: ['imperial de algarrobo', 'imperial algarrobo'],
+  camionero_4_patas: ['camionero 4 patas', '4 patas', 'cuatro patas'],
+  camionero_clasico: ['camionero clasico', 'camionero de algarrobo', 'camionero'],
+  criollo_calabaza: ['criollo de calabaza', 'criollo'],
+  yerbera: ['yerbera', 'yerberas'],
+  bombilla: ['bombilla', 'bombillas', 'pico de loro']
+};
+function vizFmt(n) { return '$' + Number(n).toLocaleString('es-AR', { maximumFractionDigits: 2 }); }
+function vizProducts() {
+  return [...document.querySelectorAll('.product-card')].map(card => {
+    const key = cardKey(card);
+    const oldEl = card.querySelector('.product-price-old');
+    return {
+      key, cat: card.getAttribute('data-cat'),
+      name: ((card.querySelector('.product-name') || {}).textContent || '').trim(),
+      price: parseFloat(card.getAttribute('data-price')),
+      old: oldEl ? oldEl.textContent.trim() : '',
+      stock: key ? stockFor(key) : null
+    };
+  }).filter(p => p.key && p.name && !isNaN(p.price));
+}
+function vizTag(p) {
+  if (p.stock === 0) return ' — <i>agotado</i>';
+  if (p.stock === 1) return ' — <i>¡última unidad!</i>';
+  if (p.stock === 2) return ' — <i>quedan 2</i>';
+  if (p.stock === 3) return ' — <i>últimas unidades</i>';
+  return '';
+}
+function vizLine(p) { return `${p.name} — <b>${vizFmt(p.price)}</b>${vizTag(p)}`; }
+const vizDisponibles = () => vizProducts().filter(p => p.stock !== 0);
+
+const VIZ_LIVE = {
+  catalogo() {
+    const ps = vizProducts();
+    const bloques = VIZ_CAT_ORDER.map(([cat, titulo]) => {
+      const items = ps.filter(p => p.cat === cat);
+      return items.length ? `<b>${titulo}</b><br>` + items.map(vizLine).join('<br>') : '';
+    }).filter(Boolean);
+    return '¡Acá va el catálogo completo! 📋<br><br>' + bloques.join('<br><br>');
+  },
+  categorias() {
+    const ps = vizProducts();
+    const lineas = VIZ_CAT_ORDER.map(([cat, titulo]) => {
+      const items = ps.filter(p => p.cat === cat);
+      return items.length ? `<b>${titulo}</b>: ` + items.map(p => vizFmt(p.price) + (p.stock === 0 ? ' (agotado)' : '')).join(' / ') : '';
+    }).filter(Boolean);
+    return '¡Te los separo! 🧉<br><br>' + lineas.join('<br>') + '<br><br>¿Alguna categoría te interesa?';
+  },
+  combos() {
+    const cs = vizProducts().filter(p => p.cat === 'combos');
+    if (!cs.length) return 'Por ahora no tenemos combos publicados. Escribinos y te armamos uno 🤎';
+    return '¡Los combos son lo más completo! 🤎<br>' + cs.map(p => `${p.name} — <b>${vizFmt(p.price)}</b>${p.old ? ` (antes ${p.old})` : ''}${vizTag(p)}`).join('<br>') + '<br>¿Cuál te interesa?';
+  },
+  precio() {
+    const ps = vizDisponibles().sort((a, b) => a.price - b.price);
+    if (!ps.length) return 'Escribinos por WhatsApp y te pasamos precios y disponibilidad 📲';
+    const a = ps[0], z = ps[ps.length - 1];
+    return `Los precios van desde ${vizFmt(a.price)} (${a.name}) hasta ${vizFmt(z.price)} (${z.name}). ¿Querés ver todos juntos, por categoría, o el más barato?`;
+  },
+  barato() {
+    const ps = vizDisponibles().sort((a, b) => a.price - b.price).slice(0, 4);
+    return 'Las opciones más accesibles que tenemos disponibles:<br>' + ps.map(vizLine).join('<br>');
+  },
+  regalo() {
+    const cs = vizDisponibles().filter(p => p.cat === 'combos').sort((a, b) => a.price - b.price).slice(0, 2);
+    const txt = cs.length ? ' Los combos son los más elegidos: ' + cs.map(p => `${p.name} (<b>${vizFmt(p.price)}</b>)`).join(' o ') + '.' : '';
+    return `¡Un mate artesanal es el regalo perfecto! 🎁${txt} Si tenés un presupuesto en mente, probá el <b>buscador de regalos</b> 🎁 de la web: te muestra solo lo que entra en tu presupuesto y tiene stock. ¿Para quién es?`;
+  },
+  stock() {
+    const ps = vizProducts();
+    if (!ps.some(p => p.stock !== null)) return 'Ahora no puedo ver el stock, pero escribinos por WhatsApp y te lo confirmamos al toque 📲';
+    const agotados = ps.filter(p => p.stock === 0);
+    const pocos = ps.filter(p => p.stock > 0 && p.stock <= 3);
+    let t = '📦 Así está el stock ahora:<br>';
+    if (agotados.length) t += '<br><b>Agotados</b><br>' + agotados.map(p => p.name).join('<br>') + '<br>';
+    if (pocos.length) t += '<br><b>Quedan pocas unidades</b><br>' + pocos.map(p => `${p.name} — ${p.stock === 1 ? '1 unidad' : p.stock + ' unidades'}`).join('<br>') + '<br>';
+    t += '<br>Todo lo demás está disponible 🤎';
+    return t;
+  }
+};
+const VIZ_KB_MAP = { 'combo': 'combos', 'ver todos los precios': 'catalogo', 'precios por categoría': 'categorias', 'precio': 'precio', 'barato': 'barato', 'regalo': 'regalo' };
+const VIZ_STOCK_KEYS = ['stock', 'disponible', 'disponibles', 'disponibilidad', 'agotado', 'agotados', 'quedan', 'queda', 'hay en stock', 'les queda'];
+
+const _getResponseOriginal = getResponse;
+getResponse = function (input) {
+  try {
+    const q = ' ' + normalize(input) + ' ';
+    const has = k => q.includes(' ' + normalize(k).trim() + ' ');
+    // Producto puntual (ej: "¿hay vaquita?", "cuánto sale el torpedo")
+    let prod = null, prodScore = 0;
+    Object.entries(VIZ_ALIASES).forEach(([key, als]) => als.forEach(a => {
+      const sc = a.split(' ').length + 1;
+      if (has(a) && sc > prodScore) { prod = key; prodScore = sc; }
+    }));
+    const esCombo = has('combo') || has('combos');
+    const esCurado = ['curar', 'curado', 'estrenar', 'primer uso', 'preparar'].some(has);
+    if (prod && !esCombo && !esCurado) {
+      const p = vizProducts().find(x => x.key === prod);
+      if (p) {
+        let estado;
+        if (p.stock === 0) estado = 'Ahora está <b>agotado</b> 😕 Si querés, te avisamos cuando vuelva a entrar.';
+        else if (p.stock === 1) estado = '¡Queda <b>una sola unidad</b>! Si lo querés, no lo dejes pasar 🔥';
+        else if (p.stock === 2 || p.stock === 3) estado = `Quedan solo <b>${p.stock} unidades</b> 🔥`;
+        else estado = 'Tenemos stock disponible 🤎';
+        const link = p.stock === 0
+          ? { text: '🔔 Avisame cuando vuelva', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Vi que el "${p.name}" está agotado. ¿Me avisan cuando vuelva a entrar? 🧉`) }
+          : { text: '💬 Consultar por WhatsApp', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Quiero consultar por el ${p.name} (${vizFmt(p.price)}).`) };
+        return { text: `<b>${p.name}</b> — ${vizFmt(p.price)}${p.old ? ` (antes ${p.old})` : ''}.<br>${estado}`, link, postButtons: null };
+      }
+    }
+    if (!esCurado && VIZ_STOCK_KEYS.some(has)) {
+      return { text: VIZ_LIVE.stock(), link: { text: '💬 Consultar por WhatsApp', url: WA_LINK }, postButtons: null };
+    }
+    // Respuestas generales: se mantiene la lógica original, pero con datos en vivo
+    const nq = normalize(input);
+    let best = null, bestScore = 0;
+    for (const entry of KB) {
+      let score = 0;
+      for (const k of entry.keys) { if (nq.includes(normalize(k))) score += k.split(' ').length; }
+      if (score > bestScore) { bestScore = score; best = entry; }
+    }
+    const gen = best && VIZ_KB_MAP[best.keys[0]];
+    if (gen) return { text: VIZ_LIVE[gen](), link: best.link || null, postButtons: best.postButtons || null };
+  } catch (e) { console.warn('[Vizcachita] respuesta en vivo falló:', e.message); }
+  return _getResponseOriginal(input);
+};
 </script>
 </body>
 </html>
