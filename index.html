@@ -1673,6 +1673,27 @@ footer::before {
         </div>
       </div>
 
+      <!-- COMBO CAMIONERO 4 PATAS -->
+      <div class="product-card" data-cat="combos" data-price="22500">
+        <div class="product-img-wrap has-gallery" data-gallery-key="combo_camionero_4_patas" onclick="openProductDetail('combo_camionero_4_patas')">
+          <span class="product-badge">Oferta</span>
+          <div class="combo-img-split">
+            <img loading="lazy" decoding="async" class="split-img" src="mate-camionero-4-patas-1.jpeg" alt="Mate camionero 4 patas" onerror="this.style.background='#D4C4A0'">
+            <div class="split-divider"></div>
+            <img loading="lazy" decoding="async" class="split-img" src="Bombilla_pico_de_loro__inoxidable_.jpeg" alt="Bombilla" onerror="this.style.background='#C4B090'">
+          </div>
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Combo camionero 4 patas + bombilla</h3>
+          <p class="product-desc">Mate camionero de calabaza natural, forrado en cuero y con virola de acero inoxidable. Su diseño tradicional se distingue por su formato robusto y su base de 4 patas, que le aporta un apoyo firme y una presencia característica. Disponible en colores bordó, negro y suela, combina materiales nobles y una terminación cuidada, dando como resultado una pieza funcional y de estilo clásico. Las variaciones naturales de la calabaza hacen que cada pieza conserve su propia identidad. Incluye bombilla pico de loro (inoxidable): fabricada en acero inoxidable, con terminaciones simples y funcionales. Resistente y fácil de limpiar.</p>
+          <div class="product-footer">
+            <div><span class="product-price-old">$25.000</span><span class="product-price">$22.500</span></div>
+            <button class="product-action" onclick="consultarProducto('Combo camionero 4 patas + bombilla', '$22.500')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('combo_camionero_4_patas','Combo camionero 4 patas + bombilla',22500,'mate-camionero-4-patas-1.jpeg',this)">🛒 Agregar</button>
+          </div>
+        </div>
+      </div>
+
       <!-- MATE CRIOLLO CALABAZA -->
       <div class="product-card" data-cat="calabaza" data-price="17999.99">
         <div class="product-img-wrap has-gallery" data-gallery-key="criollo_calabaza" onclick="openProductDetail('criollo_calabaza')">
@@ -1733,6 +1754,22 @@ footer::before {
             <span class="product-price">$50.000</span>
             <button class="product-action" onclick="consultarProducto('Imperial de cuero crudo con base', '$50.000')">Consultar</button>
             <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('imperial_cuero_crudo','Imperial de cuero crudo con base',50000,'mate-imperial-cuero-crudo-con-base-1.jpeg',this)">🛒 Agregar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- TORPEDO DE CUERO CRUDO -->
+      <div class="product-card" data-cat="calabaza" data-price="48000">
+        <div class="product-img-wrap has-gallery" data-gallery-key="torpedo_crudo" onclick="openProductDetail('torpedo_crudo')">
+          <img loading="lazy" decoding="async" class="product-img" src="mate-torpedo-cuero-crudo-1.jpeg" alt="Mate torpedo de calabaza forrado en cuero crudo con virola de acero" onerror="this.style.background='#D4C4A0'">
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">Torpedo de cuero crudo</h3>
+          <p class="product-desc">Mate torpedo de calabaza natural, forrado en cuero crudo y terminado con virola de acero inoxidable lisa. Su formato torpedo requiere una selección cuidada de la calabaza y un trabajo artesanal preciso para lograr una estructura estilizada, una boca amplia y una terminación pareja. El cuero crudo y la virola de acero inoxidable completan una pieza de mayor nivel de elaboración, pensada para quienes buscan materiales nobles, durabilidad y una terminación más trabajada. Por su origen natural y su confección artesanal, cada mate presenta particularidades propias en forma, tono y detalles, por lo que no existen dos unidades exactamente iguales.</p>
+          <div class="product-footer">
+            <span class="product-price">$48.000</span>
+            <button class="product-action" onclick="consultarProducto('Torpedo de cuero crudo', '$48.000')">Consultar</button>
+            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('torpedo_crudo','Torpedo de cuero crudo',48000,'mate-torpedo-cuero-crudo-1.jpeg',this)">🛒 Agregar</button>
           </div>
         </div>
       </div>
@@ -2303,10 +2340,12 @@ const PRODUCT_GALLERIES = {
   imperial_premium: ['mate-imperial-algarrobo-1.jpeg', 'mate-imperial-algarrobo-2.jpeg', 'mate-imperial-algarrobo-3.jpeg'],
   imperial_calabaza: ['mate-imperial-calabaza-cuero-negro-1.jpeg', 'mate-imperial-calabaza-cuero-negro-2.jpeg'],
   imperial_cuero_crudo: ['mate-imperial-cuero-crudo-con-base-1.jpeg', 'mate-imperial-cuero-crudo-con-base-2.jpeg', 'mate-imperial-cuero-crudo-con-base-3.jpeg'],
+  torpedo_crudo: ['mate-torpedo-cuero-crudo-1.jpeg', 'mate-torpedo-cuero-crudo-2.jpeg', 'mate-torpedo-cuero-crudo-3.jpeg'],
   imperial_alpaca: ['mate-imperial-alpaca-1.jpeg', 'mate-imperial-alpaca-2.jpeg'],
   camionero_4_patas: ['mate-camionero-4-patas-1.jpeg', 'mate-camionero-4-patas-2.jpeg', 'mate-camionero-4-patas-3.jpeg', 'mate-camionero-4-patas-4.jpeg', 'mate-camionero-4-patas-5.jpeg'],
   combo_criollo: ['mate-criollo-calabaza-cuero-1.jpeg', 'mate-criollo-calabaza-cuero-2.jpeg', 'bombilla-pico-de-loro-acero-inoxidable.jpeg'],
   combo_camionero: ['mate-camionero-algarrobo-1.jpeg', 'bombilla-pico-de-loro-acero-inoxidable.jpeg'],
+  combo_camionero_4_patas: ['mate-camionero-4-patas-1.jpeg', 'mate-camionero-4-patas-2.jpeg', 'mate-camionero-4-patas-3.jpeg', 'mate-camionero-4-patas-4.jpeg', 'mate-camionero-4-patas-5.jpeg', 'bombilla-pico-de-loro-acero-inoxidable.jpeg'],
   camionero_clasico: ['mate-camionero-algarrobo-1.jpeg', 'mate-camionero-algarrobo-2.jpeg']
 };
 let currentGallery = [];
@@ -2452,10 +2491,12 @@ initHoverCycle();
 const GIFT_PRODUCTS = [
   { key: 'combo_criollo', name: 'Combo criollo + bombilla', price: 21999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
   { key: 'combo_camionero', name: 'Combo camionero de algarrobo + bombilla', price: 25500, cat: 'algarrobo', img: 'mate-camionero-algarrobo-1.jpeg' },
+  { key: 'combo_camionero_4_patas', name: 'Combo camionero 4 patas + bombilla', price: 22500, cat: 'calabaza', img: 'mate-camionero-4-patas-1.jpeg' },
   { key: 'criollo_calabaza', name: 'Criollo de calabaza', price: 17999.99, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
   { key: 'torpedo', name: 'Torpedo con virola de acero', price: 26999, cat: 'calabaza', img: 'Torpedo_con_virola_de_acero.jpeg' },
   { key: 'imperial_calabaza', name: 'Imperial de calabaza', price: 30000, cat: 'calabaza', img: 'Imperial_de_calabaza.jpeg' },
   { key: 'imperial_cuero_crudo', name: 'Imperial de cuero crudo con base', price: 50000, cat: 'calabaza', img: 'mate-imperial-cuero-crudo-con-base-1.jpeg' },
+  { key: 'torpedo_crudo', name: 'Torpedo de cuero crudo', price: 48000, cat: 'calabaza', img: 'mate-torpedo-cuero-crudo-1.jpeg' },
   { key: 'imperial_alpaca', name: 'Imperial de alpaca', price: 37000, cat: 'calabaza', img: 'mate-imperial-alpaca-1.jpeg' },
   { key: 'camionero_4_patas', name: 'Camionero 4 patas', price: 18500, cat: 'calabaza', img: 'mate-camionero-4-patas-1.jpeg' },
   { key: 'imperial_premium', name: 'Imperial de algarrobo', price: 27200, cat: 'algarrobo', img: 'Imperial_de_algarrobo_premium.jpeg' },
@@ -2809,9 +2850,9 @@ let chatOpen = false;
 
 const KB = [
   { keys: ['hola','buenas','buen dia','hey','hi','que tal','como estas'], resp: ['¡Hola! 🤎 ¿Cómo andás? Soy Vizcachita, la asistente de Fogón Mates. ¿Qué andás buscando?','¡Buenas! 🔥 Bienvenido/a a Fogón Mates. ¿Te ayudo con algo?'] },
-  { keys: ['combo','combos','kit'], resp: ['¡Los combos son lo más completo! 🤎 Combo criollo + bombilla — <b>$21.999</b> (antes $25.000) y Combo camionero + bombilla — <b>$25.500</b> (antes $28.000). Ambos listos para usar. ¿Cuál te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo criollo + bombilla — <b>$21.999</b>\n🌳 Combo camionero + bombilla — <b>$25.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de calabaza — <b>$17.999,99</b>\nTorpedo con virola — <b>$26.999</b>\nImperial de calabaza — <b>$30.000</b>\nImperial de cuero crudo con base — <b>$50.000</b>\nImperial de alpaca — <b>$37.000</b>\nCamionero 4 patas — <b>$18.500</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero clásico — <b>$21.500</b>\nImperial de algarrobo — <b>$27.200</b>\nMate vaquita — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera Fogón — <b>$16.000</b>\nBombilla pico de loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
-  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500\n<b>🧉 Calabaza</b>: $17.999,99 / $26.999 / $30.000 / $50.000 / $37.000 / $18.500\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $16.000\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['combo','combos','kit'], resp: ['¡Los combos son lo más completo! 🤎 Combo criollo + bombilla — <b>$21.999</b> (antes $25.000), Combo camionero + bombilla — <b>$25.500</b> (antes $28.000) y Combo camionero 4 patas + bombilla — <b>$22.500</b> (antes $25.000). Todos listos para usar. ¿Cuál te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['ver todos los precios','todos los precios','lista de precios','que tienen','catalogo'], resp: ['¡Acá va el catálogo completo! 📋\n\n<b>🤝 COMBOS</b>\n🤎 Combo criollo + bombilla — <b>$21.999</b>\n🌳 Combo camionero + bombilla — <b>$25.500</b>\nCombo camionero 4 patas + bombilla — <b>$22.500</b>\n\n<b>🧉 CALABAZA</b>\nCriollo de calabaza — <b>$17.999,99</b>\nTorpedo con virola — <b>$26.999</b>\nImperial de calabaza — <b>$30.000</b>\nImperial de cuero crudo con base — <b>$50.000</b>\nTorpedo de cuero crudo — <b>$48.000</b>\nImperial de alpaca — <b>$37.000</b>\nCamionero 4 patas — <b>$18.500</b>\n\n<b>🪵 ALGARROBO</b>\nCamionero clásico — <b>$21.500</b>\nImperial de algarrobo — <b>$27.200</b>\nMate vaquita — <b>$39.500</b>\n\n<b>👜 ACCESORIOS</b>\nYerbera Fogón — <b>$16.000</b>\nBombilla pico de loro — <b>$6.500</b>'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
+  { keys: ['precios por categoría','precios por categoria','categorias','separado por tipo'], resp: ['¡Te los separo! 🧉\n\n<b>🤝 Combos</b>: $21.999 / $25.500 / $22.500\n<b>🧉 Calabaza</b>: $17.999,99 / $26.999 / $30.000 / $50.000 / $48.000 / $37.000 / $18.500\n<b>🪵 Algarrobo</b>: $21.500 / $27.200 / $39.500\n<b>👜 Accesorios</b>: $16.000\n<b>🥄 Bombillas</b>: $6.500\n\n¿Alguna categoría te interesa?'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $50.000 (Imperial de cuero crudo con base). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
   { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera Fogón — $16.000 / 🧉 Criollo de calabaza — $17.999,99 / 🤎 <b>Combo criollo + bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   {
