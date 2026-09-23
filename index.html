@@ -1581,7 +1581,7 @@ footer::before {
     <span class="frase-item">🔥 Hecho a mano, sentido con el alma.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🌳 Combo camionero + bombilla — $25.500.<span class="frase-sep">◆</span></span>
     <span class="frase-item">💬 Coordinamos tu compra por WhatsApp.<span class="frase-sep">◆</span></span>
-    <span class="frase-item">🧉 7 piezas únicas, ninguna igual a la otra.<span class="frase-sep">◆</span></span>
+    <span class="frase-item">🧉 <span class="piezas-count">12</span> piezas únicas, ninguna igual a la otra.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🐄 Mate vaquita — pintado a mano.<span class="frase-sep">◆</span></span>
     <span class="frase-item">✨ Imperial de Algarrobo Premium — $27.200.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🚚 Despachamos por correo a todo el país.<span class="frase-sep">◆</span></span>
@@ -1593,7 +1593,7 @@ footer::before {
     <span class="frase-item">🔥 Hecho a mano, sentido con el alma.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🌳 Combo camionero + bombilla — $25.500.<span class="frase-sep">◆</span></span>
     <span class="frase-item">💬 Coordinamos tu compra por WhatsApp.<span class="frase-sep">◆</span></span>
-    <span class="frase-item">🧉 7 piezas únicas, ninguna igual a la otra.<span class="frase-sep">◆</span></span>
+    <span class="frase-item">🧉 <span class="piezas-count">12</span> piezas únicas, ninguna igual a la otra.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🐄 Mate vaquita — pintado a mano.<span class="frase-sep">◆</span></span>
     <span class="frase-item">✨ Imperial de Algarrobo Premium — $27.200.<span class="frase-sep">◆</span></span>
     <span class="frase-item">🚚 Despachamos por correo a todo el país.<span class="frase-sep">◆</span></span>
@@ -1637,7 +1637,7 @@ footer::before {
   </div>
   <div class="stat-divider"></div>
   <div class="stat-item">
-    <span class="stat-number">7</span>
+    <span class="stat-number piezas-count">12</span>
     <span class="stat-label">Piezas Únicas</span>
   </div>
   <div class="stat-divider"></div>
@@ -1728,7 +1728,7 @@ footer::before {
         </div>
         <div class="product-info">
           <h3 class="product-name">Combo camionero 4 patas + bombilla</h3>
-          <p class="product-desc">Mate camionero de calabaza natural, forrado en cuero y con virola de acero inoxidable. Su diseño tradicional se distingue por su formato robusto y su base de 4 patas, que le aporta un apoyo firme y una presencia característica. Disponible en colores bordó, negro y suela, combina materiales nobles y una terminación cuidada, dando como resultado una pieza funcional y de estilo clásico. Las variaciones naturales de la calabaza hacen que cada pieza conserve su propia identidad. Incluye bombilla pico de loro (inoxidable): fabricada en acero inoxidable, con terminaciones simples y funcionales. Resistente y fácil de limpiar.</p>
+          <p class="product-desc">Calabaza natural forrada en cuero, con virola de acero inoxidable y base de 4 patas. Viene con bombilla de regalo.</p>
           <div class="product-footer">
             <div><span class="product-price-old">$25.000</span><span class="product-price">$22.500</span></div>
             <button class="product-action" onclick="consultarProducto('Combo camionero 4 patas + bombilla', '$22.500')">Consultar</button>
@@ -3298,6 +3298,13 @@ async function loadStock() {
 loadStock();
 setInterval(() => { if (!document.hidden) loadStock(); }, STOCK_REFRESH_MS);
 document.addEventListener('visibilitychange', () => { if (!document.hidden) loadStock(); });
+</script>
+<script>
+// Piezas únicas: se cuentan solas (todos los productos del catálogo menos los combos)
+(function () {
+  const n = document.querySelectorAll('.product-card:not([data-cat="combos"])').length;
+  if (n) document.querySelectorAll('.piezas-count').forEach(el => el.textContent = n);
+})();
 </script>
 </body>
 </html>
