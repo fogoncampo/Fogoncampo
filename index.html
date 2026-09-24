@@ -375,6 +375,7 @@ nav.scrolled { padding: 0.8rem 3rem; }
 .gift-result-card img { width: 64px; height: 64px; object-fit: cover; flex-shrink: 0; }
 .gift-result-name { font-family: 'Playfair Display', serif; font-size: 0.95rem; font-weight: 700; color: var(--brown-dark); margin: 0 0 0.2rem; }
 .gift-result-price { font-size: 0.85rem; color: var(--ember); font-weight: 700; }
+.gift-result-tag { font-size: 0.78rem; font-style: italic; color: var(--brown-light); margin: 0.15rem 0 0; }
 .gift-restart {
   background: none; border: none; color: var(--brown-light); text-decoration: underline;
   font-family: 'Cormorant Garamond', serif; font-size: 0.85rem; cursor: pointer;
@@ -2274,19 +2275,11 @@ footer::before {
     </button>
     <div id="giftStep1">
       <p class="gift-question">¿Cuál es tu presupuesto?</p>
-      <div class="gift-options">
-        <button class="gift-option-btn" onclick="giftSetBudget(0, 18000)">Hasta $18.000</button>
-        <button class="gift-option-btn" onclick="giftSetBudget(18000, 32000)">$18.000 – $32.000</button>
-        <button class="gift-option-btn" onclick="giftSetBudget(32000, Infinity)">Más de $32.000</button>
-      </div>
+      <div class="gift-options"></div>
     </div>
     <div id="giftStep2" style="display:none;">
       <p class="gift-question">¿Qué estilo preferís?</p>
-      <div class="gift-options">
-        <button class="gift-option-btn" onclick="giftSetStyle('calabaza')">Calabaza natural</button>
-        <button class="gift-option-btn" onclick="giftSetStyle('algarrobo')">Algarrobo oscuro</button>
-        <button class="gift-option-btn" onclick="giftSetStyle('cualquiera')">Sorprendeme</button>
-      </div>
+      <div class="gift-options"></div>
     </div>
     <div id="giftResults" style="display:none;">
       <p class="gift-question" id="giftResultsTitle">Estos son los que más pegan:</p>
@@ -2422,9 +2415,11 @@ let currentDetailName = '';
 let currentDetailPrice = '';
 
 function openProductDetail(productKey) {
-  const imgs = PRODUCT_GALLERIES[productKey];
-  if (!imgs || !imgs.length) return;
   const wrap = document.querySelector(`[data-gallery-key="${productKey}"]`);
+  let imgs = PRODUCT_GALLERIES[productKey];
+  // Producto nuevo sin galería cargada: se abre igual con la foto de su tarjeta
+  if ((!imgs || !imgs.length) && wrap) { const im = wrap.querySelector('.product-img'); if (im) imgs = [im.getAttribute('src')]; }
+  if (!imgs || !imgs.length) return;
   const card = wrap ? wrap.closest('.product-card') : null;
   const nameEl = card ? card.querySelector('.product-name') : null;
   const descEl = card ? card.querySelector('.product-desc') : null;
@@ -2435,7 +2430,7 @@ function openProductDetail(productKey) {
   document.getElementById('galleryDetailPrice').textContent = currentDetailPrice;
   document.getElementById('galleryDetailDesc').textContent = descEl ? descEl.textContent.trim() : '';
   document.getElementById('galleryDetailWaBtn').onclick = () => consultarProducto(currentDetailName, currentDetailPrice);
-  const catalogEntry = GIFT_PRODUCTS.find(p => p.key === productKey);
+  const catalogEntry = giftCatalog().find(p => p.key === productKey);
   document.getElementById('galleryDetailCartBtn').onclick = () => {
     if (catalogEntry) addToCart(catalogEntry.key, catalogEntry.name, catalogEntry.price, catalogEntry.img, document.getElementById('galleryDetailCartBtn'));
   };
@@ -2555,27 +2550,155 @@ function initHoverCycle() {
 }
 initHoverCycle();
 
-/* ── BUSCADOR DE REGALO ── */
-const GIFT_PRODUCTS = [
-  { key: 'combo_criollo', name: 'Combo criollo + bombilla', price: 21999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
-  { key: 'combo_camionero', name: 'Combo camionero de algarrobo + bombilla', price: 25500, cat: 'algarrobo', img: 'mate-camionero-algarrobo-1.jpeg' },
-  { key: 'combo_camionero_4_patas', name: 'Combo camionero 4 patas + bombilla', price: 22500, cat: 'calabaza', img: 'mate-camionero-4-patas-1.jpeg' },
-  { key: 'criollo_calabaza', name: 'Criollo de calabaza', price: 17999, cat: 'calabaza', img: 'Mate_Criollo_de_calabaza.jpeg' },
-  { key: 'torpedo', name: 'Torpedo con virola de acero', price: 26999, cat: 'calabaza', img: 'Torpedo_con_virola_de_acero.jpeg' },
-  { key: 'imperial_calabaza', name: 'Imperial de calabaza', price: 30000, cat: 'calabaza', img: 'Imperial_de_calabaza.jpeg' },
-  { key: 'imperial_cuero_crudo', name: 'Imperial de cuero crudo con base', price: 50000, cat: 'calabaza', img: 'mate-imperial-cuero-crudo-con-base-1.jpeg' },
-  { key: 'torpedo_crudo', name: 'Torpedo de cuero crudo', price: 48000, cat: 'calabaza', img: 'mate-torpedo-cuero-crudo-1.jpeg' },
-  { key: 'imperial_alpaca', name: 'Imperial de alpaca', price: 37000, cat: 'calabaza', img: 'mate-imperial-alpaca-1.jpeg' },
-  { key: 'camionero_4_patas', name: 'Camionero 4 patas', price: 18500, cat: 'calabaza', img: 'mate-camionero-4-patas-1.jpeg' },
-  { key: 'imperial_premium', name: 'Imperial de algarrobo', price: 27200, cat: 'algarrobo', img: 'Imperial_de_algarrobo_premium.jpeg' },
-  { key: 'vaquita_ranchero', name: 'Mate vaquita', price: 39500, cat: 'algarrobo', img: 'matevaquita_ranchero.jpeg' },
-  { key: 'camionero_clasico', name: 'Camionero clásico de algarrobo', price: 21500, cat: 'algarrobo', img: 'mate-camionero-algarrobo-1.jpeg' },
-  { key: 'yerbera', name: 'Yerbera Fogón', price: 16000, cat: 'accesorios', img: 'yerbera.jpeg' },
-  { key: 'bombilla', name: 'Bombilla pico de loro (inoxidable)', price: 6500, cat: 'accesorios', img: 'Bombilla_pico_de_loro__inoxidable_.jpeg' }
-];
-let giftBudget = null;
+/* ── BUSCADOR DE REGALO ──
+   Se arma SOLO con las tarjetas del catálogo de la web: productos nuevos, líneas nuevas
+   (una categoría nueva con su botón de filtro), precios del Sheet y stock se toman en vivo.
+   Para sumar un producto al buscador no hay que tocar nada acá: alcanza con su tarjeta.
+   Opcional: data-material="calabaza|algarrobo" en la tarjeta si un combo no lo dice en el nombre. */
+const GIFT_MATERIALS = { calabaza: 'Calabaza natural', algarrobo: 'Algarrobo oscuro' };
+const GIFT_MATERIAL_TXT = { calabaza: 'mates de calabaza', algarrobo: 'mates de algarrobo', combos: 'combos' };
+function giftCatalog() {
+  const seen = new Set();
+  return [...document.querySelectorAll('.product-card')].map(card => {
+    const btn = card.querySelector('.add-to-cart-btn');
+    const oc = btn ? (btn.getAttribute('onclick') || '') : '';
+    const m = oc.match(/addToCart\('([^']+)',\s*'((?:[^'\\]|\\.)*)',\s*[\d.]+,\s*'([^']*)'/);
+    const w = card.querySelector('[data-gallery-key]');
+    const key = w ? w.getAttribute('data-gallery-key') : (m ? m[1] : null);
+    const cardName = ((card.querySelector('.product-name') || {}).textContent || '').trim();
+    const desc = ((card.querySelector('.product-desc') || {}).textContent || '').toLowerCase();
+    const cat = card.getAttribute('data-cat') || '';
+    let material = card.getAttribute('data-material') || '';
+    if (!material && GIFT_MATERIALS[cat]) material = cat;
+    if (!material && cat === 'combos') {
+      const n = cardName.toLowerCase();
+      material = n.includes('algarrobo') ? 'algarrobo' : n.includes('calabaza') ? 'calabaza'
+        : desc.includes('algarrobo') ? 'algarrobo' : desc.includes('calabaza') ? 'calabaza' : '';
+    }
+    const imgEl = card.querySelector('.product-img');
+    return {
+      key, cat, material,
+      isMate: cat === 'combos' || !!material,
+      name: m ? m[2].replace(/\\'/g, "'") : cardName,
+      displayName: cardName || (m ? m[2] : ''),
+      price: parseFloat(card.getAttribute('data-price')),
+      img: m ? m[3] : (imgEl ? imgEl.getAttribute('src') : '')
+    };
+  }).filter(p => p.key && p.price > 0 && !seen.has(p.key) && seen.add(p.key));
+}
+function giftHasStock(p) { return typeof stockFor !== 'function' || stockFor(p.key) !== 0; }
+function giftMoney(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
+function giftInBudget(p, b) { return (b.min > 0 ? p.price > b.min : true) && p.price <= b.max; }
+function giftMatchStyle(p, style) {
+  if (!style || style === 'cualquiera') return true;
+  if (style === 'combos') return p.cat === 'combos';
+  if (GIFT_MATERIALS[style]) return p.material === style;
+  return p.cat === style;
+}
+// Rangos de presupuesto armados con los precios reales (se reacomodan solos si cambian los precios)
+function giftBrackets() {
+  const avail = giftCatalog().filter(giftHasStock);
+  let prices = avail.filter(p => p.isMate).map(p => p.price);
+  if (prices.length < 3) prices = avail.map(p => p.price);
+  prices.sort((a, b) => a - b);
+  if (prices.length < 3) return [{ min: 0, max: Infinity, label: 'Ver todas las opciones' }];
+  const up = n => Math.ceil(n / 1000) * 1000;
+  const c1 = up(prices[Math.max(0, Math.floor(prices.length / 3) - 1)]);
+  const c2 = up(prices[Math.max(0, Math.floor(prices.length * 2 / 3) - 1)]);
+  if (c2 <= c1 || c2 >= prices[prices.length - 1]) {
+    return [{ min: 0, max: c1, label: `Hasta ${giftMoney(c1)}` }, { min: c1, max: Infinity, label: `Más de ${giftMoney(c1)}` }];
+  }
+  return [
+    { min: 0, max: c1, label: `Hasta ${giftMoney(c1)}` },
+    { min: c1, max: c2, label: `${giftMoney(c1)} – ${giftMoney(c2)}` },
+    { min: c2, max: Infinity, label: `Más de ${giftMoney(c2)}` }
+  ];
+}
+// Estilos disponibles: materiales + cada categoría con botón de filtro (las líneas nuevas entran solas)
+function giftStyles(budget) {
+  const avail = giftCatalog().filter(giftHasStock).filter(p => !budget || giftInBudget(p, budget));
+  const out = [];
+  Object.keys(GIFT_MATERIALS).forEach(mat => { if (avail.some(p => p.material === mat)) out.push({ style: mat, label: GIFT_MATERIALS[mat] }); });
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(b => {
+    const cat = b.dataset.cat;
+    if (cat === 'todos' || cat === 'combos' || GIFT_MATERIALS[cat]) return;
+    if (avail.some(p => p.cat === cat && !p.material)) out.push({ style: cat, label: b.textContent.trim().charAt(0).toUpperCase() + b.textContent.trim().slice(1).toLowerCase() });
+  });
+  return out;
+}
+// Motor de recomendación (lo usan el buscador y Vizcachita, así responden igual)
+function giftRecommend(budget, style, limit) {
+  limit = limit || 3;
+  const b = budget || { min: 0, max: Infinity };
+  const avail = giftCatalog().filter(giftHasStock);
+  const rank = (a, z) => {
+    if (style === 'cualquiera' || !style) { if (a.isMate !== z.isMate) return a.isMate ? -1 : 1; }
+    // Con tope: primero lo que mejor aprovecha el presupuesto. Sin tope: lo más cercano al mínimo.
+    return b.max === Infinity ? a.price - z.price : z.price - a.price;
+  };
+  // Si un combo ya está en la lista, no repetir el mismo mate suelto
+  const partsOf = k => (typeof STOCK_MAP !== 'undefined' && STOCK_MAP[k]) || [];
+  const pick = list => {
+    const chosen = [];
+    list.forEach(p => {
+      if (chosen.length >= limit) return;
+      const own = partsOf(p.key);
+      const dup = chosen.some(c => {
+        const cp = partsOf(c.key);
+        return (c.cat === 'combos' && own.length === 1 && cp.includes(own[0])) ||
+               (p.cat === 'combos' && cp.length === 1 && own.includes(cp[0]));
+      });
+      if (!dup) chosen.push(p);
+      else if (p.cat === 'combos') {
+        // Para regalar conviene el combo (viene con bombilla): reemplaza al mate suelto
+        const i = chosen.findIndex(c => c.cat !== 'combos' && partsOf(c.key).length === 1 && own.includes(partsOf(c.key)[0]));
+        if (i >= 0) chosen[i] = p;
+      }
+    });
+    return chosen;
+  };
+  const exact = pick(avail.filter(p => giftInBudget(p, b) && giftMatchStyle(p, style)).sort(rank));
+  if (exact.length) return { items: exact, note: '' };
 
+  // No hay nada que cumpla las dos cosas: se dice claro y se muestra lo más cercano
+  const sameStyle = avail.filter(p => giftMatchStyle(p, style));
+  const dist = p => p.price > b.max ? p.price - b.max : (b.min - p.price);
+  const closest = sameStyle.slice().sort((a, z) => dist(a) - dist(z))[0];
+  const inBudget = pick(avail.filter(p => giftInBudget(p, b)).sort((a, z) => (a.isMate !== z.isMate ? (a.isMate ? -1 : 1) : (b.max === Infinity ? a.price - z.price : z.price - a.price))));
+  const items = [];
+  if (closest && style && style !== 'cualquiera') {
+    const d = dist(closest);
+    items.push(Object.assign({}, closest, { tag: closest.price > b.max ? `Se pasa ${giftMoney(d)} de tu presupuesto` : `Está ${giftMoney(d)} debajo de tu presupuesto` }));
+  }
+  inBudget.forEach(p => { if (items.length < limit && !items.some(x => x.key === p.key)) items.push(p); });
+  const que = GIFT_MATERIAL_TXT[style] || 'productos de ' + ((document.querySelector(`.cat-btn[data-cat="${style}"]`) || {}).textContent || 'ese tipo').trim().toLowerCase();
+  let note = '';
+  if (!items.length) note = '';
+  else if (style && style !== 'cualquiera') {
+    note = `No tenemos ${que} en ese presupuesto.` +
+      (closest ? ' Te muestro el más cercano' + (inBudget.length ? ' y otras opciones que sí entran:' : ':') : ' Estas opciones sí entran:');
+  } else note = 'Nada entra justo en ese presupuesto; esto es lo más cercano:';
+  return { items, note };
+}
+
+let giftBudget = null;
+let giftBracketList = [];
+
+function giftRenderStep1() {
+  giftBracketList = giftBrackets();
+  const box = document.querySelector('#giftStep1 .gift-options');
+  box.innerHTML = '';
+  giftBracketList.forEach((br, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'gift-option-btn';
+    btn.textContent = br.label;
+    btn.onclick = () => giftSetBudget(br.min, br.max);
+    box.appendChild(btn);
+  });
+}
 function openGiftFinder() {
+  giftBudget = null;
+  giftRenderStep1();
   document.getElementById('giftStep1').style.display = '';
   document.getElementById('giftStep2').style.display = 'none';
   document.getElementById('giftResults').style.display = 'none';
@@ -2586,49 +2709,58 @@ function closeGiftFinder() {
 }
 function restartGiftFinder() {
   giftBudget = null;
+  giftRenderStep1();
   document.getElementById('giftStep1').style.display = '';
   document.getElementById('giftStep2').style.display = 'none';
   document.getElementById('giftResults').style.display = 'none';
 }
 function giftSetBudget(min, max) {
   giftBudget = { min, max };
+  // Solo se ofrecen estilos que tienen algo en ese presupuesto y con stock
+  const box = document.querySelector('#giftStep2 .gift-options');
+  box.innerHTML = '';
+  giftStyles(giftBudget).forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'gift-option-btn';
+    btn.textContent = s.label;
+    btn.onclick = () => giftSetStyle(s.style);
+    box.appendChild(btn);
+  });
+  const any = document.createElement('button');
+  any.className = 'gift-option-btn';
+  any.textContent = 'Sorprendeme';
+  any.onclick = () => giftSetStyle('cualquiera');
+  box.appendChild(any);
   document.getElementById('giftStep1').style.display = 'none';
   document.getElementById('giftStep2').style.display = '';
 }
 function giftSetStyle(style) {
-  const STYLE_NAMES = { calabaza: 'calabaza', algarrobo: 'algarrobo' };
-  // Solo productos que entran en el presupuesto elegido y que tienen stock
-  const hayStock = p => typeof stockFor !== 'function' || stockFor(p.key) !== 0;
-  const enPresupuesto = GIFT_PRODUCTS.filter(p => p.price >= giftBudget.min && p.price <= giftBudget.max && hayStock(p));
-  let candidates = style === 'cualquiera' ? enPresupuesto.slice() : enPresupuesto.filter(p => p.cat === style);
-  let note = '';
-  if (!candidates.length && style !== 'cualquiera') {
-    candidates = enPresupuesto.slice();
-    if (candidates.length) note = `No tenemos mates de ${STYLE_NAMES[style]} en ese presupuesto, pero estas opciones sí entran:`;
-  }
-  // Primero lo que mejor aprovecha el presupuesto (más cerca del centro del rango)
-  const centro = giftBudget.max === Infinity ? giftBudget.min * 1.25 : (giftBudget.min + giftBudget.max) / 2;
-  candidates.sort((a, b) => Math.abs(a.price - centro) - Math.abs(b.price - centro));
-  const top = candidates.slice(0, 3);
-
+  const { items, note: n } = giftRecommend(giftBudget, style, 3);
+  let note = n;
   const noteEl = document.getElementById('giftNote');
   const titleEl = document.getElementById('giftResultsTitle');
-  if (!top.length) {
+  if (!items.length) {
     titleEl.textContent = 'Por ahora no tenemos opciones en ese presupuesto 😕';
     note = 'Escribinos por WhatsApp y te armamos algo a medida.';
   } else {
-    titleEl.textContent = 'Estos son los que más pegan:';
+    titleEl.textContent = n ? 'Mirá estas opciones:' : 'Estos son los que más pegan:';
   }
   noteEl.textContent = note;
   noteEl.style.display = note ? '' : 'none';
 
   const grid = document.getElementById('giftResultsGrid');
   grid.innerHTML = '';
-  top.forEach(p => {
+  items.forEach(p => {
     const card = document.createElement('div');
     card.className = 'gift-result-card';
-    card.innerHTML = `<img src="${p.img}" alt="${p.name}" loading="lazy">
-      <div><p class="gift-result-name">${p.name}</p><p class="gift-result-price">$${p.price.toLocaleString('es-AR')}</p></div>`;
+    const img = document.createElement('img');
+    img.src = p.img; img.alt = p.displayName; img.loading = 'lazy';
+    const info = document.createElement('div');
+    const nm = document.createElement('p'); nm.className = 'gift-result-name'; nm.textContent = p.displayName;
+    const pr = document.createElement('p'); pr.className = 'gift-result-price'; pr.textContent = giftMoney(p.price);
+    info.appendChild(nm); info.appendChild(pr);
+    if (p.tag) { const tg = document.createElement('p'); tg.className = 'gift-result-tag'; tg.textContent = p.tag; info.appendChild(tg); }
+    card.appendChild(img); card.appendChild(info);
     card.onclick = () => { closeGiftFinder(); openProductDetail(p.key); };
     grid.appendChild(card);
   });
@@ -2945,12 +3077,12 @@ const KB = [
   { keys: ['precio','precios','cuanto sale','cuanto cuesta','valores'], resp: ['Los precios van desde $6.500 (bombilla) hasta $50.000 (Imperial de cuero crudo con base). ¿Querés ver todos juntos, por categoría, o el más barato?'] },
   { keys: ['barato','económico','mas barato','accesible','poco presupuesto'], resp: ['Las opciones más accesibles: 🥄 Bombilla — $6.500 / 👜 Yerbera Fogón — $16.000 / 🧉 Criollo de calabaza — $17.999 / 🤎 <b>Combo criollo + bombilla — $21.999</b> ⭐ (el favorito precio-calidad!)'], link: { text: '💬 Consultar por WhatsApp', url: WA_LINK } },
   {
-    keys: ['curar','curado','como curar','cómo curar','primer uso','estrenar','preparar'],
+    keys: ['curar','curado','como curar','cómo curar','curo','curarlo','primer uso','estrenar','preparar'],
     resp: ['¡Buenísima pregunta! 🔥 Curar bien el mate es clave para sacarle todo el sabor. El proceso varía un poco según el material. ¿Tu mate es de <b>calabaza</b> o de <b>algarrobo</b>?'],
     followUp: 'curar_tipo',
     postButtons: [
-      { label: '🧉 Es de calabaza', msg: 'calabaza' },
-      { label: '🪵 Es de algarrobo', msg: 'algarrobo' },
+      { label: '🧉 Es de calabaza', msg: 'Es de calabaza' },
+      { label: '🪵 Es de algarrobo', msg: 'Es de algarrobo' },
     ]
   },
   {
@@ -3419,7 +3551,7 @@ function applyPrices(table) {
     });
   });
 
-  if (typeof GIFT_PRODUCTS !== 'undefined') GIFT_PRODUCTS.forEach(p => { if (PRICES[p.key] !== undefined) p.price = PRICES[p.key]; });
+  // El buscador de regalos y Vizcachita leen el precio de las tarjetas (data-price), que se actualiza arriba
 
   if (typeof CART !== 'undefined') {
     let changed = false;
@@ -3568,11 +3700,93 @@ const VIZ_LIVE = {
 const VIZ_KB_MAP = { 'combo': 'combos', 'ver todos los precios': 'catalogo', 'precios por categoría': 'categorias', 'precio': 'precio', 'barato': 'barato', 'regalo': 'regalo' };
 const VIZ_STOCK_KEYS = ['stock', 'disponible', 'disponibles', 'disponibilidad', 'agotado', 'agotados', 'quedan', 'queda', 'hay en stock', 'les queda'];
 
+// ---- Regalos, presupuesto y material: usa el mismo motor que el buscador de regalos ----
+let vizEsperaCurado = false; // después de "¿es de calabaza o algarrobo?" la respuesta es sobre curado
+function vizParseBudget(raw) {
+  const t = String(raw || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+    .replace(/(\d+)\s*(y|a|al|-)\s*(\d+)\s*(mil\b|k\b|lucas?\b)/g, '$1 $4 $2 $3 $4'); // "entre 20 y 30 mil" 
+  const re = /(\$\s*)?(\d{1,3}(?:[.,]\d{3})+|\d+(?:[.,]\d+)?)\s*(mil\b|k\b|lucas?\b)?/g;
+  const nums = []; let m;
+  while ((m = re.exec(t))) {
+    const s = m[2]; let v;
+    const sep = /^\d{1,3}([.,]\d{3})+$/.test(s);
+    v = sep ? parseInt(s.replace(/[.,]/g, ''), 10) : parseFloat(s.replace(',', '.'));
+    if (m[3]) v *= 1000;
+    const claro = m[1] || m[3] || sep;
+    if (!claro && (v < 3000 || (v >= 1900 && v <= 2100))) continue; // edades, años, cantidades
+    if (v >= 1000 && v < 10000000) nums.push({ v, i: m.index });
+  }
+  if (!nums.length) return null;
+  const antes = i => t.slice(Math.max(0, i - 22), i);
+  if (nums.length >= 2 && /entre|desde|de\s*$/.test(antes(nums[0].i) + ' ')) {
+    const a = nums[0].v, z = nums[1].v;
+    return { min: Math.min(a, z), max: Math.max(a, z) };
+  }
+  const n = nums[0], b = antes(n.i);
+  if (/(mas|arriba|encima|mayor)\s+(de|a)\s*$|desde\s*$|minimo\s*$/.test(b)) return { min: n.v, max: Infinity };
+  return { min: 0, max: n.v }; // "hasta 25 mil", "tengo 25 mil", "algo de 25 mil"
+}
+function vizProdLink(p) {
+  return `<a href="#" class="viz-prod-link" style="color:inherit;text-decoration:underline;" onclick="vizAbrirProducto('${p.key}');return false;">${p.displayName}</a>`;
+}
+function vizAbrirProducto(key) {
+  if (typeof chatWindow !== 'undefined') { chatOpen = false; chatWindow.classList.remove('open'); }
+  openProductDetail(key);
+}
+function vizRegalo(input) {
+  const q = ' ' + normalize(input) + ' ';
+  const has = k => q.includes(' ' + k + ' ');
+  const esRegalo = ['regalo', 'regalos', 'regalar', 'regalarle', 'regalito', 'cumple', 'cumpleanos', 'aniversario', 'navidad', 'reyes', 'dia del padre', 'dia de la madre', 'dia del amigo', 'dia del nino', 'egresado', 'recibida', 'recibido', 'sorpresa', 'presupuesto'].some(has);
+  const budget = vizParseBudget(input);
+  let style = null;
+  if (has('algarrobo') || has('madera')) style = 'algarrobo';
+  else if (has('calabaza')) style = 'calabaza';
+  else if (has('combo') || has('combos')) style = 'combos';
+  else document.querySelectorAll('.cat-btn[data-cat]').forEach(b => {
+    const c = b.dataset.cat; if (style || c === 'todos') return;
+    const w = normalize(b.textContent).trim();
+    if (w && (has(w) || has(w.replace(/s$/, '')))) style = c;
+  });
+  if (!esRegalo && !budget && !style) return null;
+  if (!esRegalo && !budget && style === 'combos') return null; // "combos" solo → respuesta de combos de siempre
+
+  const que = GIFT_MATERIAL_TXT[style] || (style ? 'productos de ' + normalize((document.querySelector(`.cat-btn[data-cat="${style}"]`) || {}).textContent || '').trim() : '');
+  const wa = { text: '💬 Armar regalo por WhatsApp', url: WA_LINK };
+
+  // Regalo sin presupuesto ni estilo → pregunta presupuesto con botones (rangos en vivo)
+  if (esRegalo && !budget && !style) {
+    const combos = giftRecommend({ min: 0, max: Infinity }, 'combos', 2).items;
+    const txt = combos.length ? ' Los combos son los más elegidos porque vienen listos para usar: ' + combos.map(p => `${vizProdLink(p)} (<b>${vizFmt(p.price)}</b>)`).join(' o ') + '.' : '';
+    return {
+      text: `¡Un mate artesanal es el regalo perfecto! 🎁${txt}<br><br>¿Cuánto querés gastar? Te muestro solo lo que entra y tiene stock:`,
+      link: null,
+      postButtons: giftBrackets().map(br => ({ label: br.label, msg: 'Regalo ' + br.label.toLowerCase().replace(' – ', ' a ') }))
+    };
+  }
+  // Solo material o categoría, sin regalo ni presupuesto → todo lo disponible de eso
+  if (!esRegalo && !budget) {
+    const items = giftCatalog().filter(giftHasStock).filter(p => giftMatchStyle(p, style)).sort((a, z) => a.price - z.price);
+    if (!items.length) return { text: `Ahora no tenemos ${que} disponibles 😕 Escribinos y te avisamos cuando entren.`, link: wa, postButtons: null };
+    return { text: `Estos son los ${que} que tenemos disponibles 🧉<br>` + items.map(p => `${vizProdLink(p)} — <b>${vizFmt(p.price)}</b>${vizTag({ stock: stockFor(p.key) })}`).join('<br>') + '<br><br>Tocá uno para ver las fotos.', link: null, postButtons: null };
+  }
+  // Presupuesto y/o estilo → recomendación
+  const b = budget || { min: 0, max: Infinity };
+  const { items, note } = giftRecommend(b, style || 'cualquiera', 3);
+  const rango = !budget ? '' : b.max === Infinity ? ` de más de ${vizFmt(b.min)}` : b.min > 0 ? ` de ${vizFmt(b.min)} a ${vizFmt(b.max)}` : ` de hasta ${vizFmt(b.max)}`;
+  if (!items.length) return { text: `Por ahora no tenemos opciones${rango} 😕 Escribinos por WhatsApp y te armamos algo a medida.`, link: wa, postButtons: null };
+  const lineas = items.map(p => `• ${vizProdLink(p)} — <b>${vizFmt(p.price)}</b>${p.tag ? ` <i>(${p.tag.toLowerCase()})</i>` : ''}${vizTag({ stock: stockFor(p.key) })}`).join('<br>');
+  const intro = note ? note.replace(' en ese presupuesto', rango || ' en ese presupuesto')
+    : esRegalo ? `Para un regalo${rango}${style ? ` en ${que}` : ''}, estos son los que más pegan 🎁`
+    : `${style ? que.charAt(0).toUpperCase() + que.slice(1) : 'Opciones'}${rango} que tenemos disponibles 🧉`;
+  return { text: `${intro}<br>${lineas}<br><br>Tocá uno para ver las fotos.`, link: wa, postButtons: null };
+}
+
 const _getResponseOriginal = getResponse;
 getResponse = function (input) {
   try {
     const q = ' ' + normalize(input) + ' ';
     const has = k => q.includes(' ' + normalize(k).trim() + ' ');
+    const esperaCurado = vizEsperaCurado; vizEsperaCurado = false;
     // Producto puntual (ej: "¿hay vaquita?", "cuánto sale el torpedo")
     let prod = null, prodScore = 0;
     Object.entries(VIZ_ALIASES).forEach(([key, als]) => als.forEach(a => {
@@ -3580,7 +3794,9 @@ getResponse = function (input) {
       if (has(a) && sc > prodScore) { prod = key; prodScore = sc; }
     }));
     const esCombo = has('combo') || has('combos');
-    const esCurado = ['curar', 'curado', 'estrenar', 'primer uso', 'preparar'].some(has);
+    const esCurado = ['curar', 'curado', 'curo', 'curarlo', 'estrenar', 'primer uso', 'preparar', 'es de calabaza', 'es de algarrobo'].some(has) ||
+      (esperaCurado && /^\s*(de\s+)?(calabaza|algarrobo)\s*$/.test(normalize(input)));
+    if (['curar', 'curado', 'curo', 'curarlo', 'estrenar', 'primer uso', 'preparar'].some(has) && !has('calabaza') && !has('algarrobo')) vizEsperaCurado = true;
     if (prod && !esCombo && !esCurado) {
       const p = vizProducts().find(x => x.key === prod);
       if (p) {
@@ -3595,6 +3811,8 @@ getResponse = function (input) {
         return { text: `<b>${p.name}</b> — ${vizFmt(p.price)}${p.old ? ` (antes ${p.old})` : ''}.<br>${estado}`, link, postButtons: null };
       }
     }
+    // Regalos / presupuesto / "¿tienen de algarrobo?" → recomendación en vivo (no el video de curado)
+    if (!esCurado) { const r = vizRegalo(input); if (r) return r; }
     if (!esCurado && VIZ_STOCK_KEYS.some(has)) {
       return { text: VIZ_LIVE.stock(), link: { text: '💬 Consultar por WhatsApp', url: WA_LINK }, postButtons: null };
     }
