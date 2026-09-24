@@ -2645,7 +2645,6 @@ function giftRecommend(budget, style, limit) {
     const chosen = [];
     list.forEach(p => {
       if (chosen.length >= limit) return;
-      if (giftSoldOut(p) && chosen.some(giftSoldOut)) return; // como mucho 1 agotado por recomendación
       const own = partsOf(p.key);
       const dup = chosen.some(c => {
         const cp = partsOf(c.key);
