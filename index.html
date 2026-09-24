@@ -2588,9 +2588,8 @@ function giftCatalog() {
   }).filter(p => p.key && p.price > 0 && !seen.has(p.key) && seen.add(p.key));
 }
 function giftHasStock(p) { return typeof stockFor !== 'function' || stockFor(p.key) !== 0; }
-// Los agotados se recomiendan igual (se reponen a pedido), pero marcados como sin stock
+// Los agotados se recomiendan igual (se reponen a pedido), marcados como agotados
 function giftSoldOut(p) { return typeof stockFor === 'function' && stockFor(p.key) === 0; }
-const GIFT_SIN_STOCK = 'Sin stock por ahora — escribinos y te lo reponemos';
 function giftMoney(n) { return '$' + Math.round(n).toLocaleString('es-AR'); }
 function giftInBudget(p, b) { return (b.min > 0 ? p.price > b.min : true) && p.price <= b.max; }
 function giftMatchStyle(p, style) {
@@ -2646,7 +2645,7 @@ function giftRecommend(budget, style, limit) {
     const chosen = [];
     list.forEach(p => {
       if (chosen.length >= limit) return;
-      if (giftSoldOut(p) && chosen.some(giftSoldOut)) return;
+      if (giftSoldOut(p) && chosen.some(giftSoldOut)) return; // como mucho 1 agotado por recomendación
       const own = partsOf(p.key);
       const dup = chosen.some(c => {
         const cp = partsOf(c.key);
@@ -2663,7 +2662,7 @@ function giftRecommend(budget, style, limit) {
     return chosen;
   };
   const exact = pick(avail.filter(p => giftInBudget(p, b) && giftMatchStyle(p, style)).sort(rank));
-  if (exact.length) return { items: exact.map(p => giftSoldOut(p) ? Object.assign({}, p, { tag: GIFT_SIN_STOCK }) : p), note: '' };
+  if (exact.length) return { items: exact.map(p => giftSoldOut(p) ? Object.assign({}, p, { tag: 'Agotado' }) : p), note: '' };
 
   // No hay nada que cumpla las dos cosas: se dice claro y se muestra lo más cercano
   const sameStyle = avail.filter(p => giftMatchStyle(p, style));
@@ -2683,7 +2682,7 @@ function giftRecommend(budget, style, limit) {
     note = `No tenemos ${que} en ese presupuesto.` +
       (closest ? ' Te muestro el más cercano' + (inBudget.length ? ' y otras opciones que sí entran:' : ':') : ' Estas opciones sí entran:');
   } else note = 'Nada entra justo en ese presupuesto; esto es lo más cercano:';
-  items.forEach((p, i) => { if (giftSoldOut(p)) items[i] = Object.assign({}, p, { tag: (p.tag ? p.tag + ' · ' : '') + GIFT_SIN_STOCK }); });
+  items.forEach((p, i) => { if (giftSoldOut(p)) items[i] = Object.assign({}, p, { tag: (p.tag ? p.tag + ' · ' : '') + 'Agotado' }); });
   return { items, note };
 }
 
@@ -3307,7 +3306,7 @@ function stockLabel(n) {
   if (n === 3) return 'Últimas unidades';
   if (n === 2) return 'Últimas 2 unidades';
   if (n === 1) return 'Última unidad';
-  return 'Sin stock por ahora';
+  return 'Agotado';
 }
 function cardKey(card) {
   const w = card.querySelector('[data-gallery-key]');
@@ -3317,7 +3316,7 @@ function cardKey(card) {
   return m ? m[1] : null;
 }
 function avisameCuandoVuelva(name) {
-  const msg = `Hola Fogón! Quiero el "${name}" que vi en la web y figura sin stock. ¿Me lo pueden reponer? 🧉`;
+  const msg = `Hola Fogón! Vi que el "${name}" está agotado. ¿Me avisan cuando vuelva a entrar? 🧉`;
   window.open('https://wa.me/5491150998752?text=' + encodeURIComponent(msg), '_blank', 'noopener');
 }
 function stockToast(text) {
@@ -3382,17 +3381,17 @@ function applyStockToCards() {
     if (cartBtn) {
       if (!cartBtn.dataset.label) cartBtn.dataset.label = cartBtn.innerHTML;
       cartBtn.disabled = out;
-      cartBtn.innerHTML = out ? 'Sin stock' : cartBtn.dataset.label;
+      cartBtn.innerHTML = out ? 'Agotado' : cartBtn.dataset.label;
     }
     let badge = imgWrap && imgWrap.querySelector('.soldout-badge');
-    if (out && imgWrap && !badge) { badge = document.createElement('span'); badge.className = 'soldout-badge'; badge.textContent = 'Sin stock'; imgWrap.appendChild(badge); }
+    if (out && imgWrap && !badge) { badge = document.createElement('span'); badge.className = 'soldout-badge'; badge.textContent = 'Agotado'; imgWrap.appendChild(badge); }
     if (!out && badge) badge.remove();
 
     let notify = card.querySelector('.notify-back-btn');
     if (out && footer && !notify) {
       notify = document.createElement('button');
       notify.className = 'notify-back-btn';
-      notify.textContent = '💬 Sin stock: escribinos y te lo reponemos';
+      notify.textContent = '🔔 Avisame cuando vuelva';
       notify.onclick = e => { e.stopPropagation(); avisameCuandoVuelva(name.trim()); };
       footer.appendChild(notify);
     }
@@ -3420,7 +3419,7 @@ addToCart = function (key, name, price, img, originEl) {
   const n = stockFor(key);
   if (n !== null) {
     const inCart = (CART.find(i => i.key === key) || { qty: 0 }).qty;
-    if (n === 0) { stockToast(`Estamos sin stock de "${name}". Escribinos por WhatsApp y te lo reponemos 🤎`); flashNoStock(originEl, 'Sin stock'); return; }
+    if (n === 0) { stockToast(`No hay stock de "${name}" en este momento. Podés tocar "Avisame cuando vuelva" y te escribimos.`); flashNoStock(originEl, 'Sin stock'); return; }
     if (inCart >= n) { stockToast(stockLimitText(name, n)); flashNoStock(originEl, 'No hay más stock'); return; }
   }
   return _addToCartOriginal(key, name, price, img, originEl);
@@ -3449,10 +3448,10 @@ openProductDetail = function (productKey) {
   msg.textContent = label;
   msg.classList.toggle('stock-out', n === 0);
   cartBtn.disabled = n === 0;
-  cartBtn.textContent = n === 0 ? 'Sin stock' : '🛒 Agregar al carrito';
+  cartBtn.textContent = n === 0 ? 'Agotado' : '🛒 Agregar al carrito';
   let notify = document.getElementById('galleryDetailNotify');
   if (n === 0) {
-    if (!notify) { notify = document.createElement('button'); notify.id = 'galleryDetailNotify'; notify.className = 'notify-back-btn gallery-detail-notify'; notify.textContent = '💬 Sin stock: escribinos y te lo reponemos'; cartBtn.insertAdjacentElement('afterend', notify); }
+    if (!notify) { notify = document.createElement('button'); notify.id = 'galleryDetailNotify'; notify.className = 'notify-back-btn gallery-detail-notify'; notify.textContent = '🔔 Avisame cuando vuelva'; cartBtn.insertAdjacentElement('afterend', notify); }
     notify.style.display = '';
     notify.onclick = () => avisameCuandoVuelva(document.getElementById('galleryDetailName').textContent.trim());
   } else if (notify) notify.style.display = 'none';
@@ -3645,7 +3644,7 @@ function vizProducts() {
   }).filter(p => p.key && p.name && !isNaN(p.price));
 }
 function vizTag(p) {
-  if (p.stock === 0) return ' — <i>sin stock por ahora, escribinos y te lo reponemos</i>';
+  if (p.stock === 0) return ' — <i>agotado</i>';
   if (p.stock === 1) return ' — <i>¡última unidad!</i>';
   if (p.stock === 2) return ' — <i>quedan 2</i>';
   if (p.stock === 3) return ' — <i>últimas unidades</i>';
@@ -3697,7 +3696,7 @@ const VIZ_LIVE = {
     const agotados = ps.filter(p => p.stock === 0);
     const pocos = ps.filter(p => p.stock > 0 && p.stock <= 3);
     let t = '📦 Así está el stock ahora:<br>';
-    if (agotados.length) t += '<br><b>Sin stock (escribinos y te los reponemos)</b><br>' + agotados.map(p => p.name).join('<br>') + '<br>';
+    if (agotados.length) t += '<br><b>Agotados</b><br>' + agotados.map(p => p.name).join('<br>') + '<br>';
     if (pocos.length) t += '<br><b>Quedan pocas unidades</b><br>' + pocos.map(p => `${p.name} — ${p.stock === 1 ? '1 unidad' : p.stock + ' unidades'}`).join('<br>') + '<br>';
     t += '<br>Todo lo demás está disponible 🤎';
     return t;
@@ -3780,13 +3779,11 @@ function vizRegalo(input) {
   const { items, note } = giftRecommend(b, style || 'cualquiera', 3);
   const rango = !budget ? '' : b.max === Infinity ? ` de más de ${vizFmt(b.min)}` : b.min > 0 ? ` de ${vizFmt(b.min)} a ${vizFmt(b.max)}` : ` de hasta ${vizFmt(b.max)}`;
   if (!items.length) return { text: `Por ahora no tenemos opciones${rango} 😕 Escribinos por WhatsApp y te armamos algo a medida.`, link: wa, postButtons: null };
-  const lineas = items.map(p => `• ${vizProdLink(p)} — <b>${vizFmt(p.price)}</b>${p.tag ? ` <i>(${p.tag.replace(' · ' + GIFT_SIN_STOCK, '').replace(GIFT_SIN_STOCK, '').toLowerCase()})</i>`.replace(' <i>()</i>', '') : ''}${vizTag({ stock: stockFor(p.key) })}`).join('<br>');
+  const lineas = items.map(p => `• ${vizProdLink(p)} — <b>${vizFmt(p.price)}</b>${p.tag && p.tag !== 'Agotado' ? ` <i>(${p.tag.replace(' · Agotado', '').toLowerCase()})</i>` : ''}${vizTag({ stock: stockFor(p.key) })}`).join('<br>');
   const intro = note ? note.replace(' en ese presupuesto', rango || ' en ese presupuesto')
     : esRegalo ? `Para un regalo${rango}${style ? ` en ${que}` : ''}, estos son los que más pegan 🎁`
     : `${style ? que.charAt(0).toUpperCase() + que.slice(1) : 'Opciones'}${rango} que tenemos disponibles 🧉`;
-  const agot = items.find(giftSoldOut);
-  const link = agot ? { text: '💬 Pedir el ' + agot.displayName + ' por WhatsApp', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Quiero el "${agot.name}" que vi en la web y figura sin stock. ¿Me lo pueden reponer? 🧉`) } : wa;
-  return { text: `${intro}<br>${lineas}<br><br>Tocá uno para ver las fotos.`, link, postButtons: null };
+  return { text: `${intro}<br>${lineas}<br><br>Tocá uno para ver las fotos.`, link: wa, postButtons: null };
 }
 
 const _getResponseOriginal = getResponse;
@@ -3809,12 +3806,12 @@ getResponse = function (input) {
       const p = vizProducts().find(x => x.key === prod);
       if (p) {
         let estado;
-        if (p.stock === 0) estado = 'Ahora estamos <b>sin stock</b> 😕 Escribinos por WhatsApp y te lo reponemos.';
+        if (p.stock === 0) estado = 'Ahora está <b>agotado</b> 😕 Si querés, te avisamos cuando vuelva a entrar.';
         else if (p.stock === 1) estado = '¡Queda <b>una sola unidad</b>! Si lo querés, no lo dejes pasar 🔥';
         else if (p.stock === 2 || p.stock === 3) estado = `Quedan solo <b>${p.stock} unidades</b> 🔥`;
         else estado = 'Tenemos stock disponible 🤎';
         const link = p.stock === 0
-          ? { text: '💬 Pedirlo por WhatsApp', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Quiero el "${p.name}" que vi en la web y figura sin stock. ¿Me lo pueden reponer? 🧉`) }
+          ? { text: '🔔 Avisame cuando vuelva', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Vi que el "${p.name}" está agotado. ¿Me avisan cuando vuelva a entrar? 🧉`) }
           : { text: '💬 Consultar por WhatsApp', url: 'https://wa.me/5491150998752?text=' + encodeURIComponent(`Hola Fogón! Quiero consultar por el ${p.name} (${vizFmt(p.price)}).`) };
         return { text: `<b>${p.name}</b> — ${vizFmt(p.price)}${p.old ? ` (antes ${p.old})` : ''}.<br>${estado}`, link, postButtons: null };
       }
